@@ -1,0 +1,154 @@
+#!/bin/bash
+#wait time to discover new devices in seconds
+SCAN_PERIOD=5
+AUTOTRUST=false
+#locations of blacklist and hard coded list of paired devices (watch out, need to modify Makefile as well if you want to change these values and still use make install)
+BLACKLIST=${XDG_DATA_HOME:-$HOME/.local/share}/bt/blacklist
+PAIRLIST=${XDG_DATA_HOME:-$HOME/.local/share}/bt/paired
+
+actions="pair
+disconnect
+unpair"
+
+[ "$AUTOTRUST" = false ] && actions+="
+trust"
+
+#Checks for necessary programs to be present. Very unlikely not to be present but let's just err on the safer side.
+for prog in dmenu bluetoothctl awk cat date nl; do
+   if ! hash "$prog" 2>/dev/null; then
+      printf 'bthandler: %s: command not found\n' "$prog" >&2
+      exit 127
+   fi
+done
+
+power(){
+	powerstatus="$( bluetoothctl show | grep Powered | awk '{print $2}' )"
+	[ "$powerstatus" = "no" ] && [ "$1" = on ] && bluetoothctl power on
+	[ "$powerstatus" = "yes" ] && [ "$1" = off ] && bluetoothctl power off
+}
+scan(){
+	scanstatus="$( bluetoothctl show | grep Discovering | awk '{print $2}' )"
+	if [ "$1" = on ]; then
+		#sets variable in case scanning was already on before the start of bt
+		[ "$start_scan" = "" ] && start_scan="$( date +'%s' )"
+		if [ "$scanstatus" = "no" ]; then
+			bluetoothctl scan on &
+			start_scan="$( date +'%s' )"
+		fi
+	elif [ "$1" = off ]; then
+		if [ "$scanstatus" = "yes" ]; then
+			bluetoothctl scan off
+		fi
+	fi
+}
+
+#start scanning as early as possible to speed up pairing process
+#=> maybe use an option to do this? Otherwise ever invocation of bt powers on the controller.
+power on
+scan on
+
+#Compile list of all Bluetooth IDS of paired devices (from bluetoothctl and from hardcoded list)
+bt_IDS="$( ( bluetoothctl paired-devices && cat "$PAIRLIST" ) | sort -u | awk '{print $2}' )"
+
+#Compile list of all device Names of paired devices (from bluetoothctl and from hardcoded list)
+paired_devices="$( ( bluetoothctl paired-devices && cat "$PAIRLIST" ) | sort -u | awk '{for (i=3; i<NF; i++) printf $i " "; print $NF}' )"
+
+disp_devices="$( echo "$paired_devices" | grep -vf "$BLACKLIST"  )"
+
+#detects current power mode of controller and adjusts options accordingly
+poweroption="$( echo "$powerstatus" | sed 's/yes/power off/; s/no/power on/' )"
+#Don't print empty device list, removes unnecessary empty choice in dmenu
+[ "$disp_devices" = "" ] && choice=$( printf "%s\n%s" "$poweroption" "$actions" | dmenu -i -p 'What BT action would you like to perform:' )
+[ "$disp_devices" != "" ] && choice=$( ( echo "$disp_devices" && printf "%s\n%s" "$poweroption" "$actions"  ) | dmenu -i -p 'What BT action would you like to perform:' )
+
+cleanup(){
+	scan off
+	exit 0
+}
+
+pair(){
+	#since this function can get called indefinitely, make sure to always be scanning and controller has power in the case that it got deactived by some other process.
+	power on
+	scan on
+	#check whether $SCAN_PERIOD seconds has already passed since starting scanning, if not, wait for the rest of that time.
+	if [ $((( "$(date +'%s')" - "$start_scan" ))) -lt $SCAN_PERIOD ]; then
+		sleep_period="$((( "$SCAN_PERIOD" - "$( date +'%s')" + "$start_scan" )))"
+		if [ "$sleep_period" -eq 1 ]; then
+			notify-send "Bluetooth" "Searching for devices, please wait 1 second"
+		else
+			notify-send "Bluetooth" "Searching for devices, please wait $sleep_period seconds"
+		fi
+
+		sleep "$sleep_period"
+	fi
+	echo paired_devices:"$paired_devices".
+	echo paired_devices:$paired_devices.
+	if [ $paired_devices = "" ]; then
+		new_devices="$( bluetoothctl devices | awk '{for (i=3; i<NF; i++) printf $i " "; print $NF}' | grep -vf "<(echo $paired_devices)" )"
+	else
+		new_devices="$( bluetoothctl devices | awk '{for (i=3; i<NF; i++) printf $i " "; print $NF}' )"
+	fi
+	echo new_devices:"$new_devices".
+	echo new_devices:$new_devices.
+	[ $new_devices = "" ] && options="rescan" || options=$(echo "$new_devices" && echo 'rescan')
+	choice=$( echo "$options" | dmenu -l 10 -i -p 'pair with which device?' )
+	if [ -n "$choice" ]; then
+		if [ "$choice" = "rescan" ]; then
+			start_scan="$( date +'%s')"
+			pair
+		fi
+		bt_IDS="$( bluetoothctl devices | awk '{print $2}' )"
+		dev_no=$( echo "$new_devices" | nl | grep "$choice" | awk '{print $1}')
+		dev_id=$( echo "$bt_IDS" | nl | grep -P "^.*$dev_no\t" | awk '{print $2}' )
+
+		bluetoothctl pair "$dev_id" && sleep 2
+		bluetoothctl connect "$dev_id"
+		if $AUTOTRUST; then
+			bluetoothctl trust "$dev_id"
+		fi
+		#if device is not already hard coded as paired, add to paired devices list
+		if [ $( grep "$dev_id" "$PAIRLIST") = "" ]
+		then
+			echo to be added to "$PAIRLIST":
+			echo Device "$dev_id" "$choice"
+			echo Device "$dev_id" "$choice" >> "$PAIRLIST"
+		fi
+	fi
+}
+
+case $choice in
+	"turn on") bluetoothctl power on;;
+	"turn off") bluetoothctl power off;;
+	"scan on") bluetoothctl power on && echo power on && sleep 2
+		([ -n "$TERMINAL" ] && $TERMINAL -e bluetoothctl scan on ) || st bluetoothctl scan on;;
+	"pair") pair;;
+	"unpair") choice=$( echo "$paired_devices" | dmenu -l 10 -i -p 'remove which paired device?')
+		if [ -n "$choice" ]; then
+			dev_no=$( echo "$paired_devices" | nl | grep -P "[0-9]+\t$choice$" | awk '{print $1}')
+			dev_id=$( echo "$bt_IDS" | nl | grep -P "^.*$dev_no\t" | awk '{print $2}' )
+			bluetoothctl remove "$dev_id"
+			#remove device to unpair from hard coded paired devices list
+			new_paired_list="$( grep -v "$dev_id" "$PAIRLIST" )"
+			echo "$new_paired_list" > "$PAIRLIST" #needs to be done with temp var, can't read from file and pipe into it at the same time
+		fi;;
+	"trust") choice=$( echo "$paired_devices" | dmenu -l 10 -i -p 'remove which paired device?')
+		if [ -n "$choice" ]; then
+			dev_no=$( echo "$paired_devices" | nl | grep -P "[0-9]+\t$choice$" | awk '{print $1}')
+			dev_id=$( echo "$bt_IDS" | nl | grep -P "^.*$dev_no\t" | awk '{print $2}' )
+			bluetoothctl trust "$dev_id"
+		fi;;
+	"disconnect") choice=$( echo "$paired_devices" | dmenu -l 10 -i -p 'remove which paired device?')
+			if [ -n "$choice" ]; then
+				dev_no=$( echo "$paired_devices" | nl | grep -P "[0-9]+\t$choice$" | awk '{print $1}')
+				dev_id=$( echo "$bt_IDS" | nl | grep -P "^.*$dev_no\t" | awk '{print $2}' )
+				bluetoothctl disconnect "$dev_id"
+			fi;;
+	*)
+		echo "$choice"
+		dev_no=$( echo "$paired_devices" | nl | grep -P "[0-9]+\t$choice$" | awk '{print $1}')
+		dev_id=$( echo "$bt_IDS" | nl | grep -P "^.*$dev_no\t" | awk '{print $2}')
+		bluetoothctl power on
+		bluetoothctl pair "$dev_id"
+		bluetoothctl connect "$dev_id";;
+esac
+cleanup

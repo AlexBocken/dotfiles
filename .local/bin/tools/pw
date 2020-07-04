@@ -1,0 +1,19 @@
+#!/bin/bash
+passmenu2
+#group=$(pass list | sed 's/\x1B\[[0-9;]\+[A-Za-z]//g' | grep -Ev "Password|mutt-wizard" | grep -v ' .──' | sed -E 's/├──|└──| //' | sed 's/ //' | dmenu -l 20 -p 'choose group:')
+#
+#if [ -n "$group" ]
+#then
+#	account=$(pass list "$group" | sed 1d | sed -E 's/├──|└──| //'| sed 's/ //' | dmenu -l 20 -p "choose account from $group:")
+#
+#	if [ -n "$account" ]
+#	then
+#		temp="$group/$account"
+#		echo "$temp"
+#		pass -c "$temp" > $HOME/.cache/passstring
+#		sed -e "s/^/\"/" -e "s/$/\"/" $HOME/.cache/passstring | xargs notify-send "Password"
+#		rm $HOME/.cache/passstring
+#		sleep 45
+#		notify-send "Password" "password cleared from clipboard"
+#	fi
+#fi

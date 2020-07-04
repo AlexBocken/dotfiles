@@ -1,0 +1,23 @@
+#!/bin/bash
+turns=15
+if [[ -n $1 ]];then
+	turns=$1
+fi
+echo "Starting!"
+let "i=1"
+notify-send "Timer" "Starting, $turns minutes to go"
+for ((turn=1; turn<=$turns; turn++));
+do
+	clear
+	echo "turn $turn"
+	echo "###########"
+	sleep 2
+	for seconds in {1..60}
+	do
+		echo "$seconds secs. passed"
+		sleep 1
+	done
+	notify-send "Timer" "Switch\n($i/$turns done)"
+	let "i=i+1"
+done
+clear

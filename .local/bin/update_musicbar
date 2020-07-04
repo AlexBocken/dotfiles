@@ -1,0 +1,3 @@
+#!/bin/sh
+pkill -RTMIN+11 dwmblocks
+#echo 'sent signal to dwmblocks'

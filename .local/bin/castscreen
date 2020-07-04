@@ -1,0 +1,10 @@
+#!/bin/bash
+xrandr --output eDP-1 --mode 1920x1080 --auto
+xrdb -merge ~/.config/X11/Xres_casting
+wal -q -i ~/.config/wall.png -b '#000000'
+xdotool key super+F2
+st mkchromecast --video --control --screencast
+xrandr --output eDP-1 --mode 3200x1800 --auto
+xrdb -merge ~/.config/X11/Xresources
+wal -q -i ~/.config/wall.png -b '#000000'
+xdotool key super+F2

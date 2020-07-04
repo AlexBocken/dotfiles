@@ -1,0 +1,4 @@
+#!/bin/bash
+currentdir="$(pwd)"
+file="$( du -a ~/.config/* ~/.local/src/* ~/.local/bin/* | awk '{print $2}' | fzf -e --query="$*")"
+[ "$file" = "" ] || ( cd "$( dirname "$file" )" && $EDITOR "$file" && cd "$currentdir" )

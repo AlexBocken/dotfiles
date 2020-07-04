@@ -1,0 +1,8 @@
+#!/bin/sh
+string="$(insync get_status)"
+
+case "$string" in
+	SYNCED) echo '🔗' ;;
+	OFFLINE) echo '🔗' ;;
+	SYNCING) echo '🔄' ;;
+esac

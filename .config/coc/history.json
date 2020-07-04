@@ -1,0 +1,16 @@
+{
+  "diagnostics": {
+    "%2Fhome%2Falex%2F": {
+      "local%2Fbin%2Ftools": [
+        " "
+      ],
+      "local%2Fsrc%2Fbthandler": [
+        " "
+      ]
+    },
+    "%2Fhome%2Falex": [
+      "kk",
+      " "
+    ]
+  }
+}

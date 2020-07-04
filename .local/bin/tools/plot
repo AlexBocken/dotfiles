@@ -1,0 +1,34 @@
+#!/bin/bash
+echo $1
+sed "9s/.*/func = lambda x: $1/" "/home/alex/.local/bin/tools/plotter.py" > /tmp/plotter_temp.py
+if [ ! -z $(echo $2 | grep "a=") ]; then
+	echo $2
+	echo "Has found attribute a="
+	sed "13s/.*/$2/" "/tmp/plotter_temp.py" > /tmp/plotter_temp2.py
+	cat "/tmp/plotter_temp2.py" > /tmp/plotter_temp.py
+	a=0
+fi
+
+if [ ! -z $(echo $3 | grep "b=") ]; then
+	echo $3
+	echo "has found attribute b="
+	sed "14s/.*/$3/" "/tmp/plotter_temp.py" > /tmp/plotter_temp2.py
+	cat "/tmp/plotter_temp2.py" > /tmp/plotter_temp.py
+	b=0
+fi
+
+if [ -z $(echo $2 | grep "a=") ]; then
+	echo $2
+	a=$2
+fi
+
+if [ -z $(echo $3 | grep "b=") ]; then
+	echo $3
+	b=$3
+fi
+
+rm -f /tmp/plotter_temp2.py
+python /tmp/plotter_temp.py "$1" $2 $3
+sxiv -b /tmp/plot.png
+rm -f /tmp/plot.png
+#rm /tmp/plotter_temp.py

@@ -1,0 +1,13 @@
+#!/bin/bash
+#arg 1: xlsx file
+current_dir="$pwd"
+cd $HOME/src/GRE/
+find *.xlsx | xargs git rm
+find *.csv | xargs git rm
+cd "$current_dir"
+xlsx2csv -d 'tab' $1 | tail -n +3 > "$HOME/src/GRE/${1%xlsx}csv"
+mv $1 $HOME/src/GRE
+cd $HOME/src/GRE/
+git add "$1"
+git add "${1%xlsx}csv"
+cd "$current_dir"

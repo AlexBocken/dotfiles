@@ -1,0 +1,8 @@
+#!/bin/bash
+case $1 in
+	"set")  printf %0.f $( echo "scale=0; $2 * 9.37" | bc -l ) > /sys/class/backlight/intel_backlight/brightness;;
+	"add")	current=$( </sys/class/backlight/intel_backlight/brightness )
+		new=$( printf %.0f $(echo "$current + $2 * 9.37" | bc -l ) )
+		[ $new -gt 936 ] && bright set 937 || ( [ $new -lt 0 ] && bright set 0 || bright set "$(( new + 1 ))" ) ;;
+	"del")	bright add "-$2";;
+esac

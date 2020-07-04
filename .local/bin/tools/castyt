@@ -1,0 +1,2 @@
+#!/bin/sh
+mkchromecast --notifications --video --control -y $1 2>/dev/null || true
