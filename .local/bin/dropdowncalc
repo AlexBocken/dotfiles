@@ -1,3 +1,2 @@
 #!/bin/sh
-
-ifinstalled bc && echo "Welcome to the Calculator." && bc -lq
+ifinstalled python && python -iq -c "print('Welcome to the Calculator'); from numpy import *"
