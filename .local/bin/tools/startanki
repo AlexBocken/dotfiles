@@ -1,4 +1,0 @@
-#!/bin/bash
-anki &
-sleep 2
-hover center
