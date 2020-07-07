@@ -58,12 +58,12 @@ settings:
     global: true
   url.searchengines:
     global:
-      DEFAULT: https://searx.tuxcloud.net/?q={}&categories=general&language=en-US
+      DEFAULT: https://searx.bocken.org/?q={}&categories=general&language=en-US
       ddg: https://duckduckgo.com/?q={}
       ling: https://www.linguee.com/english-german/search?source=auto&query={}
-      sx: https://searx.tuxcloud.net/?q={}&categories=general&language=en-US
+      sx: https://searx.bocken.org/?q={}&categories=general&language=en-US
       yt: https://www.youtube.com/results?search_query={}
   url.start_pages:
-    global: https://searx.privatenet.cf/
+    global: https://searx.bocken.org/
   zoom.default:
     global: 160%

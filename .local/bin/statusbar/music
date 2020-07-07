@@ -1,10 +1,9 @@
 #!/bin/sh
 if [ $( mpc status | grep '\[paused\]' | wc -l ) -eq 1 ]; then
-	echo ""
 	exit
 fi
 
 if [ $( mpc status | grep '\[playing\]' | wc -l ) -eq 1 ]; then
-	echo $(mpc status | sed "/^volume:/d" | tac | sed -e "s/\\[paused\\].*//g;s/\\[playing\\].*//g" | tr -d '\n' | sed -e "s/$/ /g")
+	#echo $(mpc status | sed "/^volume:/d" | tac | sed -e "s/\\[paused\\].*//g;s/\\[playing\\].*//g" | tr -d '\n' | sed -e "s/$/ /g")
 	exit
 fi
