@@ -7,9 +7,9 @@ browser=${BROWSER:-firefox}
 
 pgrep -x dmenu && exit
 
-choice=$(echo "🦆" | dmenu -i -p "Searx:") || exit 1
+choice=$(echo "🔍" | dmenu -i -p "Searx:") || exit 1
 
-if [ "$choice" = "🦆"  ]; then
+if [ "$choice" = "🔍"  ]; then
     $browser "https://searx.bocken.org"
 else
     if echo "$choice" | grep "^(http:\/\/|https:\/\/)?[a-zA-Z0-9]+\.[a-zA-Z]+(/)?.*$"; then
