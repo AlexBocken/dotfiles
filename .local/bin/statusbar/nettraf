@@ -30,5 +30,9 @@ timedifference=$(( "$(date +'%s')" - "$previoustime" ))
 rx_avg=$(( "$rx" / "$timedifference" ))
 tx_avg=$(( "$tx" / "$timedifference" ))
 
-printf "⬇%4sB/s|⬆%4sB/s\\n" $(numfmt --to=iec $rx_avg) $(numfmt --to=iec $tx_avg)
+#only print if any traffic at all
+if [ "$rx_avg" -gt 0 ] || [ "$tx_avg" -gt 0 ]
+then
+	printf "⬇%4sB/s|⬆%4sB/s\\n" $(numfmt --to=iec $rx_avg) $(numfmt --to=iec $tx_avg)
+fi
 date +'%s' > $lasttime
