@@ -109,5 +109,7 @@ ZSH_AUTOSUGGEST_STRATEGY=(match_prev_cmd completion) # completion strategy, poss
 
 ZLE_PROMPT_INDENT=0
 source $HOME/.local/src/zsh-autosuggestions/zsh-autosuggestions.zsh
+# increment/decriment via Ctrl+a, Ctrl+x
+source /$HOME/.local/src/vi-increment/vi-increment.zsh
 # Load syntax highlighting; should be last.
 source $HOME/.local/src/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh 2>/dev/null
