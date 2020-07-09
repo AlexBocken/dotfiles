@@ -33,6 +33,6 @@ tx_avg=$(( "$tx" / "$timedifference" ))
 #only print if any traffic at all
 if [ "$rx_avg" -gt 0 ] || [ "$tx_avg" -gt 0 ]
 then
-	printf "⬇%4sB/s|⬆%4sB/s\\n" $(numfmt --to=iec $rx_avg) $(numfmt --to=iec $tx_avg)
+	printf "⬇%4sB/s|⬆%4sB/s\\n" $(numfmt --to=iec $rx_avg) $(numfmt --to=iec $tx_avg) | sed 's/ //g'
 fi
 date +'%s' > $lasttime
