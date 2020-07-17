@@ -1,2 +1,2 @@
 #!/bin/sh
-ifinstalled python && python -iq -c "print('Welcome to the Calculator'); from numpy import *"
+ifinstalled python && python -iq -c "print('Welcome to the Calculator'); from numpy import *; import sys; sys.ps1='>'"

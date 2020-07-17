@@ -1,2 +1,2 @@
 #!/bin/bash
-echo ☀ $(bc <<< "scale=0; $(cat /sys/class/backlight/intel_backlight/brightness) /9.37")%
+echo ☀$(bc <<< "scale=0; $(cat /sys/class/backlight/intel_backlight/brightness) /9.37")%

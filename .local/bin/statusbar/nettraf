@@ -27,8 +27,14 @@ lasttime=${XDG_CACHE_HOME:-$HOME/.cache}/nettraf_time
 rx=$(update /sys/class/net/[ew]*/statistics/rx_bytes)
 tx=$(update /sys/class/net/[ew]*/statistics/tx_bytes)
 timedifference=$(( "$(date +'%s')" - "$previoustime" ))
-rx_avg=$(( "$rx" / "$timedifference" ))
-tx_avg=$(( "$tx" / "$timedifference" ))
+if [ -n "$timedifference" ]; then
+	rx_avg=$(( "$rx" / "$timedifference" ))
+	tx_avg=$(( "$rx" / "$timedifference" ))
+else
+	rx_avg=rx_bytes
+	tx_avg=tx_bytes
+fi
+
 
 #only print if any traffic at all
 if [ "$rx_avg" -gt 0 ] || [ "$tx_avg" -gt 0 ]

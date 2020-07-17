@@ -7,6 +7,6 @@ case $BLOCK_BUTTON in
 - % is of single core." ;;
 esac
 
-temp=$(sensors | awk '/Package id 0/ {print "🌡 "$4}' | sed 's/\.[0-9]//; s/+//')
+temp=$(sensors | awk '/Package id 0/ {print "🌡"$4}' | sed 's/\.[0-9]//; s/+//')
 [ -n "$temp" ] && echo $temp > /tmp/cpu_temp
 cat /tmp/cpu_temp
