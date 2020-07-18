@@ -29,7 +29,7 @@ tx=$(update /sys/class/net/[ew]*/statistics/tx_bytes)
 timedifference=$(( "$(date +'%s')" - "$previoustime" ))
 if [ -n "$timedifference" ]; then
 	rx_avg=$(( "$rx" / "$timedifference" ))
-	tx_avg=$(( "$rx" / "$timedifference" ))
+	tx_avg=$(( "$tx" / "$timedifference" ))
 else
 	rx_avg=rx_bytes
 	tx_avg=tx_bytes
