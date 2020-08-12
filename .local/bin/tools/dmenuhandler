@@ -16,5 +16,5 @@ case "$(printf "mpv\\ncopy url\\nqueue download\\n\\nqueue youtube-dl\\nbrowser\
 	#w3m) w3m "$1" >/dev/null 2>&1 ;;
 	#"mpv (float)") setsid mpv --input-ipc-server=/tmp/mpvsoc$(date +%s) --geometry=+0-0 --autofit=30%  --title="mpvfloat" "$1" >/dev/null 2>&1 & ;;
 	"rip media") dest="$(dmenuinput 'name of folder:')"
-		[ "$dest" != "" ] && ( lynx --dump --nonumbers --listonly $1 | grep -E "(*\.webm|*\.mp4|\.gif|\.jpg|\.jpeg|\.png)" | sort -u | xargs wget -P /home/alex/$dest ) || ( lynx --dump --nonumbers --listonly $1 | grep -E "(*\.webm|*\.mp4|\.gif|\.jpg|\.jpeg|\.png)" | sort -u | xargs wget -P /home/alex/ );;
+			lynx --dump --nonumbers --listonly "$1" | grep -E "(*\.webm|*\.mp4|\.gif|\.jpg|\.jpeg|\.png)" | sort -u | xargs wget -P "$HOME/$dest";;
 esac

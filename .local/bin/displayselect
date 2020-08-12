@@ -4,6 +4,9 @@
 # displays and lets user select one to use. User may also select "manual
 # selection" which opens arandr.
 
+#automatically scale HD screens to better work with hidpi
+scale_factor_HD=1.6
+
 twoscreen() { # If multi-monitor is selected and there are two screens.
 
     mirror=$(printf "no\\nyes" | dmenu -i -p "Mirror displays?")
@@ -34,7 +37,13 @@ twoscreen() { # If multi-monitor is selected and there are two screens.
         primary=$(echo "$screens" | dmenu -i -p "Select primary display:")
         secondary=$(echo "$screens" | grep -v "$primary")
         direction=$(printf "left\\nright" | dmenu -i -p "What side of $primary should $secondary be on?")
-        xrandr --output "$primary" --auto --scale 1.0x1.0 --output "$secondary" --"$direction"-of "$primary" --auto --scale 1.0x1.0
+	if [ "$primary" = "HDMI-1" ]; then
+        	xrandr --output "$primary" --auto --scale $scale_factor_HD --output "$secondary" --"$direction"-of "$primary" --auto --scale 1.0x1.0
+	elif [ "$secondary" = "HDMI-1" ]; then
+        	xrandr --output "$primary" --auto --scale 1.0x1.0 --output "$secondary" --"$direction"-of "$primary" --auto --scale $scale_factor_HD
+	else
+        	xrandr --output "$primary" --auto --scale 1.0x1.0 --output "$secondary" --"$direction"-of "$primary" --auto --scale 1.0x1.0
+	fi
     fi
     }
 

@@ -6,6 +6,6 @@ touch $videos
 while read line; do
   [ -f "$line" ] && echo $line >> $videos
 done <$alldata
-cat $videos | dmenu -i -l 30 -p "Choose a video to watch:"  | sed 's/^/\"/' | sed 's/$/\"/' | xargs -r xdg-open
+cat $videos | sort -u | dmenu -i -l 30 -p "Choose a video to watch:"  | sed 's/^/\"/' | sed 's/$/\"/' | xargs -r xdg-open
 rm "$alldata"
 rm "$videos"

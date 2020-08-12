@@ -47,8 +47,10 @@ while [ "$DONE" -eq 0 ] ; do
         pass show -c "$SELECTION" > $HOME/.cache/passstring
 	sed -e "s/^/\"/" -e "s/$/\"/" $HOME/.cache/passstring | xargs -r notify-send "Password" -t 4000
 	sleep 45
-	[ -f $HOME/.cache/passstring ] && notify-send "Password" "password cleared from clipboard" -t 4000
-	rm $HOME/.cache/passstring
+	if [ -f $HOME/.cache/passstring ]; then
+		notify-send "Password" "password cleared from clipboard" -t 4000
+		rm $HOME/.cache/passstring
+	fi
 
       else
         xdotool - <<<"type --clearmodifiers -- $(pass show "$SELECTION" | head -n 1)"

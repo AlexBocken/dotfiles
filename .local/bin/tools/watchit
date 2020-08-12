@@ -12,4 +12,5 @@ do
         printf '%-*.*s%s\n' $COLS $COLS "$LINE" "$EL"
     done
     printf '%s%s' "$ED" "$HOME"
+    sleep 0.2
 done

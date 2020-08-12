@@ -2,6 +2,7 @@
 SCAN_PERIOD=5
 AUTOTRUST=false #trust every newly paired device
 AUTOSCAN=false #immediately start scanning when started to speed up pairing process
+
 #locations of blacklist and hard coded list of paired devices (watch out, need to modify Makefile as well if you want to change these values and still use make install)
 BLACKLIST=${XDG_DATA_HOME:-$HOME/.local/share}/bt/blacklist
 PAIRLIST=${XDG_DATA_HOME:-$HOME/.local/share}/bt/paired
@@ -75,8 +76,9 @@ startup(){
 startup &
 update_pair_list &
 
+# include head command here to speed up launch if too many devices are listed (long uptime and long scanning will lead to this depending on your surroundings)
 # shellcheck disable=SC1091
-if bluetoothctl devices | awk '{print "bluetoothctl info "$2}' | . /dev/stdin | grep -q "Connected: yes"
+if bluetoothctl devices | head | awk '{print "bluetoothctl info "$2}' | . /dev/stdin | grep -q "Connected: yes"
 then
 	actions="$(printf "disconnect\n%s" "$actions")"
 fi
@@ -146,7 +148,7 @@ pair(){
 				bluetoothctl trust "$dev_id"
 			fi
 			#if device is not already hard coded as paired, add to paired devices list
-			if [ "$( grep "$dev_id" "$PAIRLIST")" = "" ] || [ "$(wc -l "$PAIRLIST")" -eq 0 ] && $pair_succesful
+			if $pair_succesful && [ "$( grep "$dev_id" "$PAIRLIST")" = "" ] || [ "$(wc -l "$PAIRLIST")" -eq 0 ]
 			then
 				echo to be added to "$PAIRLIST":
 				echo Device "$dev_id" "$choice"
@@ -221,8 +223,13 @@ case $choice in
 		[ "$dev_no" != "" ] && dev_id=$( echo "$bt_IDS" | nl | grep -P "^.*$dev_no\t" | awk '{print $2}')
 		if [ -n "$dev_id" ]; then
 			power on
-			bluetoothctl devices | grep -q "$dev_id" || bluetoothctl pair "$dev_id"
-			bluetoothctl connect "$dev_id"
+			if bluetoothctl info "$dev_id" | grep -q "Connected: yes"
+			then
+				bluetoothctl disconnect "$dev_id"
+			else
+				bluetoothctl devices | grep -q "$dev_id" || bluetoothctl pair "$dev_id"
+				bluetoothctl connect "$dev_id"
+			fi
 		fi;;
 esac
 
