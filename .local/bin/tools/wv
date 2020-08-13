@@ -1,11 +1,11 @@
 #!/bin/sh
 alldata="/tmp/allfiles"
 videos="/tmp/videos"
-du -a ~/vids/* --time | sort -u | awk '!($1="")' | sort -bg | awk '!($1="")' | awk '!($1="")' | sed 's/^ //' | tac > $alldata
+du -a ~/vids/* --time | awk '!($1="")' | sort -bg | awk '!($1="")' | awk '!($1="")' | sed 's/^ //' | tac > $alldata
 touch $videos
 while read line; do
   [ -f "$line" ] && echo $line >> $videos
 done <$alldata
-cat $videos | sort -u | dmenu -i -l 30 -p "Choose a video to watch:"  | sed 's/^/\"/' | sed 's/$/\"/' | xargs -r xdg-open
+cat $videos | dmenu -i -l 30 -p "Choose a video to watch:"  | sed 's/^/\"/' | sed 's/$/\"/' | xargs -r xdg-open
 rm "$alldata"
 rm "$videos"
