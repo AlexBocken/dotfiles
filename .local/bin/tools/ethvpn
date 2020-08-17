@@ -1,2 +1,12 @@
-#!/bin/bash
-[ $( pgrep -c openconnect ) -eq 0 ] &&(  dmenupass "Password for ETH-VPN:" | sudo openconnect -g student-net -u abocken@student-net.ethz.ch --passwd-on-stdin sslvpn.ethz.ch ) || ( sudo pkill openconnect; notify-send "ETH VPN" "ETH VPN disconnected")
+#!/bin/sh
+user="abocken@student-net.ethz.ch"
+password_path="ETH/VPN"
+if [ $(pgrep -c openconnect) -eq 0 ]; then
+	pass "$password_path" | sudo openconnect -g student-net -u "$user" --passwd-on-stdin sslvpn.ethz.ch &
+	sleep 4
+	if [ $(pgrep -c openconnect) -eq 1 ]; then
+		notify-send "ETH VPN" "ETH VPN connected" #implement an actual check here
+	fi
+else
+	sudo pkill openconnect && notify-send "ETH VPN" "ETH VPN disconnected"
+fi
