@@ -5,8 +5,6 @@
 # Anything else, it search it.
 browser=${BROWSER:-firefox}
 
-pgrep -x dmenu && exit
-
 choice=$(echo "🔍" | dmenu -i -p "Searx:") || exit 1
 
 if [ "$choice" = "🔍"  ]; then

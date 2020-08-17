@@ -1,6 +1,7 @@
 #!/bin/sh
 ifinstalled python && python -iq -c "print('Welcome to the Calculator')
 from numpy import *
+
 import sys
 import matplotlib.pyplot as plt
 sys.ps1='❯'
@@ -9,5 +10,7 @@ def plot(a, b, f):
     x = linspace(a, b, 1000)
     y = eval(f)
     plt.plot(x, y)
+    plt.xlabel('x')
+    plt.ylabel(f)
     plt.show()
 "
