@@ -2,7 +2,6 @@
 *.alpha: 0.8
 
 !! Set a default font and font size as below:
-Sxiv.font: monospace-10
 
 *.dpi: 180
 
@@ -182,6 +181,11 @@ Sxiv.font: monospace-10
 *.cursorColor:  nord4
 *fading: 35
 *fadeColor: nord3
+
+Sxiv.font: monospace-10
+Sxiv.txtcolor: nord6
+Sxiv.background: bblack
+Sxiv.foreground: nord6
 
 *.color0: nord1
 *.color1: nord11

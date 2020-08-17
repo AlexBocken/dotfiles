@@ -2,7 +2,7 @@
 # Feed this script a link and it will give dmenu
 # some choice programs to use to open it.
 
-case "$(printf "mpv\\ncopy url\\nqueue download\\n\\nqueue youtube-dl\\nbrowser\\nrip media\\ncast" | dmenu -i -p "Open link with what program?")" in
+case "$(printf "mpv\\ncopy url\\nqueue download\\nqueue youtube-dl\\nbrowser\\nrip media\\ncast" | dmenu -i -p "Open link with what program?")" in
 	"copy url") echo "$1" | xclip -selection clipboard ;;
 	mpv) setsid mpv --quiet --ytdl-format='bestvideo[height<=1080]+bestaudio/best[height<=1080]' "$1" & ;;
 	"mpv (loop)") setsid mpv --input-ipc-server=/tmp/mpvsoc$(date +%s) -quiet --loop "$1" >/dev/null 2>&1 & ;;
@@ -16,5 +16,6 @@ case "$(printf "mpv\\ncopy url\\nqueue download\\n\\nqueue youtube-dl\\nbrowser\
 	#w3m) w3m "$1" >/dev/null 2>&1 ;;
 	#"mpv (float)") setsid mpv --input-ipc-server=/tmp/mpvsoc$(date +%s) --geometry=+0-0 --autofit=30%  --title="mpvfloat" "$1" >/dev/null 2>&1 & ;;
 	"rip media") dest="$(dmenuinput 'name of folder:')"
-			lynx --dump --nonumbers --listonly "$1" | grep -E "(*\.webm|*\.mp4|\.gif|\.jpg|\.jpeg|\.png)" | sort -u | xargs wget -P "$HOME/$dest";;
+			lynx --dump --nonumbers --listonly "$1" | grep -E "(*\.webm|*\.mp4|\.gif|\.jpg|\.jpeg|\.png|\.pdf|\.epub|\.mobi|\.djvu)" | sort -u | xargs wget -P "$HOME/$dest"
+			notify-send "dmenuhandler" "all media ripped into $dest";;
 esac
