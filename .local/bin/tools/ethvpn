@@ -3,10 +3,11 @@ user="abocken@student-net.ethz.ch"
 password_path="ETH/VPN"
 if [ $(pgrep -c openconnect) -eq 0 ]; then
 	pass "$password_path" | sudo openconnect -g student-net -u "$user" --passwd-on-stdin sslvpn.ethz.ch &
-	sleep 4
-	if [ $(pgrep -c openconnect) -eq 1 ]; then
-		notify-send "ETH VPN" "ETH VPN connected" #implement an actual check here
+	if ping -c 4 -W 6 -q webprint.ethz.ch ;then
+		notify-send "ETH VPN" "ETH VPN connected"
 	fi
 else
-	sudo pkill openconnect && notify-send "ETH VPN" "ETH VPN disconnected"
+	if ping -c 1 -W 2 -q webprint.ethz.ch ;then
+		sudo pkill openconnect && notify-send "ETH VPN" "ETH VPN disconnected"
+	fi
 fi
