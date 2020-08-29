@@ -67,3 +67,4 @@ map x $$f
 map X !$f
 map o &mimeopen $f
 map O $mimeopen --ask $f
+map - $/home/alex/.config/lf/draw_img.sh $f

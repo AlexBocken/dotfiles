@@ -17,6 +17,7 @@ settings:
   content.desktop_capture:
     global: ask
   content.notifications:
+    https://1337x.to: false
     https://boards.4chan.org: true
     https://boards.4channel.org: true
     https://nobodyhasthe.biz: true
@@ -57,14 +58,16 @@ settings:
     global: never
   tabs.tabs_are_windows:
     global: true
+  url.default_page:
+    global: https://searx.bocken.xyz
   url.searchengines:
     global:
-      DEFAULT: https://searx.bocken.org/?q={}&categories=general&language=en-US
+      DEFAULT: https://searx.bocken.xyz/?q={}&categories=general&language=en-US
       ddg: https://duckduckgo.com/?q={}
       ling: https://www.linguee.com/english-german/search?source=auto&query={}
-      sx: https://searx.bocken.org/?q={}&categories=general&language=en-US
+      sx: https://searx.bocken.xyz/?q={}&categories=general&language=en-US
       yt: https://www.youtube.com/results?search_query={}
   url.start_pages:
-    global: https://searx.bocken.org/
+    global: https://searx.bocken.xyz/
   zoom.default:
     global: 160%

@@ -26,3 +26,4 @@ unclutter --timeout 2 --ignore-scrolling &		# Remove mouse when idle
 transmission-daemon &
 echo "$HOME/.config/mpd/state" | entr -np pkill -RTMIN+11 dwmblocks &
 xrandr --listactivemonitors | grep -q '1920.*x1080.*HDMI-1$' && ( xrandr --output  HDMI-1 --scale 1.5 && setbg ) # set scale for 2nd monitor if connected
+redshift &

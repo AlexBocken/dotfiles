@@ -30,7 +30,7 @@ if [ $number -gt 0 ]; then
 	echo  "$number new videos for download available, downloading now."
 	grep -vf /tmp/alreadydownloaded /tmp/todownload | sort -u | xargs -L1 youtube-dl --get-filename -o "'%(uploader)s' '%(title)s'" $1 | xargs -L1 notify-send
 	grep -vf /tmp/alreadydownloaded /tmp/todownload | sort -u | grep 'youtube' | xargs -r -L1 youtube-dl --hls-prefer-native -i --download-archive $DLARCHIVE --dateafter $range -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' --add-metadata -o "$DLLOC/%(uploader)s/%(upload_date)s-%(title)s.%(ext)s"
-	grep -vf /tmp/alreadydownloaded /tmp/todownload | sort -u | grep 'bitchute' | xargs -r -L1 youtube-dl --hls-prefer-native -i --download-archive $DLARCHIVE -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' --add-metadata -o "$DLLOC/%(uploader)s/%(title)s.%(ext)s"
+	grep -vf /tmp/alreadydownloaded /tmp/todownload | sort -u | grep 'bitchute' | xargs -r -L1 youtube-dl --hls-prefer-native -i --download-archive $DLARCHIVE -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' --add-metadata -o "$DLLOC/%(uploader)s/%(upload_date)s-%(title)s.%(ext)s"
 	notify-send "Channel Ripper" "Finished downloading"
 fi
 
