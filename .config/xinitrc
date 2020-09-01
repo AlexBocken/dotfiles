@@ -17,7 +17,8 @@
 
 # Comment/uncomment these lines depending on what wm you want to use. Also
 # check the i3blocks line above.
-while true; do
+rm -f /tmp/killdwm
+while ! [ -f /tmp/killdwm ]; do
 	dwm
 done
 #ssh-agent dwm

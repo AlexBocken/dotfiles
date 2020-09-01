@@ -9,11 +9,11 @@ settings:
   bindings.commands:
     global:
       normal:
-        ',V': spawn setsid mpv {url}
-        ',X': spawn dmenuhandler {url}
-        ',c': hint links spawn setsid st castyt {hint-url}
-        ',v': hint links spawn setsid mpv {hint-url}
-        ',x': hint links spawn setsid dmenuhandler {hint-url}
+        ',V': spawn -d mpv {url}
+        ',X': spawn -d dmenuhandler {url}
+        ',c': hint links spawn -d st castyt {hint-url}
+        ',v': hint links spawn -d mpv {hint-url}
+        ',x': hint links spawn -d dmenuhandler {hint-url}
   content.desktop_capture:
     global: ask
   content.notifications:
@@ -59,15 +59,15 @@ settings:
   tabs.tabs_are_windows:
     global: true
   url.default_page:
-    global: https://searx.bocken.xyz
+    global: https://searx.bocken.org
   url.searchengines:
     global:
-      DEFAULT: https://searx.bocken.xyz/?q={}&categories=general&language=en-US
+      DEFAULT: https://searx.bocken.org/?q={}&categories=general&language=en-US
       ddg: https://duckduckgo.com/?q={}
       ling: https://www.linguee.com/english-german/search?source=auto&query={}
-      sx: https://searx.bocken.xyz/?q={}&categories=general&language=en-US
+      sx: https://searx.bocken.org/?q={}&categories=general&language=en-US
       yt: https://www.youtube.com/results?search_query={}
   url.start_pages:
-    global: https://searx.bocken.xyz/
+    global: https://searx.bocken.org/
   zoom.default:
     global: 160%
