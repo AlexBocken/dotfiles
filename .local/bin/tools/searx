@@ -5,12 +5,16 @@
 # Anything else, it search it.
 browser=${BROWSER:-firefox}
 
-choice=$(printf "🔍\n📋\n" | dmenu -i -p "Searx:") || exit 1
+if [ -z "$(xclip -o -selection clipboard)" ]; then
+	choice=$(printf "🔍\n" | dmenu -i -p "Searx:") || exit 1
+else
+	choice=$(printf "🔍\n📋\n" | dmenu -i -p "Searx:") || exit 1
+fi
 
 if [ "$choice" = "🔍"  ]; then
     $browser "https://searx.bocken.org"
 elif [ "$choice" = "📋" ]; then
-	$browser "$(xclip -o --clipboard=clipboard)"
+	$browser "$(xclip -o -selection clipboard)"
 else
     if echo "$choice" | grep "^(http:\/\/|https:\/\/)?[a-zA-Z0-9]+\.[a-zA-Z]+(/)?.*$"; then
         $browser "$choice"
