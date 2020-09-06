@@ -4,19 +4,13 @@
 current=$(xdotool getwindowfocus)
 newwidth=$(( 2 * $(xdotool getdisplaygeometry | awk '{print $1}') / 5))
 newheight=$(( 2 * $(xdotool getdisplaygeometry | awk '{print $2}') / 5))
-centerwidth=$(( $(xdotool getdisplaygeometry | awk '{print $1}') / 2))
 borderwidth=1
-baroffset=47
 
 case "$1" in
 	left)	horizontal=borderwidth;
 		vertical=$(($(xdotool getdisplaygeometry | awk '{print $2}') - newheight - 2 * borderwidth )) ;;
 	right)	horizontal=$(($(xdotool getdisplaygeometry | awk '{print $1}') - newwidth - 2 * borderwidth ))
 		vertical=$(($(xdotool getdisplaygeometry | awk '{print $2}') - newheight  - 2 * borderwidth )) ;;
-	center) horizontal=$(( ( $(xdotool getdisplaygeometry | awk '{print $1}') - centerwidth ) / 2 ));
-		vertical=$baroffset
-		newheight=$(( $(xdotool getdisplaygeometry | awk '{print $2}' ) - baroffset - 2 * borderwidth ))
-		newwidth=$centerwidth;;
 esac
 xdotool windowsize "$current" $newwidth $newheight
 xdotool windowmove "$current" $horizontal $vertical
