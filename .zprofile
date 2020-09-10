@@ -6,9 +6,9 @@
 # to clean up.
 
 # Adds `~/.local/bin` to $PATH
-export PATH="$PATH:$(du "$HOME/.local/bin/" | cut -f2 | tr '\n' ':' | sed 's/:*$//')"
+export PATH="$PATH:$(du "$HOME/.local/bin" | cut -f2 | tr '\n' ':' | sed 's/:*$//')"
 # Adds cargo bin path to $PATH
-export PATH="$PATH:$(du "$HOME/.local/share/cargo/bin/" | cut -f2 | tr '\n' ':' | sed 's/:*$//')"
+export PATH="$PATH:$(du "$HOME/.local/share/cargo/bin" | cut -f2 | tr '\n' ':' | sed 's/:*$//')"
 
 # Default programs:
 export EDITOR="nvim"

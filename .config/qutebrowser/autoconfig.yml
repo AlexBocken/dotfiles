@@ -9,6 +9,7 @@ settings:
   bindings.commands:
     global:
       normal:
+        ',C': spawn -d st castyt {url}
         ',V': spawn -d mpv {url}
         ',X': spawn -d dmenuhandler {url}
         ',c': hint links spawn -d st castyt {hint-url}
