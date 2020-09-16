@@ -1,0 +1,2 @@
+#!/bin/sh
+lynx --dump --listonly --nonumbers "$1" | grep '\.webm$' | uniq | xargs mpv

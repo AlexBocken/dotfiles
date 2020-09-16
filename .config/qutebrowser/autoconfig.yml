@@ -10,9 +10,11 @@ settings:
     global:
       normal:
         ',C': spawn -d st castyt {url}
+        ',S': spawn -d mpvallvids {url}
         ',V': spawn -d mpv {url}
         ',X': spawn -d dmenuhandler {url}
         ',c': hint links spawn -d st castyt {hint-url}
+        ',s': hint links spawn -d mpvallvids {hint-url}
         ',v': hint links spawn -d mpv {hint-url}
         ',x': hint links spawn -d dmenuhandler {hint-url}
   content.desktop_capture:
@@ -61,11 +63,14 @@ settings:
     global: true
   url.default_page:
     global: https://searx.bocken.org
+  url.open_base_url:
+    global: true
   url.searchengines:
     global:
       DEFAULT: https://searx.bocken.org/?q={}&categories=general&language=en-US
       ddg: https://duckduckgo.com/?q={}
       ling: https://www.linguee.com/english-german/search?source=auto&query={}
+      oz: http://www.ozdic.com/collocation-dictionary/{}
       sx: https://searx.bocken.org/?q={}&categories=general&language=en-US
       yt: https://www.youtube.com/results?search_query={}
   url.start_pages:
