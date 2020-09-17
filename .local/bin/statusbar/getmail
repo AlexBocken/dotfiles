@@ -1,7 +1,4 @@
 #!/bin/bash
 num=$(find ~/.local/share/mail/*/INBOX/new -type f | wc -l)
-if [ $num != 0 ]; then
-	echo "📬"$num
-else
-	echo ""
-fi
+[ $num != 0 ] && printf "📬%s" "$num"
+printf '\n'
