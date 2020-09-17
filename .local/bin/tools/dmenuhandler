@@ -8,7 +8,7 @@ case "$(printf "mpv\\ncopy url\\nqueue download\\nqueue youtube-dl\\nbrowser\\nr
 	"mpv (loop)") setsid mpv --input-ipc-server=/tmp/mpvsoc$(date +%s) -quiet --loop "$1" >/dev/null 2>&1 & ;;
 	"queue download") name="$( dmenuinput 'Name for file:' )"
 		tsp curl -L -o $name "$1" >/dev/null 2>&1 ;;
-	"queue youtube-dl") youtube-dl --write-metadata -i -o '/home/alex/%(upload_date)s-%(title)s.%(ext)s' "$1" >/dev/null 2>&1 ;;
+	"queue youtube-dl") youtube-dl --add-metadata -i -o $HOME/'%(upload_date)s-%(title)s.%(ext)s' "$1" >/dev/null 2>&1;;
 	cast) setsid $TERMINAL -e mkchromecast -y $1 --video --control
 		;;
 	browser) setsid "$BROWSER" "$1" >/dev/null 2>&1 & ;;
