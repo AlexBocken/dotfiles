@@ -10,7 +10,7 @@ if echo "$1" | grep -qE 'youtube.*list'; then
 	playlist_id="$( echo "$1" | perl -pe "s|^.*?(\?\|&)list=(.*?)|\2|; s|&index=[0-9]+||" )"
 	echo PL_id:$playlist_id
 	notify-send "startmpv" "Searching for all videos in playlist..."
-	npm start --prefix "$js_playlist_index_loc" -- --api-key "$API_key" --playlist-id $playlist_id | xargs -L1 echo 'https://www.youtube.com/watch?v=' | sed 's/ //' | xargs mpv || notify-send "startmpv" "An error has occured with playlist $playlist_id"
+	npm start --prefix "$js_playlist_index_loc" -- --api-key "$API_key" --playlist-id $playlist_id | sed 's/^/https:\/\/www.youtube.com\/watch?v=/' | xargs mpv || notify-send "startmpv" "An error has occured with playlist $playlist_id"
 else
 	mpv "$1"
 fi
