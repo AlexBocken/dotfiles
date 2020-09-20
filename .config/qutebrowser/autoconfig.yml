@@ -11,11 +11,11 @@ settings:
       normal:
         ',C': spawn -d st castyt {url}
         ',S': spawn -d mpvallvids {url}
-        ',V': spawn -d mpv {url}
+        ',V': spawn -d startmpv {url}
         ',X': spawn -d dmenuhandler {url}
         ',c': hint links spawn -d st castyt {hint-url}
         ',s': hint links spawn -d mpvallvids {hint-url}
-        ',v': hint links spawn -d mpv {hint-url}
+        ',v': hint links spawn -d startmpv {hint-url}
         ',x': hint links spawn -d dmenuhandler {hint-url}
   content.desktop_capture:
     global: ask

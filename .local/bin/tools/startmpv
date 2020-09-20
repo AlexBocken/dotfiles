@@ -1,0 +1,12 @@
+#!/bin/zsh
+js_plalist_index_loc="/home/alex/src/youtube-playlist-video-ids"
+API_key="$(pass show 'Misc/Youtube Data API v3')"
+if echo "$1" | grep -qE 'youtube.*list'; then
+	echo "$1"
+	playlist_id="$( echo "$1" | perl -pe "s|^.*?(\?\|&)list=(.*?)|\2|; s|&index=[0-9]+||" )"
+	echo PL_id:$playlist_id
+	notify-send "startmpv" "Searching for all videos in playlist..."
+	npm start --prefix "$js_plalist_index_loc" -- --api-key "$API_key" --playlist-id $playlist_id | xargs -L1 echo 'https://www.youtube.com/watch?v=' | sed 's/ //' | xargs mpv || notify-send "startmpv" "An error has occured with playlist $playlist_id"
+else
+	mpv "$1"
+fi
