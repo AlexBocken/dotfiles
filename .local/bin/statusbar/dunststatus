@@ -1,5 +1,5 @@
 #!/bin/sh
 if [ "$( dunstctl is-paused )" = "true" ]; then
-	printf "📨⏸"
+	printf '🔕'
 fi
-printf "\n"
+printf '\n'
