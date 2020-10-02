@@ -4,11 +4,7 @@
 # transmitted (TX) since the previous time this script ran. So if run every
 # second, gives network traffic per second.
 
-case $BLOCK_BUTTON in
-	3) notify-send "🌐 Network traffic module" "🔻: Traffic received
-🔺: Traffic transmitted" ;;
-	6) "$TERMINAL" -e "$EDITOR" "$0" ;;
-esac
+lasttime=${XDG_CACHE_HOME:-$HOME/.cache}/nettraf_time
 
 update() {
     sum=0
@@ -22,24 +18,18 @@ update() {
     printf %d\\n $(( sum - old ))
 }
 
-lasttime=${XDG_CACHE_HOME:-$HOME/.cache}/nettraf_time
 [ -f "$lasttime" ] && read -r previoustime < "$lasttime" || previoustime=0
 rx=$(update /sys/class/net/[ew]*/statistics/rx_bytes)
 tx=$(update /sys/class/net/[ew]*/statistics/tx_bytes)
 timedifference=$(( "$(date +'%s')" - "$previoustime" ))
-if [ -n "$timedifference" ]; then
+
+if [ "$timedifference" -gt 0 ]; then
 	rx_avg=$(( "$rx" / "$timedifference" ))
 	tx_avg=$(( "$tx" / "$timedifference" ))
 else
-	rx_avg=rx_bytes
-	tx_avg=tx_bytes
+	rx_avg=$rx
+	tx_avg=$tx
 fi
 
-
-#only print if any traffic at all
-if [ "$rx_avg" -gt 0 ] || [ "$tx_avg" -gt 0 ]
-then
-	#printf "⬇%4sB/s⬆%4sB/s\\n" $(numfmt --to=iec $rx_avg) $(numfmt --to=iec $tx_avg) | sed 's/ //g'
-	printf "⬇%sB/s ⬆%sB/s\\n" $(numfmt --to=iec $rx_avg) $(numfmt --to=iec $tx_avg)
-fi
-date +'%s' > $lasttime
+printf '⬇%s ⬆%s\n' $(numfmt --to=iec $rx_avg) $(numfmt --to=iec $tx_avg)
+date +'%s' > "$lasttime"

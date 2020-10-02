@@ -10,9 +10,10 @@ alias \
 	mv="mv -iv" \
 	rm="rm -v" \
 	mkd="mkdir -pv" \
-	yt="youtube-dl --add-metadata -i" \
+	yt="youtube-dl --add-metadata -o '%(upload_date)s-%(title)s.%(ext)s' -i" \
 	yta="yt -x -f bestaudio/best" \
-	ffmpeg="ffmpeg -hide_banner"
+	ffmpeg="ffmpeg -hide_banner" \
+	sage="sage -q"
 
 # Colorize commands when possible.
 alias \

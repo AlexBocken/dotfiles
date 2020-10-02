@@ -3,4 +3,5 @@ day=$(date '+%Y%b%d')
 logged=$(grep -v Break ~/eth/pomodoros | grep $(date '+%Y%b%d') | grep -Eo "\(.*\)" | paste -sd+ | bc)
 temp=$(cat /tmp/pomptemptimes 2>/dev/null)
 min=$([ "$logged" != "" ] && ([ "$temp" != "" ] &&  echo "$logged + $temp" | bc || echo $logged )  || ([ "$temp" != "" ] && echo $temp))
-[ -n "$min" ] && echo '🍅'$min
+[ -n "$min" ] && printf '🍅%s' "$min"
+printf '\n'

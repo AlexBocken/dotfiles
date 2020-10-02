@@ -69,6 +69,7 @@ settings:
     global:
       DEFAULT: https://searx.bocken.org/?q={}&categories=general&language=en-US
       ddg: https://duckduckgo.com/?q={}
+      gg: https://linggle.com/?q={}
       ling: https://www.linguee.com/english-german/search?source=auto&query={}
       oz: http://www.ozdic.com/collocation-dictionary/{}
       sx: https://searx.bocken.org/?q={}&categories=general&language=en-US
