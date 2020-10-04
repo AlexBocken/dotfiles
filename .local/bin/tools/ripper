@@ -7,12 +7,9 @@ DLARCHIVE=$XDG_VIDEOS_DIR/.downloaded
 DLLOC=$XDG_VIDEOS_DIR
 CHANNELSFILE=$XDG_VIDEOS_DIR/.channels
 
-
-#STILL NOT WORKING
 # Required to display notifications if run as a cronjob:
-export XAUTHORITY="/home/alex/.cache/xdg_run/Xauthority" # This line will break some DMs.
+export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus
 export DISPLAY=:0.0
-DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus
 
 range="now-40years"
 notify-send "Channel Ripper" "Scanning for new Videos to download"
