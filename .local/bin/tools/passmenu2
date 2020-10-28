@@ -44,13 +44,14 @@ while [ "$DONE" -eq 0 ] ; do
       # not a directory so it must be a real password entry
 
       if [[ $typeit -eq 0 ]]; then
-        pass show -c "$SELECTION" > $HOME/.cache/passstring
-	sed -e "s/^/\"/" -e "s/$/\"/" $HOME/.cache/passstring | xargs -r notify-send "Password" -t 4000
-	sleep 45
-	if [ -f $HOME/.cache/passstring ]; then
-		notify-send "Password" "password cleared from clipboard" -t 4000
-		rm $HOME/.cache/passstring
-	fi
+        	pass show -c "$SELECTION" > $HOME/.cache/passstring
+		pass show "$SELECTION" | awk 'NR == 2 {print $NF}' | xclip -i -selection primary
+		sed -e "s/^/\"/" -e "s/$/\"/" $HOME/.cache/passstring | xargs -r notify-send "Password" -t 4000
+		sleep 45
+		if [ -f $HOME/.cache/passstring ]; then
+			notify-send "Password" "password cleared from clipboard" -t 4000
+			rm $HOME/.cache/passstring
+		fi
 
       else
         xdotool - <<<"type --clearmodifiers -- $(pass show "$SELECTION" | head -n 1)"
