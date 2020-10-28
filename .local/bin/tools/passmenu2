@@ -45,7 +45,7 @@ while [ "$DONE" -eq 0 ] ; do
 
       if [[ $typeit -eq 0 ]]; then
         	pass show -c "$SELECTION" > $HOME/.cache/passstring
-		pass show "$SELECTION" | awk 'NR == 2 {print $NF}' | xclip -i -selection primary
+		pass show "$SELECTION" | awk 'NR == 2 {print $NF}' | xclip -r -i -selection primary
 		sed -e "s/^/\"/" -e "s/$/\"/" $HOME/.cache/passstring | xargs -r notify-send "Password" -t 4000
 		sleep 45
 		if [ -f $HOME/.cache/passstring ]; then
