@@ -2,7 +2,7 @@
 
 #needed if run as cronjob
 export XDG_VIDEOS_DIR=$HOME/vids
-
+echo $XDG_VIDEOS_DIR
 DLARCHIVE=$XDG_VIDEOS_DIR/.downloaded
 DLLOC=$XDG_VIDEOS_DIR
 CHANNELSFILE=$XDG_VIDEOS_DIR/.channels

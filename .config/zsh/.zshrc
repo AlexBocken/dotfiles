@@ -4,7 +4,7 @@
 autoload -U colors && colors	# Load colors
 export LC_ALL="en_US.UTF-8"
 
-PROMPT="%{%B%}%(?.%{$fg[grey]%}◆.%{$fg[red]%}✖ %?)%{$fg[blue]%} %1~ %(?.%{$fg[grey]%}❯%{$fg[blue]%}❯%{$fg[white]%}❯.%{$fg[red]%}❯❯❯) %{%f%b%}"
+PROMPT="%{%B%}%(?.%{$fg[grey]%}◆.%{$fg[red]%}✖ %?)%{$fg[blue]%} %1~ %(?.%B%{$fg[grey]%}❯%{$fg[blue]%}❯%{$fg[white]%}❯.%{$fg[red]%}❯❯❯) %{%f%b%}"
 #PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
 setopt autocd		# Automatically cd into typed directory.
 stty stop undef		# Disable ctrl-s to freeze terminal.
@@ -25,6 +25,9 @@ zstyle ':completion:*' menu select
 zmodload zsh/complist
 compinit
 _comp_options+=(globdots)		# Include hidden files.
+
+#does not return error if argument cannot be found as file, was annoying for URLs with '?'
+setopt NO_NOMATCH
 
 # vi mode
 bindkey -v

@@ -1,8 +1,9 @@
 #show-read-feeds no
 auto-reload yes
 
-#external-url-viewer "urlscan -dc -r 'linkhandler {}'"
+#external-url-viewer "urlscan -dc -r 'dmenuhandler {}'"
 external-url-viewer "newsboat_urlscan {}"
+#external-url-viewer "urlscan -dn -r 'echo {} | newsboat_urlscan'
 
 bind-key j down
 bind-key k up

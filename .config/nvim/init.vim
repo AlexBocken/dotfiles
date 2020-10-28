@@ -26,7 +26,13 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'dense-analysis/ale'
 Plug 'arcticicestudio/nord-vim'
 Plug 'tpope/vim-fugitive'
+Plug 'rhysd/vim-grammarous'
 call plug#end()
+
+" Integrated spell-check
+" set spellang = en,de
+" nnoremap <silent> <F11> :set spell!<cr>
+" inoremap <silent> <F11> <C-O>:set spell!<cr>
 
 set bg=light
 set go=a

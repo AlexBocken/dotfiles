@@ -12,5 +12,7 @@ case "$1" in
 	right)	horizontal=$(($(xdotool getdisplaygeometry | awk '{print $1}') - newwidth - 2 * borderwidth ))
 		vertical=$(($(xdotool getdisplaygeometry | awk '{print $2}') - newheight  - 2 * borderwidth )) ;;
 esac
-xdotool windowsize "$current" $newwidth $newheight
-xdotool windowmove "$current" $horizontal $vertical
+wmctrl -r :ACTIVE: -b remove,maximized_vert,maximized_horz
+wmctrl -r :ACTIVE: -e 0,$horizontal,$vertical,$newwidth,$newheight
+#xdotool windowsize "$current" $newwidth $newheight
+#xdotool windowmove "$current" $horizontal $vertical

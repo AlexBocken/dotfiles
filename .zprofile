@@ -9,6 +9,8 @@
 export PATH="$PATH:$(du "$HOME/.local/bin" | cut -f2 | tr '\n' ':' | sed 's/:*$//')"
 # Adds cargo bin path to $PATH
 export PATH="$PATH:$(du "$HOME/.local/share/cargo/bin" | cut -f2 | tr '\n' ':' | sed 's/:*$//')"
+# Adds MATLAB
+#export PATH="$PATH:$(du "/usr/local/MATLAB" | cut -f2 | tr '\n' ':' | sed 's/:*$//')"
 
 # Default programs:
 export EDITOR="nvim"

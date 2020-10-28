@@ -24,8 +24,10 @@ settings:
     https://boards.4chan.org: true
     https://boards.4channel.org: true
     https://nobodyhasthe.biz: true
+    https://old.reddit.com: false
     https://riot.im: true
     https://support.cloud.google.com: true
+    https://www.duolingo.com: false
     https://www.reddit.com: false
     https://www.youtube.com: false
   content.register_protocol_handler:
