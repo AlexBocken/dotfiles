@@ -43,7 +43,7 @@ bounce_freq = 0
 # Show age of message if message is older than show_age_threshold
 # seconds.
 # Set to -1 to disable.
-show_age_threshold = 60
+show_age_threshold = 20
 
 # Split notifications into multiple lines if they don't fit into
 # geometry.
@@ -70,7 +70,7 @@ hide_duplicates_count = yes
 # The width can be negative.  In this case the actual width is the
 # screen width minus the width defined in within the geometry option.
 #geometry = "250x50-40+40"
-geometry = "500x50-10+50"
+geometry = "500x50-0+47"
 
 # Shrink window if it's smaller than the width.  Will be ignored if
 # width is 0.
@@ -79,7 +79,7 @@ shrink = no
 # The transparency of the window.  Range: [0; 100].
 # This option will only work if a compositing windowmanager is
 # present (e.g. xcompmgr, compiz, etc.).
-transparency = 20
+transparency = 10
 
 # Don't remove messages, if the user is idle (no mouse or keyboard input)
 # for longer than idle_threshold seconds.
@@ -87,7 +87,7 @@ transparency = 20
 idle_threshold = 120
 
 # Which monitor should the notifications be displayed on.
-monitor = 0
+monitor = 1
 
 # Display notification on focused monitor.  Possible modes are:
 #   mouse: follow mouse pointer
@@ -188,9 +188,14 @@ background = "#191311"
 timeout = 15
 
 [urgency_normal]
-frame_color = "#5B8234"
-foreground = "#d7d5d1"
-background = "#191311"
+frame_color =  "#5E81AC"
+#frame_color = "#5B8234"
+#foreground = "#5E81AC"
+#foreground = "#d7d5d1"
+foreground = "#ECEFF4"
+#background = "#000000"
+background = "#2E3440"
+#background = "#191311"
 #background = "#2B313C"
 timeout = 20
 
