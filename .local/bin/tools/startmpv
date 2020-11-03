@@ -1,11 +1,11 @@
 #!/bin/zsh
-# this script uses https://github.com/maxime-aknin/youtube-playlist-video-ids to gather video ids
-# please install this first and specify the path to this cloned repo below
-js_playlist_index_loc="$HOME/src/youtube-playlist-video-ids"
-# The above mentioned script needs Youtube API access, (see the repo for more info on that)
-# I've saved my API key in my password manager, I reccomend you to do something similar.
-API_key="$(pass show 'Misc/Youtube Data API v3')"
 if echo "$1" | grep -qE 'youtube.*list'; then
+	# this script uses https://github.com/maxime-aknin/youtube-playlist-video-ids to gather video ids
+	# please install this first and specify the path to this cloned repo below
+	js_playlist_index_loc="$HOME/src/youtube-playlist-video-ids"
+	# The above mentioned script needs Youtube API access, (see the repo for more info on that)
+	# I've saved my API key in my password manager, I reccomend you to do something similar.
+	API_key="$(pass show 'Misc/Youtube Data API v3')"
 	playlist_id="$( echo "$1" | perl -pe "s|^.*?(\?\|&)list=(.*?)|\2|; s|&index=[0-9]+||" )"
 	notify-send "startmpv" "Searching for all videos in playlist..."
 	npm start --prefix "$js_playlist_index_loc" -- --api-key "$API_key" --playlist-id $playlist_id | sed 's/^/https:\/\/www.youtube.com\/watch?v=/' | xargs mpv || notify-send "startmpv" "An error has occured with playlist $playlist_id"

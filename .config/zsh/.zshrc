@@ -107,7 +107,7 @@ bindkey '^<Tab>' autosuggest-accept
 bindkey '^x' autosuggest-execute
 zmodload  zsh/zpty #needed for tab completion autosuggest
 ZSH_AUTOSUGGEST_USE_ASYNC=1 #can be set to anything, as long as it's set it will work asynchronously
-#ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20 #Might be useful for large buffers, but async might be enough
+ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20 #Might be useful for large buffers, but async might be enough
 ZSH_AUTOSUGGEST_STRATEGY=(match_prev_cmd completion) # completion strategy, possible values: history, completion, match_prev_cmd or a combination of those
 
 ZLE_PROMPT_INDENT=0
