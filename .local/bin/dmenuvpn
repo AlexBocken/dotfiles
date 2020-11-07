@@ -4,29 +4,19 @@ USER='alexander@bocken.org'
 ETH_user="abocken@student-net.ethz.ch"
 ETH_password_path="ETH/VPN"
 
-if [ "$1" = "status" ]; then
-	pgrep openconnect > /dev/null && if ping -c 1 -W 1 -q webprint.ethz.ch &> /dev/null
-	then
-		 printf '🔬'
+choice="$(ls "${XDG_CONFIG_HOME}/openvpn/cfgs" | sed 's/\.ovpn//' | awk 'BEGIN {print "ETH"}; {print $0}' | dmenu -p 'connect with which vpn server?' -l 10)"
+[ -z "$choice" ] && exit
+if [ "$choice" = "ETH" ]; then
+	if [ $(pgrep -c openconnect) -eq 0 ]; then
+		pass "$ETH_password_path" | sudo openconnect -g student-net -u "$ETH_user" --passwd-on-stdin sslvpn.ethz.ch &
+	if ping -c 3 -W 3 -q webprint.ethz.ch ;then
+		notify-send "ETH VPN" "ETH VPN connected"
 	fi
-	pgrep openvpn > /dev/null && printf '🛡'
-	printf '\n'
+elif ping -c 1 -W 2 -q webprint.ethz.ch ;then
+			sudo pkill openconnect && notify-send "ETH VPN" "ETH VPN disconnected"
+	fi
 else
-
-	choice="$(ls "${XDG_CONFIG_HOME}/openvpn/cfgs" | sed 's/\.ovpn//' | awk 'BEGIN {print "ETH"}; {print $0}' | dmenu -p 'connect with which vpn server?' -l 10)"
-	[ -z "$choice" ] && exit
-	if [ "$choice" = "ETH" ]; then
-		if [ $(pgrep -c openconnect) -eq 0 ]; then
-			pass "$ETH_password_path" | sudo openconnect -g student-net -u "$ETH_user" --passwd-on-stdin sslvpn.ethz.ch &
-		if ping -c 3 -W 3 -q webprint.ethz.ch ;then
-			notify-send "ETH VPN" "ETH VPN connected"
-		fi
-	elif ping -c 1 -W 2 -q webprint.ethz.ch ;then
-				sudo pkill openconnect && notify-send "ETH VPN" "ETH VPN disconnected"
-		fi
-	else
-		printf '%s\n%s\n' "$USER" "$(pass $PASS_DIR)" > /tmp/tmp_pass
-		[ -n "$choice" ] && st -t "openVPN" sudo openvpn --config "${XDG_CONFIG_HOME}/openvpn/cfgs/${choice}.ovpn" --auth-user-pass /tmp/tmp_pass & pkill -RTMIN+9 dwmblocks; sleep 2; rm -f /tmp/tmp_pass
-	fi
+	printf '%s\n%s\n' "$USER" "$(pass $PASS_DIR)" > /tmp/tmp_pass
+	[ -n "$choice" ] && st -t "openVPN" sudo openvpn --config "${XDG_CONFIG_HOME}/openvpn/cfgs/${choice}.ovpn" --auth-user-pass /tmp/tmp_pass & pkill -RTMIN+9 dwmblocks; sleep 2; rm -f /tmp/tmp_pass
 fi
 pkill -RTMIN+9 dwmblocks
