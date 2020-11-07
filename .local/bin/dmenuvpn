@@ -5,7 +5,7 @@ ETH_user="abocken@student-net.ethz.ch"
 ETH_password_path="ETH/VPN"
 
 if [ "$1" = "status" ]; then
-	if ping -c 1 -W 1 -q webprint.ethz.ch &> /dev/null
+	pgrep openconnect > /dev/null && if ping -c 1 -W 1 -q webprint.ethz.ch &> /dev/null
 	then
 		 printf '🔬'
 	fi
@@ -18,7 +18,7 @@ else
 	if [ "$choice" = "ETH" ]; then
 		if [ $(pgrep -c openconnect) -eq 0 ]; then
 			pass "$ETH_password_path" | sudo openconnect -g student-net -u "$ETH_user" --passwd-on-stdin sslvpn.ethz.ch &
-		if ping -c 4 -W 6 -q webprint.ethz.ch ;then
+		if ping -c 3 -W 3 -q webprint.ethz.ch ;then
 			notify-send "ETH VPN" "ETH VPN connected"
 		fi
 	elif ping -c 1 -W 2 -q webprint.ethz.ch ;then
