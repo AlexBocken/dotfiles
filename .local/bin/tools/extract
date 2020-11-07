@@ -26,6 +26,7 @@ case "$archive" in
 	*.7z) 7z x "$toextract" ;;
 	*.xz) unxz "$toextract" ;;
 	*.exe) cabextract "$toextract" ;;
+	*.zst) zstd -d "$toextract";;
 	*) printf "extract: '%s' - unknown archive method\\n" "$toextract" ;;
 esac
 }
