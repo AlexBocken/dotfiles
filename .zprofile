@@ -74,6 +74,13 @@ export MOZ_USE_XINPUT2="1"		# Mozilla smooth scrolling/touchpads.
 export _JAVA_AWT_WM_NONREPARENTING=1	# Java doesn't understand tiling windows
 export AWT_TOOLKIT="MToolkit wmname LG3D"	#May have to install wmname
 
+# Settings for Japanese input
+export GTK_IM_MODULE='ibus'
+export QT_IM_MODULE='ibus'
+export XMODIFIERS=@im='ibus'
+
+ibus-daemon -drx #Toolbar for anthy
+
 # This is the list for lf icons:
 export LF_ICONS="di=📁:\
 fi=📃:\
