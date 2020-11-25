@@ -1,0 +1,8 @@
+[Trigger]
+ 	Operation = Upgrade 
+	Type = Package
+	Target = *
+[Action]
+	Description = Update statusbar
+	When = PostTransaction
+	Exec = /usr/local/bin/update_statusbar
