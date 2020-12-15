@@ -20,6 +20,6 @@ else
         $browser "$choice"
     else
 	string="$(echo $choice | sed 's/\ /+/g')"
-        $browser "https://searx.bocken.org/?q=$string&t=ffab&atb=v1-1"
+        $browser "https://searx.lukesmith.xyz/?q=$string&t=ffab&atb=v1-1"
     fi
 fi
