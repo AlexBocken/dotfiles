@@ -53,7 +53,7 @@ alias \
 	weath="less -S ${XDG_DATA_HOME:-$HOME/.local/share}/weatherreport" \
 	tmux="tmux -f ${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tmux.conf"\
 	cast="mkchromecast --video --control -i"\
-	castaudio="mkchromecast --control --screencast"\
+	castaudio="mkchromecast --control --screencast --b 320"\
 	rest="clear && sleep 90 && echo ###########START############"
 	#gpg="gpg --homedir=$GNUPGHOME"
 

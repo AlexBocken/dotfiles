@@ -1,10 +1,13 @@
 #!/bin/bash
 xrandr --output eDP-1 --mode 1920x1080 --auto
 xrdb -merge ~/.config/X11/Xres_casting
+setbg
 #wal -q -i ~/.config/wall.png -b '000000'
 pkill dwm
-st mkchromecast --video --control --screencast
+pgrep dwmblocks && dwmblocks & st mkchromecast --video --control --screencast -s
 xrandr --output eDP-1 --mode 3200x1800 --auto
 xrdb -merge ~/.config/X11/Xresources
+setbg
 #wal -q -i ~/.config/wall.png -b '000000'
 pkill dwm
+pgrep dwmblocks && dwmblocks & disown
