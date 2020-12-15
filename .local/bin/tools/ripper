@@ -4,22 +4,23 @@ export XDG_VIDEOS_DIR=$HOME/vids
 DLARCHIVE=$XDG_VIDEOS_DIR/.downloaded
 DLLOC=$XDG_VIDEOS_DIR
 CHANNELSFILE=$XDG_VIDEOS_DIR/.channels
+BLACKLIST=$XDG_VIDEOS_DIR/.blacklist
 
 # Required to display notifications if run as a cronjob:
 export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus
 export DISPLAY=:0.0
 
 range="now-40years"
-notify-send "Channel Ripper" "Scanning for new Videos to download"
+#notify-send "Channel Ripper" "Scanning for new Videos to download"
 echo "Scanning for new Videos to download"
-grep 'youtube' "$CHANNELSFILE" | xargs -L1 lynx --dump --listonly --nonumbers  | grep 'videos.xml' | xargs lynx --dump | grep 'yt:video:' | perl -pe 's/^.*yt:video:([^ \t\s]*) .*$/https:\/\/www\.youtube\.com\/watch\?v=\1/' > /tmp/todownload
+grep 'youtube' "$CHANNELSFILE" | xargs -L1 lynx --dump --listonly --nonumbers  | grep 'videos.xml' | xargs lynx --dump | grep -oE 'yt:video:[^\s\t ]{11,15}' | perl -pe 's/^yt:video:([^ \t\s]*)$/https:\/\/www\.youtube\.com\/watch\?v=\1/' | grep -vf "$BLACKLIST" > /tmp/todownload
 grep 'youtube' "$DLARCHIVE" | sed 's/youtube /https:\/\/www\.youtube\.com\/watch?v=/' > /tmp/alreadydownloaded
 
-grep 'bitchute' "$CHANNELSFILE" | xargs -L1 lynx --dump --nonumbers -listonly $1 | grep 'bitchute\.com\/video' | sort -u >> /tmp/todownload
+grep 'bitchute' "$CHANNELSFILE" | xargs -L1 lynx --dump --nonumbers -listonly $1 | grep 'bitchute\.com\/video' | sort -u | grep -vf "$BLACKLIST" >> /tmp/todownload
 grep 'bitchute' "$DLARCHIVE" | sed 's/bitchute /https:\/\/www\.bitchute\.com\/video\//' >> /tmp/alreadydownloaded
 
-number=$(grep -vf /tmp/alreadydownloaded /tmp/todownload | sort -u | wc -l)
-
+number=$(grep -vf /tmp/alreadydownloaded /tmp/todownload | grep -vf $BLACKLIST | sort -u | wc -l)
+grep -vf /tmp/alreadydownloaded /tmp/todownload | sort -u
 if [ $number -gt 0 ]; then
 	[ $number -eq 1 ] && ( notify-send "Channel Ripper" "1 new video available for download, downloading now." ) || ( notify-send "Channel Ripper" "$number new videos available for download, downloading now." )
 	echo  "$number new videos for download available, downloading now."
@@ -31,7 +32,7 @@ fi
 
 if [ $number -eq 0 ]; then
 	echo "No new Videos"
-	notify-send "Channel Ripper" "No new Videos"
+	#notify-send "Channel Ripper" "No new Videos"
 fi
 
 rm -f /tmp/alreadydownloaded

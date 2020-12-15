@@ -9,12 +9,26 @@ settings:
   bindings.commands:
     global:
       normal:
+        ',A': spawn -d catt add {url}
         ',C': spawn -d st castyt {url}
         ',S': spawn -d mpvallvids {url}
         ',V': spawn -d startmpv {url}
         ',X': spawn -d dmenuhandler {url}
+        ',a': hint links spawn -d catt add {hint-url}
+        ',ap': config-cycle content.user_stylesheets ~/src/solarized-everything-css/css/apprentice/apprentice-all-sites.css
+          ""
         ',c': hint links spawn -d st castyt {hint-url}
+        ',dd': config-cycle content.user_stylesheets ~/src/solarized-everything-css/css/solarized-dark/solarized-dark-all-sites.css
+          ""
+        ',dr': config-cycle content.user_stylesheets ~/src/solarized-everything-css/css/darculized/darculized-all-sites.css
+          ""
+        ',gv': config-cycle content.user_stylesheets ~/src/solarized-everything-css/css/gruvbox/gruvbox-all-sites.css
+          ""
+        ',nd': config-cycle content.user_stylesheets ~/src/solarized-everything-css/css/nord/nord.css
+          ""
         ',s': hint links spawn -d mpvallvids {hint-url}
+        ',tr': config-cycle content.user_stylesheets ~/src/solarized-everything-css/css/dark/dark-all-sites.css
+          ""
         ',v': hint links spawn -d startmpv {hint-url}
         ',x': hint links spawn -d dmenuhandler {hint-url}
   content.desktop_capture:
@@ -66,12 +80,12 @@ settings:
   tabs.tabs_are_windows:
     global: true
   url.default_page:
-    global: https://searx.bocken.org
+    global: https://searx.lukesmith.xyz/
   url.open_base_url:
     global: true
   url.searchengines:
     global:
-      DEFAULT: https://searx.bocken.org/?q={}&categories=general&language=en-US
+      DEFAULT: https://searx.lukesmith.xyz/?q={}
       ddg: https://duckduckgo.com/?q={}
       gg: https://linggle.com/?q={}
       ling: https://www.linguee.com/english-german/search?source=auto&query={}
@@ -79,6 +93,6 @@ settings:
       sx: https://searx.bocken.org/?q={}&categories=general&language=en-US
       yt: https://www.youtube.com/results?search_query={}
   url.start_pages:
-    global: https://searx.bocken.org/
+    global: https://searx.lukesmith.xyz/
   zoom.default:
     global: 160%

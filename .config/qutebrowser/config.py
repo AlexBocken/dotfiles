@@ -18,3 +18,4 @@ config.bind(',dr', 'config-cycle content.user_stylesheets ~/src/solarized-everyt
 config.bind(',ap', 'config-cycle content.user_stylesheets ~/src/solarized-everything-css/css/apprentice/apprentice-all-sites.css ""')
 config.bind(',gv', 'config-cycle content.user_stylesheets ~/src/solarized-everything-css/css/gruvbox/gruvbox-all-sites.css ""')
 config.bind(',dd', 'config-cycle content.user_stylesheets ~/src/solarized-everything-css/css/solarized-dark/solarized-dark-all-sites.css ""')
+config.bind(',nd', 'config-cycle content.user_stylesheets ~/src/solarized-everything-css/css/nord/nord.css ""')
