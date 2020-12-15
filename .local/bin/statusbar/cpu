@@ -9,8 +9,9 @@ esac
 
 #TEMPERATURE
 #load=$(sensors | awk '/Package id 0/ {print "🌡"$4}' | sed 's/\.[0-9]//; s/+//')
+load=$(sensors | awk '/Package id 0/ {print $4}' | sed 's/\.[0-9]//; s/+//')
 
 #LOAD PERCENTAGE
-load=$(top -n1 | awk 'NR==3 {print "🖩"$2"%"}')
+#load=$(top -n1 | awk 'NR==3 {print "🖩"$2"%"}')
 
 [ -n "$load" ] && echo "$load"
