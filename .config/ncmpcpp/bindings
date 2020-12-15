@@ -271,14 +271,14 @@ def_key "2"
 def_key "3"
   show_search_engine
 #
-#def_key "3"
-#  reset_search_engine
+def_key "3"
+  reset_search_engine
 #
-#def_key "4"
-#  show_media_library
+def_key "4"
+  show_media_library
 #
-#def_key "4"
-#  toggle_media_library_columns_mode
+def_key "4"
+  toggle_media_library_columns_mode
 #
 def_key "5"
   show_playlist_editor
@@ -286,17 +286,17 @@ def_key "5"
 def_key "6"
   show_tag_editor
 #
-#def_key "7"
-#  show_outputs
+def_key "7"
+  show_outputs
 #
-#def_key "8"
-#  show_visualizer
+def_key "8"
+  show_visualizer
 #
-#def_key "="
-#  show_clock
+def_key "="
+  show_clock
 #
-#def_key "@"
-#  show_server_info
+def_key "@"
+  show_server_info
 #
 def_key "s"
   stop
@@ -436,8 +436,8 @@ def_key "Z"
 #def_key "g"
 #  jump_to_position_in_song
 #
-#def_key "l"
-#  show_lyrics
+def_key "l"
+  show_lyrics
 #
 #def_key "ctrl-v"
 #  select_range
