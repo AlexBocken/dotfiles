@@ -53,7 +53,7 @@ word_wrap = yes
 ignore_newline = no
 
 # Hide duplicate's count and stack them
-stack_duplicates = yes
+stack_duplicates = no
 hide_duplicates_count = yes
 
 
@@ -79,7 +79,7 @@ shrink = no
 # The transparency of the window.  Range: [0; 100].
 # This option will only work if a compositing windowmanager is
 # present (e.g. xcompmgr, compiz, etc.).
-transparency = 10
+transparency = 0
 
 # Don't remove messages, if the user is idle (no mouse or keyboard input)
 # for longer than idle_threshold seconds.
@@ -183,7 +183,8 @@ context = ctrl+shift+period
 # Otherwise the "#" and following would be interpreted as a comment.
 frame_color = "#3B7C87"
 foreground = "#d7d5d1"
-background = "#191311"
+#background = "#191311"
+#background = "#2B313C"
 #background = "#2B313C"
 timeout = 15
 
