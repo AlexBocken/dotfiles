@@ -6,5 +6,5 @@
 # When clicked, it will run an upgrade via pacman.
 
 no="$( pacman -Qu | grep -Fcv "[ignored]" )"
-[ "$no" -gt 0 ] && ( echo "$no" | sed "s/^/📦/"; exit )
+[ "$no" -gt 0 ] && printf '📦%s' "$no"
 printf '\n'
