@@ -1,5 +1,12 @@
 #!/bin/sh
+APPOINTMENTS_SIGNAL=8
 if [ "$( dunstctl is-paused )" = "true" ]; then
-	printf '🔕'
+	printf '🔕\n'
+	if [ ! -f /tmp/nodunst ]; then
+		touch /tmp/nodunst
+	fi
+else
+	printf '\n'
+	rm -f /tmp/nodunst
 fi
-printf '\n'
+pkill -RTMIN+$APPOINTMENTS_SIGNAL dwmblocks #update appointments after file has been created/deleted
