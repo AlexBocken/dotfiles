@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 #Print the next appointment for the day for statusbar
 #or generate notification for upcoming appointment
 diff=$(calcurse --next | tail -n1 | sed 's/^\s*//; s/\[//;s/\]//' | cut -f1 -d ' ')
