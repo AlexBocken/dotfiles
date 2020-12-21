@@ -1,7 +1,7 @@
-#!/bin/zsh
+#!/bin/sh
 #Print the next appointment for the day for statusbar
 #or generate notification for upcoming appointment
-diff=$(calcurse --next | tail -n1 | sed 's/^\s*//; s/\[//;s/\]//' | cut -f1 -d ' ')
+diff=$(calcurse --next | tail -n1 | sed 's/^\s*//; s/\[//;s/\]//' | cut -f1 -d ' ' | perl -pe 's/0([0-9])/\1/g' )
 if [ -n "$diff" ]; then
 	secs=$(( $(echo "$diff" | cut -f1 -d ':') * 3600  + $(echo "$diff" | cut -f2 -d ':') *60 ))
 	time_appointment="$(date --date "@$(( $( date +'%s' ) + $secs ))" +"%s")"
