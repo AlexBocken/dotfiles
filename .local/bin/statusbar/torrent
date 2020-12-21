@@ -1,6 +1,6 @@
 #!/bin/sh
 
-var="$( transmission-remote -l | grep % |
+var="$( transmission-remote -l | grep % | grep -v '100%' |
 	sed " # This first sed command is to ensure a desirable order with sort
 	s/.*Stopped.*/A/g;
 	s/.*Seeding.*/Z/g;
