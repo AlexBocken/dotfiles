@@ -6,7 +6,7 @@ shell="$(ps aux | grep $( ppid ) | head -n1 | awk '{print $11}' )"
 document_dirs="$HOME/bks/* $HOME/eth/* $HOME/dox/*"
 #/bin/sh means it's probably from dmenu_run (it's ugly but works)
 if [ "$shell" = "/bin/sh" ]; then
-	file="$( du -a $document_dirs | awk '{for(i=2; i<NF; i++){printf("%s ", $i)}printf("%s\n", $NF)}'| dmenu -l 10 -p 'open what file?' )"
+	file="$( du -a $document_dirs | awk '{for(i=2; i<NF; i++){printf("%s ", $i)}printf("%s\n", $NF)}'| dmenu -l 10 -p 'open what file?' -it "$*" )"
 	[ -z "$file" ] && exit
 	cd "$( dirname "$file" )" || exit
 	if rifle -l "$file" | head -n1 | grep -q 'EDITOR';then
