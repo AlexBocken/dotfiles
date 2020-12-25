@@ -20,13 +20,14 @@ grep 'bitchute' "$CHANNELSFILE" | xargs -L1 lynx --dump --nonumbers -listonly $1
 grep 'bitchute' "$DLARCHIVE" | sed 's/bitchute /https:\/\/www\.bitchute\.com\/video\//' >> /tmp/alreadydownloaded
 
 number=$(grep -vf /tmp/alreadydownloaded /tmp/todownload | grep -vf $BLACKLIST | sort -u | wc -l)
-grep -vf /tmp/alreadydownloaded /tmp/todownload | sort -u
 if [ $number -gt 0 ]; then
 	[ $number -eq 1 ] && ( notify-send "Channel Ripper" "1 new video available for download, downloading now." ) || ( notify-send "Channel Ripper" "$number new videos available for download, downloading now." )
 	echo  "$number new videos for download available, downloading now."
-	grep -vf /tmp/alreadydownloaded /tmp/todownload | sort -u | xargs -L1 youtube-dl --get-filename -o "'%(uploader)s' '%(title)s'" $1 | xargs -L1 notify-send
-	grep -vf /tmp/alreadydownloaded /tmp/todownload | sort -u | grep 'youtube' | xargs -r -L1 youtube-dl --hls-prefer-native -i --download-archive $DLARCHIVE --dateafter $range -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' --add-metadata -o "$DLLOC/%(uploader)s/%(upload_date)s-%(title)s.%(ext)s"
-	grep -vf /tmp/alreadydownloaded /tmp/todownload | sort -u | grep 'bitchute' | xargs -r -L1 youtube-dl --hls-prefer-native -i --download-archive $DLARCHIVE -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' --add-metadata -o "$DLLOC/%(uploader)s/%(upload_date)s-%(title)s.%(ext)s"
+	if [ "$number"  -lt 10 ];then
+		grep -vf /tmp/alreadydownloaded /tmp/todownload | sort -u | xargs -L1 youtube-dl --get-filename -o "'%(uploader)s' '%(title)s'" $1 | xargs -L1 notify-send
+	fi
+	grep -vf /tmp/alreadydownloaded /tmp/todownload | sort -u | grep 'youtube' | xargs -r -L1 -0 youtube-dl --hls-prefer-native -i --download-archive $DLARCHIVE --dateafter $range -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' --add-metadata -o "$DLLOC/%(uploader)s/%(upload_date)s-%(title)s.%(ext)s"
+	grep -vf /tmp/alreadydownloaded /tmp/todownload | sort -u | grep 'bitchute' | xargs -r -L1 -0 youtube-dl --hls-prefer-native -i --download-archive $DLARCHIVE -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' --add-metadata -o "$DLLOC/%(uploader)s/%(upload_date)s-%(title)s.%(ext)s"
 	notify-send "Channel Ripper" "Finished downloading"
 fi
 
