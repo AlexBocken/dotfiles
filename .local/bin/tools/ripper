@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 #needed if run as cronjob
 export XDG_VIDEOS_DIR=$HOME/vids
 DLARCHIVE=$XDG_VIDEOS_DIR/.downloaded
@@ -23,15 +23,15 @@ grep 'youtube' "$DLARCHIVE" | sed 's/youtube /https:\/\/www\.youtube\.com\/watch
 grep 'bitchute' "$CHANNELSFILE" | xargs -L1 lynx --dump --nonumbers -listonly $1 | grep 'bitchute\.com\/video' | sort -u | grep -vf "$BLACKLIST" >> /tmp/todownload$$
 grep 'bitchute' "$DLARCHIVE" | sed 's/bitchute /https:\/\/www\.bitchute\.com\/video\//' >> /tmp/alreadydownloaded$$
 
-number=$(grep -vf /tmp/alreadydownloaded$$ /tmp/todownload$$ | sort -u | wc -l)
+grep -vf /tmp/alreadydownloaded$$ /tmp/todownload$$ | sort -u > /tmp/new_videos$$
+number=$(wc -l /tmp/new_videos$$ | cut -d ' ' -f 1 )
 if [ $number -gt 0 ]; then
 	[ $number -gt 1 ] && plural="s"
 	notify-send "Channel Ripper" "$number new video$plural available for download, downloading now."
 	echo  "$number new video$plural for download available, downloading now."
 	if [ "$number"  -lt 10 ];then
-		grep -vf /tmp/alreadydownloaded$$ /tmp/todownload$$ | sort -u | xargs -L1 youtube-dl --get-filename -o "'%(uploader)s' '%(title)s'" $1 | xargs -L1 notify-send
+		xargs -L1 youtube-dl --get-filename -o "'%(uploader)s' '%(title)s'" < /tmp/new_videos$$ | xargs -L1 notify-send
 	fi
-	grep -vf /tmp/alreadydownloaded$$ /tmp/todownload$$ | sort -u > /tmp/new_videos$$
 	rm -f /tmp/alreadydownloaded$$ /tmp/todownload$$
 	youtube-dl --hls-prefer-native -i --download-archive $DLARCHIVE --dateafter $range -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' --add-metadata -o "$DLLOC/%(uploader)s/%(upload_date)s-%(title)s.%(ext)s" -a /tmp/new_videos$$
 	rm -f /tmp/new_videos$$
