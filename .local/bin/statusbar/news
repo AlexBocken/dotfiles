@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 num="$(newsboat -x print-unread | cut -f1 -d ' ' )"
 if  ! pgrep newsboat > /dev/null ; then
-	[ "$num" = "" ] || printf "📰%s" "$num"
+	[ "$num" = "0" ] || printf "📰%s" "$num"
 	printf '\n'
 fi
