@@ -28,3 +28,4 @@ ibus-daemon -drx &
 xrandr --listactivemonitors | grep -q '1920.*x1080.*HDMI-1$' && ( xrandr --output  HDMI-1 --scale 1.5 && setbg ) # set scale for 2nd monitor if connected
 redshift &		# Bluefilter based on time
 keynav &		# emulate mouse clicks with vim-bindings and starting with Ctrl+;
+update_musicbar &	# update music statusbar the instant state changes

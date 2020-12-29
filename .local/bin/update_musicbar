@@ -1,3 +1,5 @@
 #!/bin/sh
-pkill -RTMIN+11 dwmblocks
-#echo 'sent signal to dwmblocks'
+while true; do
+	mpc idle > /dev/null
+	pkill -RTMIN+11 dwmblocks
+done
