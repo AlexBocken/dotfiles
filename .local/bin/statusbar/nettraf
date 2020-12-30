@@ -30,6 +30,5 @@ else
 	rx_avg=$rx
 	tx_avg=$tx
 fi
-
-printf '⬇%s ⬆%s\n' $(numfmt --to=iec $rx_avg) $(numfmt --to=iec $tx_avg)
+printf '⬇%s ⬆%s\n' "$(numfmt --to=iec "$rx_avg")" "$(numfmt --to=iec "$tx_avg")"
 date +'%s' > "$lasttime"
