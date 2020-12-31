@@ -1,18 +1,28 @@
 #!/bin/bash
-currentdir="$(pwd)"
-#file="$( du -a ~/.config/* ~/.local/src/* ~/.local/bin/* | awk '{print $2}' | fzf -e --query="$*")"
-#[ "$file" = "" ] || ( cd "$( dirname "$file" )" && $EDITOR "$file" && cd "$currentdir" )
+#A script that launches documents in their respective viewers
+#either via dmenu or fzf depending on the context
 ppid () { ps -p ${1:-$$} -o ppid=; }
 shell="$(ps aux | grep $( ppid ) | head -n1 | awk '{print $11}' )"
-#/bin/sh probably means we're in dmenu_run
+document_dirs="$HOME/.config/* $HOME/.local/src/* $HOME/.local/bin/*"
+#/bin/sh means it's probably from dmenu_run (it's ugly but works)
 if [ "$shell" = "/bin/sh" ]; then
-	file="$( du -a ~/.config/* ~/.local/src/* ~/.local/bin/* | awk '{print $2}' | dmenu -l 10 -p 'open what file?' )"
+	file="$( du -a $document_dirs | awk '{for(i=2; i<NF; i++){printf("%s ", $i)}printf("%s\n", $NF)}'| dmenu -l 10 -p 'open what file?' -it "$*" )"
 	[ -z "$file" ] && exit
-	## NEEDS TO BE WORKED ON
-	cd "$( dirname "$file" )" && st $EDITOR "$file"
+	cd "$( dirname "$file" )" || exit
+	if rifle -l "$file" | head -n1 | grep -q 'EDITOR';then
+		st rifle "$file"
+	else
+		rifle "$file"
+	fi
 else
 	currentdir="$(pwd)"
-	file="$( du -a ~/.config/* ~/.local/src/* ~/.local/bin/* | awk '{print $2}' | fzf -e --query="$*")"
+	file="$( du -a $document_dirs | awk '{for(i=2; i<NF; i++){printf("%s ", $i)}printf("%s\n", $NF)}' | fzf -e --query="$*")"
 	[ -z "$file" ] && exit
-	cd "$( dirname "$file" )" && rifle  "$file" && cd "$currentdir"
+	cd "$( dirname "$file" )" || exit
+	if rifle -l "$file" | head -n1 | grep -q 'EDITOR';then
+		rifle "$file"
+	else
+		rifle "$file" & disown
+	fi
+	cd "$currentdir" || exit
 fi
