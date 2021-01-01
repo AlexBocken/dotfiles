@@ -19,8 +19,8 @@ fi
 
 echo "Scanning for new Videos to download"
 echo "Scanning on Youtube:"
-IDs="$( grep 'youtube' "$CHANNELSFILE" | grep 'channel' | sed 's/https:\/\/www\.youtube\.com\/channel\///')"
-not_correctly_formatted="$(grep 'youtube' "$CHANNELSFILE" | grep -v 'channel')"
+IDs="$( grep 'youtube' "$CHANNELSFILE" | grep -v '^#' | grep 'channel' | sed 's/https:\/\/www\.youtube\.com\/channel\///')"
+not_correctly_formatted="$(grep 'youtube' "$CHANNELSFILE" | grep -v '^#' | grep -v 'channel')"
 if [  "$( echo "$not_correctly_formatted" | wc -l )" -gt 0 ]; then
 	echo Please fix the following channel urls to be scannable:
 	echo "$not_correctly_formatted"
@@ -33,7 +33,7 @@ done
 grep 'youtube' "$DLARCHIVE" | sed 's/youtube /https:\/\/www\.youtube\.com\/watch?v=/' > /tmp/alreadydownloaded$$
 
 echo "Scanning on Bitchute..."
-grep 'bitchute' "$CHANNELSFILE" | xargs -L1 lynx --dump --nonumbers -listonly | grep 'bitchute\.com\/video' | sort -u | grep -vf "$BLACKLIST" >> /tmp/todownload$$
+grep 'bitchute' "$CHANNELSFILE" | grep -v '^#' | xargs -L1 lynx --dump --nonumbers -listonly | grep 'bitchute\.com\/video' | sort -u | grep -vf "$BLACKLIST" >> /tmp/todownload$$
 grep 'bitchute' "$DLARCHIVE" | sed 's/bitchute /https:\/\/www\.bitchute\.com\/video\//' >> /tmp/alreadydownloaded$$
 
 grep -vf /tmp/alreadydownloaded$$ /tmp/todownload$$ | sort -u > /tmp/new_videos$$
@@ -54,3 +54,4 @@ fi
 if [ $number -eq 0 ]; then
 	echo "No new videos"
 fi
+rm -f /tmp/alreadydownloaded$$ /tmp/todownload$$
