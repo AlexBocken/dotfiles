@@ -10,17 +10,30 @@ BLACKLIST=$XDG_VIDEOS_DIR/.blacklist
 export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus
 export DISPLAY=:0.0
 
+APIKEY="$(pass show Misc/Youtube\ Data\ API\ v3 | head -n1 )"
+
 if [ $(pgrep -c ripper) -gt 1 ]; then
 	echo "Ripper already running, exiting new instance..."
 	exit
 fi
 
-range="now-40years"
 echo "Scanning for new Videos to download"
-grep 'youtube' "$CHANNELSFILE" | xargs -L1 lynx --dump --listonly --nonumbers  | grep 'videos.xml' | xargs lynx --dump | grep -oE 'yt:video:[^\s\t ]{11,15}' | perl -pe 's/^yt:video:([^ \t\s]*)$/https:\/\/www\.youtube\.com\/watch\?v=\1/' | grep -vf "$BLACKLIST" > /tmp/todownload$$
+echo "Scanning on Youtube:"
+IDs="$( grep 'youtube' "$CHANNELSFILE" | grep 'channel' | sed 's/https:\/\/www\.youtube\.com\/channel\///')"
+not_correctly_formatted="$(grep 'youtube' "$CHANNELSFILE" | grep -v 'channel')"
+if [  "$( echo "$not_correctly_formatted" | wc -l )" -gt 0 ]; then
+	echo Please fix the following channel urls to be scannable:
+	echo "$not_correctly_formatted"
+	echo "They need to be in the 'https://www.youtube.com/channel/...' format"
+fi
+for channel_id in $IDs; do
+	echo "ID: $channel_id"
+	curl -s "https://www.googleapis.com/youtube/v3/search?key=$APIKEY&channelId=$channel_id&part=snippet,id&order=date&maxResults=500" | jq '."items" | .[] | .id."videoId"' | tr -d '"' | sed 's/^/https:\/\/www\.youtube\.com\/watch\?v=/' | grep -vf "$BLACKLIST" >> /tmp/todownload$$
+done
 grep 'youtube' "$DLARCHIVE" | sed 's/youtube /https:\/\/www\.youtube\.com\/watch?v=/' > /tmp/alreadydownloaded$$
 
-grep 'bitchute' "$CHANNELSFILE" | xargs -L1 lynx --dump --nonumbers -listonly $1 | grep 'bitchute\.com\/video' | sort -u | grep -vf "$BLACKLIST" >> /tmp/todownload$$
+echo "Scanning on Bitchute..."
+grep 'bitchute' "$CHANNELSFILE" | xargs -L1 lynx --dump --nonumbers -listonly | grep 'bitchute\.com\/video' | sort -u | grep -vf "$BLACKLIST" >> /tmp/todownload$$
 grep 'bitchute' "$DLARCHIVE" | sed 's/bitchute /https:\/\/www\.bitchute\.com\/video\//' >> /tmp/alreadydownloaded$$
 
 grep -vf /tmp/alreadydownloaded$$ /tmp/todownload$$ | sort -u > /tmp/new_videos$$
@@ -30,14 +43,14 @@ if [ $number -gt 0 ]; then
 	notify-send "Channel Ripper" "$number new video$plural available for download, downloading now."
 	echo  "$number new video$plural for download available, downloading now."
 	if [ "$number"  -lt 10 ];then
-		xargs -L1 youtube-dl --get-filename -o "'%(uploader)s' '%(title)s'" < /tmp/new_videos$$ | xargs -L1 notify-send
+		youtube-dl --get-filename -o "'%(uploader)s' '%(title)s'" -a /tmp/new_videos$$ | xargs -L1 notify-send
 	fi
 	rm -f /tmp/alreadydownloaded$$ /tmp/todownload$$
-	youtube-dl --hls-prefer-native -i --download-archive $DLARCHIVE --dateafter $range -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' --add-metadata -o "$DLLOC/%(uploader)s/%(upload_date)s-%(title)s.%(ext)s" -a /tmp/new_videos$$
+	youtube-dl --hls-prefer-native -i --download-archive $DLARCHIVE -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' --add-metadata -o "$DLLOC/%(uploader)s/%(upload_date)s-%(title)s.%(ext)s" -a /tmp/new_videos$$
 	rm -f /tmp/new_videos$$
 	notify-send "Channel Ripper" "Finished downloading"
 fi
 
 if [ $number -eq 0 ]; then
-	echo "No new Videos"
+	echo "No new videos"
 fi
