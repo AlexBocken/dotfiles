@@ -4,7 +4,8 @@
 #The YouTube implementation now uses a YoutubeData API v3 key to work more reliably.
 #Either insert this key in plain text below at the variable "APIKEY" or do it via ENV vars or a password manager
 #Since bitchute still doesn't have an API I'm using lynx to emulate a user.
-#This can be limit the number of recent videos available. For a whole download of bitchute channels consider other methods first.
+#This can limit the number of recent videos available. For a whole download of bitchute channels consider other methods first.
+#For youtube the videos per channel are limited to the last 500 uploaded videos. For the rest you can just use youtube-dl itself
 
 #needed if run as cronjob
 export XDG_VIDEOS_DIR=$HOME/vids #TODO ADJUST FOR PERSONAL USE HERE!
