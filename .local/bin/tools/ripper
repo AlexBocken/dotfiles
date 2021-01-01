@@ -7,15 +7,15 @@
 #This can be limit the number of recent videos available. For a whole download of bitchute channels consider other methods first.
 
 #needed if run as cronjob
-export XDG_VIDEOS_DIR=$HOME/vids
-DLARCHIVE=$XDG_VIDEOS_DIR/.downloaded
-DLLOC=$XDG_VIDEOS_DIR
-CHANNELSFILE=$XDG_VIDEOS_DIR/.channels
+export XDG_VIDEOS_DIR=$HOME/vids #TODO ADJUST FOR PERSONAL USE HERE!
+DLARCHIVE="${XDG_VIDEOS_DIR:-$HOME/Videos}/.downloaded"
+DLLOC="${XDG_VIDEOS_DIR:-$HOME/Videos}"
+CHANNELSFILE="${XDG_VIDEOS_DIR:-$HOME/Videos}/.channels"
 #FORMAT OF CHANNELSFILE:
 #Youtube: include the channel URI: https://www.youtube.com/channel/<channelId>
 #Bitchute: normal channel URI: https://www.bitchute.com/channel/<user>
 #Lines starting with '#' will be ignored in this file
-BLACKLIST=$XDG_VIDEOS_DIR/.blacklist
+BLACKLIST="${XDG_VIDEOS_DIR:-$HOME/Videos}/.blacklist"
 
 # Required to display notifications if run as a cronjob:
 export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus
