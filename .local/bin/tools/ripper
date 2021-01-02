@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #A script that checks multiple youtube and bitchute channels for new videos to download via youtube-dl
 #This script works considerably faster than just giving youtube-dl a channel URI.
 #The YouTube implementation now uses a YoutubeData API v3 key to work more reliably.
@@ -11,7 +11,8 @@
 #For youtube the videos per channel are limited to the last 500 uploaded videos. For the rest you can just use youtube-dl itself
 
 #needed if run as cronjob
-export XDG_VIDEOS_DIR=$HOME/vids #TODO ADJUST FOR PERSONAL USE HERE!
+XDG_VIDEOS_DIR=$HOME/vids #TODO ADJUST FOR PERSONAL USE HERE!
+export XDG_VIDEOS_DIR
 DLARCHIVE="${XDG_VIDEOS_DIR:-$HOME/Videos}/.downloaded"
 DLLOC="${XDG_VIDEOS_DIR:-$HOME/Videos}"
 CHANNELSFILE="${XDG_VIDEOS_DIR:-$HOME/Videos}/.channels"
@@ -22,12 +23,13 @@ CHANNELSFILE="${XDG_VIDEOS_DIR:-$HOME/Videos}/.channels"
 BLACKLIST="${XDG_VIDEOS_DIR:-$HOME/Videos}/.blacklist"
 
 # Required to display notifications if run as a cronjob:
-export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus
+DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus
+export DBUS_SESSION_BUS_ADDRESS
 export DISPLAY=:0.0
 
 APIKEY="$(pass show Misc/Youtube\ Data\ API\ v3 | head -n1 )"
 
-if [ $(pgrep -c ripper) -gt 1 ]; then
+if [ "$(pgrep -c ripper)" -gt 1 ]; then
 	echo "Ripper already running, exiting new instance..."
 	exit
 fi
@@ -54,18 +56,18 @@ grep 'bitchute' "$DLARCHIVE" | sed 's/bitchute /https:\/\/www\.bitchute\.com\/vi
 grep -vf /tmp/alreadydownloaded$$ /tmp/todownload$$ | sort -u > /tmp/new_videos$$
 rm -f /tmp/alreadydownloaded$$ /tmp/todownload$$
 number=$(wc -l /tmp/new_videos$$ | cut -d ' ' -f 1 )
-if [ $number -gt 0 ]; then
-	[ $number -gt 1 ] && plural="s"
+if [ "$number" -gt 0 ]; then
+	[ "$number" -gt 1 ] && plural="s"
 	notify-send "Channel Ripper" "$number new video$plural available for download, downloading now."
 	echo  "$number new video$plural for download available, downloading now."
 	if [ "$number"  -lt 10 ];then
 		youtube-dl --get-filename -o "'%(uploader)s' '%(title)s'" -a /tmp/new_videos$$ | xargs -L1 notify-send
 	fi
-	youtube-dl --hls-prefer-native -i --download-archive $DLARCHIVE -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' --add-metadata -o "$DLLOC/%(uploader)s/%(upload_date)s-%(title)s.%(ext)s" -a /tmp/new_videos$$
+	youtube-dl --hls-prefer-native -i --download-archive "$DLARCHIVE" -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' --add-metadata -o "$DLLOC/%(uploader)s/%(upload_date)s-%(title)s.%(ext)s" -a /tmp/new_videos$$
 	rm -f /tmp/new_videos$$
 	notify-send "Channel Ripper" "Finished downloading"
 fi
 
-if [ $number -eq 0 ]; then
+if [ "$number" -eq 0 ]; then
 	echo "No new videos"
 fi
