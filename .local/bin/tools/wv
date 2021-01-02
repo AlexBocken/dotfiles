@@ -1,6 +1,16 @@
 #!/bin/sh
+ppid () { ps -p ${1:-$$} -o ppid=; }
+shell="$(ps aux | grep $( ppid ) | head -n1 | awk '{print $11}' )"
 videos="/tmp/videos$$"
 du -a ~/vids/* --time | awk '!($1="")' | sort -bgr -k1 | awk '!($1="")' | awk '!($1="")' | sed 's/^ //' | grep -v "$(find ~/vids/* -type d | sed 's/$/\$/; s/\[/\\[/g; s/\]/\\]/g')" | sed "s|$HOME|\~|" > $videos
 path="$(dmenu -i -l 30 -p "Choose a video to watch:" <"$videos" | sed "s|\~|$HOME|")"
-[ -n "$path" ] && rifle "$path"
+if [ ! "$shell" = "/bin/sh" ]; then
+	[ -n "$path" ] && rifle "$path"
+else
+	if rifle -l "$path" | head -n1 | grep -q 'EDITOR';then
+		st rifle "$path"
+	else
+		rifle "$path"
+	fi
+fi
 rm "$videos"
