@@ -35,7 +35,7 @@ if [ "$(pgrep -c ripper)" -gt 1 ]; then
 fi
 
 echo "Scanning for new Videos to download"
-echo "Scanning on Youtube:"
+echo "Scanning on Youtube..."
 IDs="$( grep 'youtube' "$CHANNELSFILE" | grep -v '^#' | grep 'channel' | sed 's/https:\/\/www\.youtube\.com\/channel\///')"
 not_correctly_formatted="$(grep 'youtube' "$CHANNELSFILE" | grep -v '^#' | grep -v 'channel')"
 if [  -n "$not_correctly_formatted" ]; then
@@ -45,7 +45,16 @@ if [  -n "$not_correctly_formatted" ]; then
 fi
 for channel_id in $IDs; do
 	echo "ID: $channel_id"
-	curl -s "https://www.googleapis.com/youtube/v3/search?key=$APIKEY&channelId=$channel_id&part=snippet,id&order=date&maxResults=500" | jq '."items" | .[] | .id."videoId"' | tr -d '"' | grep -v '^null$'| sed 's/^/https:\/\/www\.youtube\.com\/watch\?v=/' | grep -vf "$BLACKLIST" >> /tmp/todownload$$
+	json="$(curl -s "https://www.googleapis.com/youtube/v3/search?key=$APIKEY&channelId=$channel_id&part=snippet,id&order=date&maxResults=500")"
+	#Fallback to legacy mode if API quota is exceeded
+	if [ "$(echo "$json" | jq '."error"."errors"[]."reason"')" = '"quotaExceeded"' ];then
+		echo "YT API Quota exceeded, using fallback"
+		lynx --dump --nonumbers -listonly "https://www.youtube.com/channel/$channel_id" | grep 'videos.xml' | xargs curl -s > "${channel_id}.xml"
+
+		#| grep -oE 'yt:video:[^\s\t ]{11,15}' | perl -pe 's/^yt:video:([^ \t\s]*)$/https:\/\/www\.youtube\.com\/watch\?v=\1/' | sed 's|</id||' | grep -vf "$BLACKLIST" >> /tmp/todownload$$ #TODO: Use an actual xml parser instead of regexp
+	else
+		echo "$json" | jq '."items"[].id."videoId"' | tr -d '"' | grep -v '^null$'| sed 's/^/https:\/\/www\.youtube\.com\/watch\?v=/' | grep -vf "$BLACKLIST" >> /tmp/todownload$$
+	fi
 done
 grep 'youtube' "$DLARCHIVE" | sed 's/youtube /https:\/\/www\.youtube\.com\/watch?v=/' > /tmp/alreadydownloaded$$
 
