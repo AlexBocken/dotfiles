@@ -15,11 +15,11 @@ XDG_VIDEOS_DIR=$HOME/vids #TODO ADJUST FOR PERSONAL USE HERE!
 export XDG_VIDEOS_DIR
 DLARCHIVE="${XDG_VIDEOS_DIR:-$HOME/Videos}/.downloaded"
 DLLOC="${XDG_VIDEOS_DIR:-$HOME/Videos}"
-CHANNELSFILE="${XDG_VIDEOS_DIR:-$HOME/Videos}/.channels"
 #FORMAT OF CHANNELSFILE:
 #Youtube: include the channel URI: https://www.youtube.com/channel/<channelId>
 #Bitchute: normal channel URI: https://www.bitchute.com/channel/<user>
 #Lines starting with '#' will be ignored in this file
+CHANNELSFILE="${XDG_VIDEOS_DIR:-$HOME/Videos}/.channels"
 BLACKLIST="${XDG_VIDEOS_DIR:-$HOME/Videos}/.blacklist"
 
 # Required to display notifications if run as a cronjob:
@@ -42,10 +42,13 @@ echo "Scanning for new Videos to download"
 ##YOUTUBE
 echo "Scanning on Youtube..."
 IDs="$( grep 'youtube' "$CHANNELSFILE" | grep -v '^#' | grep 'channel' | sed 's/https:\/\/www\.youtube\.com\/channel\///')"
-not_correctly_formatted="$(grep 'youtube' "$CHANNELSFILE" | grep -v '^#' | grep -v 'channel')"
+not_correctly_formatted="$(grep 'youtube' "$CHANNELSFILE" | grep -v '^#' | grep -v 'https:\/\/www\.youtube\.com\/channel\/')"
 if [  -n "$not_correctly_formatted" ]; then
 	echo Please fix the following channel urls to be scannable:
-	echo "$not_correctly_formatted"
+	echo "$not_correctly_formatted" | while read -r line; do
+		printf 'Given URI:\t%s\n' "$line"
+		printf 'Potentiall correct channel URI:\n\thttps://youtube.com/channel/%s\n' "$(curl "$line" -s | grep -Eo 'externalId":"[^"]*"' | sed 's|^externalId":"||; s|"||g')"
+	done
 	echo "They need to be in the 'https://www.youtube.com/channel/...' format"
 fi
 for channel_id in $IDs; do
