@@ -45,7 +45,7 @@ if [  -n "$not_correctly_formatted" ]; then
 fi
 for channel_id in $IDs; do
 	echo "ID: $channel_id"
-	curl -s "https://www.googleapis.com/youtube/v3/search?key=$APIKEY&channelId=$channel_id&part=snippet,id&order=date&maxResults=500" | jq '."items" | .[] | .id."videoId"' | tr -d '"' | sed 's/^/https:\/\/www\.youtube\.com\/watch\?v=/' | grep -vf "$BLACKLIST" >> /tmp/todownload$$
+	curl -s "https://www.googleapis.com/youtube/v3/search?key=$APIKEY&channelId=$channel_id&part=snippet,id&order=date&maxResults=500" | jq '."items" | .[] | .id."videoId"' | tr -d '"' | grep -v '^null$'| sed 's/^/https:\/\/www\.youtube\.com\/watch\?v=/' | grep -vf "$BLACKLIST" >> /tmp/todownload$$
 done
 grep 'youtube' "$DLARCHIVE" | sed 's/youtube /https:\/\/www\.youtube\.com\/watch?v=/' > /tmp/alreadydownloaded$$
 
