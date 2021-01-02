@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #A script that launches documents in their respective viewers
 #either via dmenu or fzf depending on the context
 ppid () { ps -p ${1:-$$} -o ppid=; }
@@ -27,10 +27,13 @@ else
 fi
 #process selection if it's from dmenu
 [ -z "$file" ] && exit
-path="$(printf '%s%s' "$HOME" "${file//\~/}")"
-cd "$( dirname "$path" )" || exit
-if rifle -l "$path" | head -n1 | grep -q 'EDITOR';then
-	st rifle "$path"
-else
-	rifle "$path"
-fi
+path="$(echo "$file" | sed "s|\~|$HOME|")"
+echo "$path" |
+	while read -r pathfile; do
+	cd "$( dirname "$pathfile" )" || exit
+	if rifle -l "$pathfile" | head -n1 | grep -q 'EDITOR';then
+		st rifle "$pathfile"
+	else
+		rifle "$pathfile"
+	fi
+done
