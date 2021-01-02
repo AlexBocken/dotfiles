@@ -2,6 +2,9 @@
 #A script that checks multiple youtube and bitchute channels for new videos to download via youtube-dl
 #This script works considerably faster than just giving youtube-dl a channel URI.
 #The YouTube implementation now uses a YoutubeData API v3 key to work more reliably.
+#This can be quite quota taxing, as each channel search is 1% of the allotted qutoa for the day.
+#-> checking n YT channels => n% of daily quota required to run this script
+#Keep this in mind when running it as a cronjob
 #Either insert this key in plain text below at the variable "APIKEY" or do it via ENV vars or a password manager
 #Since bitchute still doesn't have an API I'm using lynx to emulate a user.
 #This can limit the number of recent videos available. For a whole download of bitchute channels consider other methods first.
