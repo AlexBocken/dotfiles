@@ -28,13 +28,18 @@ export DBUS_SESSION_BUS_ADDRESS
 export DISPLAY=:0.0
 
 APIKEY="$(pass show Misc/Youtube\ Data\ API\ v3 | head -n1 )"
+LEGACYMODE=$1 #set to anything nonzero to ignore YT API
 
+[ -n "$LEGACYMODE" ] && printf "Using YT Legacy fallback mode...\nThis is less reliable than the API requests.\nOnly expect to find the last 5 videos or so per channel\n"
 if [ "$(pgrep -c ripper)" -gt 1 ]; then
 	echo "Ripper already running, exiting new instance..."
 	exit
 fi
 
 echo "Scanning for new Videos to download"
+
+
+##YOUTUBE
 echo "Scanning on Youtube..."
 IDs="$( grep 'youtube' "$CHANNELSFILE" | grep -v '^#' | grep 'channel' | sed 's/https:\/\/www\.youtube\.com\/channel\///')"
 not_correctly_formatted="$(grep 'youtube' "$CHANNELSFILE" | grep -v '^#' | grep -v 'channel')"
@@ -45,10 +50,14 @@ if [  -n "$not_correctly_formatted" ]; then
 fi
 for channel_id in $IDs; do
 	echo "ID: $channel_id"
-	json="$(curl -s "https://www.googleapis.com/youtube/v3/search?key=$APIKEY&channelId=$channel_id&part=snippet,id&order=date&maxResults=500")"
-	#Fallback to legacy mode if API quota is exceeded
-	if [ "$(echo "$json" | jq '."error"."errors"[]."reason"')" = '"quotaExceeded"' ];then
-		echo "YT API Quota exceeded, using fallback"
+	if [ -z "$LEGACYMODE" ]; then
+		json="$(curl -s "https://www.googleapis.com/youtube/v3/search?key=$APIKEY&channelId=$channel_id&part=snippet,id&order=date&maxResults=500")"
+		#Fallback to legacy mode if API quota is exceeded
+		if [ "$(echo "$json" | jq '."error"."errors"[]."reason"')" = '"quotaExceeded"' ];then
+			echo "YT API Quota exceeded, using fallback"
+			LEGACYMODE=1
+		fi
+	elif [ -n "$LEGACYMODE" ];then
 		lynx --dump --nonumbers -listonly "https://www.youtube.com/channel/$channel_id" | grep 'videos.xml' | xargs curl -s > /tmp/"${channel_id}.xml"
 		python -c "from lxml import etree
 file=\"/tmp/${channel_id}.xml\"
@@ -64,10 +73,13 @@ for el in root.iter():
 done
 grep 'youtube' "$DLARCHIVE" | sed 's/youtube /https:\/\/www\.youtube\.com\/watch?v=/' > /tmp/alreadydownloaded$$
 
+##BITCHUTE
+#This section is quite generic and could probably be easily adapted for other video hosting websites
 echo "Scanning on Bitchute..."
 grep 'bitchute' "$CHANNELSFILE" | grep -v '^#' | xargs -L1 lynx --dump --nonumbers -listonly | grep 'bitchute\.com\/video' | sort -u | grep -vf "$BLACKLIST" >> /tmp/todownload$$
 grep 'bitchute' "$DLARCHIVE" | sed 's/bitchute /https:\/\/www\.bitchute\.com\/video\//' >> /tmp/alreadydownloaded$$
 
+##DOWNLOAD VIDEOS FROM ACCUMULATED LINKS
 grep -vf /tmp/alreadydownloaded$$ /tmp/todownload$$ | sort -u > /tmp/new_videos$$
 rm -f /tmp/alreadydownloaded$$ /tmp/todownload$$
 number=$(wc -l /tmp/new_videos$$ | cut -d ' ' -f 1 )
