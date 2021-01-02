@@ -49,9 +49,15 @@ for channel_id in $IDs; do
 	#Fallback to legacy mode if API quota is exceeded
 	if [ "$(echo "$json" | jq '."error"."errors"[]."reason"')" = '"quotaExceeded"' ];then
 		echo "YT API Quota exceeded, using fallback"
-		lynx --dump --nonumbers -listonly "https://www.youtube.com/channel/$channel_id" | grep 'videos.xml' | xargs curl -s > "${channel_id}.xml"
-
-		#| grep -oE 'yt:video:[^\s\t ]{11,15}' | perl -pe 's/^yt:video:([^ \t\s]*)$/https:\/\/www\.youtube\.com\/watch\?v=\1/' | sed 's|</id||' | grep -vf "$BLACKLIST" >> /tmp/todownload$$ #TODO: Use an actual xml parser instead of regexp
+		lynx --dump --nonumbers -listonly "https://www.youtube.com/channel/$channel_id" | grep 'videos.xml' | xargs curl -s > /tmp/"${channel_id}.xml"
+		python -c "from lxml import etree
+file=\"/tmp/${channel_id}.xml\"
+root = etree.parse(file)
+for el in root.iter():
+	if(el.tag in '{http://www.youtube.com/xml/schemas/2015}videoId'):
+		print(el.text)" |
+			sed 's/^/https:\/\/www\.youtube\.com\/watch\?v=/' | grep -vf "$BLACKLIST" >> /tmp/todownload$$
+		rm -f "/tmp/${channel_id}.xml"
 	else
 		echo "$json" | jq '."items"[].id."videoId"' | tr -d '"' | grep -v '^null$'| sed 's/^/https:\/\/www\.youtube\.com\/watch\?v=/' | grep -vf "$BLACKLIST" >> /tmp/todownload$$
 	fi
