@@ -33,7 +33,7 @@ echo "Scanning for new Videos to download"
 echo "Scanning on Youtube:"
 IDs="$( grep 'youtube' "$CHANNELSFILE" | grep -v '^#' | grep 'channel' | sed 's/https:\/\/www\.youtube\.com\/channel\///')"
 not_correctly_formatted="$(grep 'youtube' "$CHANNELSFILE" | grep -v '^#' | grep -v 'channel')"
-if [  "$( echo "$not_correctly_formatted" | wc -l )" -gt 0 ]; then
+if [  -n "$not_correctly_formatted" ]; then
 	echo Please fix the following channel urls to be scannable:
 	echo "$not_correctly_formatted"
 	echo "They need to be in the 'https://www.youtube.com/channel/...' format"
