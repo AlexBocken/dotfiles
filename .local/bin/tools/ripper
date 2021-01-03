@@ -56,7 +56,7 @@ for channel_id in $IDs; do
 	if [ -z "$LEGACYMODE" ]; then
 		json="$(curl -s "https://www.googleapis.com/youtube/v3/search?key=$APIKEY&channelId=$channel_id&part=snippet,id&order=date&maxResults=500")"
 		#Fallback to legacy mode if API quota is exceeded
-		if [ "$(echo "$json" | jq '."error"."errors"[]."reason"')" = '"quotaExceeded"' ];then
+		if [ "$(echo "$json" | jq '."error"."errors"[]."reason"' 2> /dev/null )" = '"quotaExceeded"' ];then
 			echo "YT API Quota exceeded, using fallback"
 			LEGACYMODE=1
 		fi
