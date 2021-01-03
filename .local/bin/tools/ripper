@@ -26,6 +26,11 @@ BLACKLIST="${XDG_VIDEOS_DIR:-$HOME/Videos}/.blacklist"
 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus
 export DBUS_SESSION_BUS_ADDRESS
 export DISPLAY=:0.0
+XDG_DATA_HOME=/home/alex/.local/share
+# Required to have pass work if run as cronjob
+export PASSWORD_STORE_GPG_OPTS="--homedir=$XDG_DATA_HOME/gnupg"
+export GTK2_RC_FILES="${XDG_CONFIG_HOME:-$HOME/.config}/gtk-2.0/gtkrc-2.0"
+[ -d "$HOME/.local/share/password-store" ] && export PASSWORD_STORE_DIR="$HOME/.local/share/password-store"
 
 APIKEY="$(pass show Misc/Youtube\ Data\ API\ v3 | head -n1 )"
 LEGACYMODE=$1 #set to anything nonzero to ignore YT API
