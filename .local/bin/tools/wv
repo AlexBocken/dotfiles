@@ -1,6 +1,6 @@
 #!/bin/sh
 videos="/tmp/videos$$"
-du -a ~/vids/* --time | awk '!($1="")' | sort -bgr -k1 | awk '!($1="")' | awk '!($1="")' | sed 's/^ //' | grep -v "$(find ~/vids/* -type d | sed 's/$/\$/; s/\[/\\[/g; s/\]/\\]/g')" | sed "s|$HOME|\~|" > $videos
+du -a ~/vids/* ~/dls/* --time | awk '!($1="")' | sort -bgr -k1 | awk '!($1="")' | awk '!($1="")' | sed 's/^ //' | grep -v "$(find ~/vids/* ~/dls/* -type d | sed 's/$/\$/; s/\[/\\[/g; s/\]/\\]/g')" | sed "s|$HOME|\~|" > $videos
 path="$(dmenu -i -l 30 -p "Choose a video to watch:" <"$videos" | sed "s|\~|$HOME|")"
 rm "$videos"
 if [ -n "$path" ];then
