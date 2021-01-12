@@ -1,0 +1,7 @@
+#!/bin/sh
+ifinstalled python && python -iq -c "print('Welcome to the Calculator')
+from numpy import *
+import sys
+import matplotlib.pyplot as plt
+sys.ps1='❯'
+"

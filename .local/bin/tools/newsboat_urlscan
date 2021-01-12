@@ -1,0 +1,16 @@
+#!/bin/sh
+urlregex="(((http|https)://|www\\.)[a-zA-Z0-9.]*[:]?[a-zA-Z0-9./@$&%?$#=_-]*)|((magnet:\\?xt=urn:btih:)[a-zA-Z0-9]*)"
+
+# First remove linebreaks and mutt sidebars:
+urls="$(sed 's/.*│//g' | tr -d '\n' |
+	grep -aEo "$urlregex" | # grep only urls as defined above.
+	sed 's/Podcast$//' |
+	sed 's/^www./http:\/\/www\./g' | uniq )"
+[ -z "$urls" ] && exit
+if [ "$( echo "$urls" | wc -l )" -gt 1 ]; then
+	chosen="$(echo "$urls"  | dmenu -i -p 'Follow which url?' -l 10)"
+else
+	chosen="$urls"
+fi
+[ -z "$chosen" ] && exit
+echo "$chosen" | xargs dmenuhandler
