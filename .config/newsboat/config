@@ -1,9 +1,11 @@
 #show-read-feeds no
 auto-reload yes
+reload-threads 100
 
-#external-url-viewer "urlscan -dc -r 'dmenuhandler {}'"
 external-url-viewer "newsboat_urlscan {}"
-#external-url-viewer "urlscan -dn -r 'echo {} | newsboat_urlscan'
+
+notify-program "/usr/bin/notify-send"
+notify-format "%d new articles (%n unread articles, %f unread feeds)"
 
 bind-key j down
 bind-key k up
