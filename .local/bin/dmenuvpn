@@ -4,7 +4,7 @@ USER='alexander@bocken.org'
 ETH_user="abocken@student-net.ethz.ch"
 ETH_password_path="ETH/VPN"
 
-choice="$(ls "${XDG_CONFIG_HOME}/openvpn/cfgs" | sed 's/\.ovpn//' | awk 'BEGIN {print "ETH"}; {print $0}' | dmenu -p 'connect with which vpn server?' -l 10)"
+choice="$(ls "${XDG_CONFIG_HOME}/openvpn/cfgs" | sed 's/\.ovpn//' | awk 'BEGIN {print "ETH"}; {print $0}' | dmenu -i -p 'connect with which vpn server?' -l 10)"
 [ -z "$choice" ] && exit
 if [ "$choice" = "ETH" ]; then
 	if [ $(pgrep -c openconnect) -eq 0 ]; then
