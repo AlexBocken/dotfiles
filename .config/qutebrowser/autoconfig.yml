@@ -40,6 +40,7 @@ settings:
     https://1337x.to: false
     https://boards.4chan.org: true
     https://boards.4channel.org: true
+    https://iq.opengenus.org: false
     https://nobodyhasthe.biz: true
     https://old.reddit.com: false
     https://riot.im: true
@@ -68,6 +69,20 @@ settings:
     - '{file}'
     - -c
     - normal {line}G{column0}l
+  fileselect.handler:
+    global: external
+  fileselect.multiple_files.command:
+    global:
+    - st
+    - -e
+    - ranger
+    - --choosefiles={}
+  fileselect.single_file.command:
+    global:
+    - st
+    - -e
+    - ranger
+    - --choosefile={}
   fonts.default_size:
     global: 20pt
   fonts.web.size.default_fixed:
