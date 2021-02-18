@@ -2,23 +2,30 @@
 
 [ -z "$1" ] && exit # If $1 is left, hovers in the bottom left, if right, the bottom right
 current=$(xdotool getwindowfocus)
-dims="$(xrandr --screen 0 | grep ' connected' | grep -v '^\s*$' | sed 's/ primary//' | cut -d ' ' -f3)"
+
+# xrandr is quite slow in execution. displayselect will generate a new one in postrun.
+# Otherwise if none exist this script will run xrandr once
+if [ -f /tmp/dims ]; then
+	dims="$(cat /tmp/dims)"
+else
+	dims="$(xrandr --screen 0 | grep ' connected' | grep -v '^\s*$' | sed 's/ primary//' | cut -d ' ' -f3 | tee -i '/tmp/dims')"
+fi
 horizontal_offset="$( echo "$dims" | cut -d '+' -f2 )"
-mouse_location_horizontal="$(xdotool getmouselocation | grep -Po 'x:\d{1,5}' | tr -d 'x:')"
-#var passed is an accumulator for screens that fit the current mouse location or less
+mouse_location_horizontal="$(xdotool getmouselocation | grep -Eo 'x:[0-9]{1,5}' | tr -d 'x:')"
+# var passed is an accumulator for screens that fit the current mouse location or less
 for screen in $horizontal_offset; do
 	[ "$screen" -lt "$mouse_location_horizontal" ] && passed="$(printf '%s\n%s\n' "$passed" "$screen")"
 done
-#take max of all screens to the left of mouse
+# take max of all screens to the left of mouse
 offset_of_screen_mouse_is_on="$(echo "$passed" | sort -n | tail -n1)"
 dim="$( echo "$dims" | grep "+$offset_of_screen_mouse_is_on+" )"
 screenwidth="$( echo "$dim" | grep -Eo '^[0-9]{1,5}x' | tr -d 'x')"
 screenheight="$( echo "$dim" | grep -Eo 'x[0-9]{1,5}+' | tr -d 'x+')"
 
-#Adjust here for larger/smaller windows
+# Adjust here for larger/smaller windows
 newwidth=$(( 2 * screenwidth / 5))
 newheight=$(( 2 * screenheight / 5))
-#fit your borderwidth setup of your WM or windows could bleed over to other display
+# fit your borderwidth setup of your WM or windows could bleed over to other display
 borderwidth=2
 
 case "$1" in
