@@ -2,17 +2,31 @@
 
 [ -z "$1" ] && exit # If $1 is left, hovers in the bottom left, if right, the bottom right
 current=$(xdotool getwindowfocus)
-newwidth=$(( 2 * $(xdotool getdisplaygeometry | awk '{print $1}') / 5))
-newheight=$(( 2 * $(xdotool getdisplaygeometry | awk '{print $2}') / 5))
-borderwidth=1
+dims="$(xrandr --screen 0 | grep ' connected' | grep -v '^\s*$' | sed 's/ primary//' | cut -d ' ' -f3)"
+horizontal_offset="$( echo "$dims" | cut -d '+' -f2 )"
+mouse_location_horizontal="$(xdotool getmouselocation | grep -Po 'x:\d{1,5}' | tr -d 'x:')"
+#var passed is an accumulator for screens that fit the current mouse location or less
+for screen in $horizontal_offset; do
+	[ "$screen" -lt "$mouse_location_horizontal" ] && passed="$(printf '%s\n%s\n' "$passed" "$screen")"
+done
+#take max of all screens to the left of mouse
+offset_of_screen_mouse_is_on="$(echo "$passed" | sort -n | tail -n1)"
+dim="$( echo "$dims" | grep "+$offset_of_screen_mouse_is_on+" )"
+screenwidth="$( echo "$dim" | grep -Eo '^[0-9]{1,5}x' | tr -d 'x')"
+screenheight="$( echo "$dim" | grep -Eo 'x[0-9]{1,5}+' | tr -d 'x+')"
+
+#Adjust here for larger/smaller windows
+newwidth=$(( 2 * screenwidth / 5))
+newheight=$(( 2 * screenheight / 5))
+#fit your borderwidth setup of your WM or windows could bleed over to other display
+borderwidth=2
 
 case "$1" in
-	left)	horizontal=borderwidth;
-		vertical=$(($(xdotool getdisplaygeometry | awk '{print $2}') - newheight - 2 * borderwidth )) ;;
-	right)	horizontal=$(($(xdotool getdisplaygeometry | awk '{print $1}') - newwidth - 2 * borderwidth ))
-		vertical=$(($(xdotool getdisplaygeometry | awk '{print $2}') - newheight  - 2 * borderwidth )) ;;
+	left)	horizontal=$(( borderwidth ))
+		vertical=$(( screenheight - newheight - 2 * borderwidth )) ;;
+	right)	horizontal=$((  screenwidth - newwidth - 2 * borderwidth ))
+		vertical=$(( screenheight - newheight  - 2 * borderwidth )) ;;
 esac
-wmctrl -r :ACTIVE: -b remove,maximized_vert,maximized_horz
-wmctrl -r :ACTIVE: -e 0,$horizontal,$vertical,$newwidth,$newheight
-#xdotool windowsize "$current" $newwidth $newheight
-#xdotool windowmove "$current" $horizontal $vertical
+
+xdotool windowsize "$current" $newwidth $newheight
+xdotool windowmove "$current" $horizontal $vertical
