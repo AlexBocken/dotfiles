@@ -188,6 +188,8 @@ Sxiv.txtcolor: nord6
 Sxiv.background: bblack
 Sxiv.foreground: nord6
 
+xterm*saveLines: 2000
+
 *.color0: nord1
 *.color1: nord11
 *.color2: nord14

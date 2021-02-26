@@ -14,6 +14,7 @@ export PATH="$PATH:$(du "$HOME/.local/share/cargo/bin" | cut -f2 | tr '\n' ':' |
 
 # Default programs:
 export EDITOR="nvim"
+export PAGER="less"
 export TERMINAL="st"
 export BROWSER="qutebrowser"
 export READER="zathura"
@@ -51,7 +52,7 @@ export PASSWORD_STORE_GPG_OPTS='--homedir=/home/alex/.local/share/gnupg'
 # XDG USER DIRECOTRIES
 export XDG_DESKTOP_DIR="$HOME"
 export XDG_DOCUMENTS_DIR="$HOME/dox"
-export XDG_DOWNLOAD_DIR="$HOME/dl"
+export XDG_DOWNLOAD_DIR="$HOME/dls"
 export XDG_MUSIC_DIR="$HOME/msc"
 export XDG_PICTURES_DIR="$HOME/pics"
 export XDG_VIDEOS_DIR="$HOME/vids"

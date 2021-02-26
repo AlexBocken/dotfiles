@@ -31,6 +31,8 @@ settings:
           ""
         ',v': hint links spawn -d startmpv {hint-url}
         ',x': hint links spawn -d dmenuhandler {hint-url}
+  content.blocking.method:
+    global: both
   content.desktop_capture:
     global: ask
   content.headers.user_agent:
@@ -108,7 +110,7 @@ settings:
       gg: https://linggle.com/?q={}
       ling: https://www.linguee.com/english-german/search?source=auto&query={}
       oz: http://www.ozdic.com/collocation-dictionary/{}
-      sx: https://searx.bocken.org/?q={}&categories=general&language=en-US
+      sx: https://searx.lukesmith.xyz/?q={}&categories=general&language=en-US
       yt: https://www.youtube.com/results?search_query={}
   url.start_pages:
     global: https://searx.lukesmith.xyz/

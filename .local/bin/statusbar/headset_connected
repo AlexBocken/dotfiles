@@ -1,6 +1,5 @@
-#!/bin/bash
+#!/bin/sh
 if pactl list sinks | grep -qE 'device.icon_name = \"audio-(headset|headphones)-bluetooth\"'; then
-	echo 🎧
-else
-	echo ""
+	printf '🎧'
 fi
+printf '\n'

@@ -43,8 +43,7 @@ alias \
 	glog="git log --all --graph --decorate"\
 	clog="config log --all --graph --decorate"\
 	cam="mpv --demuxer-lavf-format=video4linux2 --demuxer-lavf-o-set=input_format=mjpeg av://v4l2:/dev/video0"\
-	createvocabhtml="awk -F '\t' '{print \"<div class='word'><b>\"$2\"</b></div><div class='part_of_speech'>\"$4\"</div>\t <div class='meaning'><b>\"$3\"</b></div><div class='explanation'>\"$5\"</div><div class='example'>\"$6\"</div><div class='bottom'>no. \"$1\", \"$7\", \"$8\"</div>\"}'"
-
+	pa="paru"
 
 # Some other stuff
 alias \
@@ -54,14 +53,6 @@ alias \
 	tmux="tmux -f ${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tmux.conf"\
 	cast="mkchromecast --video --control -i"\
 	castaudio="mkchromecast --control --screencast --b 320"\
-	rest="clear && sleep 90 && echo ###########START############"
-	#gpg="gpg --homedir=$GNUPGHOME"
+	mlterm="matlab -nosplash -nodesktop -noopengl"
 
-# Some useful functions
-vf() { fzf | xargs -r -I % $EDITOR % ;}
-#	 [ -z $video ] || ( mpv "$video" & disown ) ;}
-vpdf() { pdf="$( ls -t $HOME/.cache/luakit/viewpdf/ | fzf -e )"
-	[ -z $pdf ] || ( $READER "$HOME/.cache/luakit/viewpdf/$pdf" & disown ) ;}
-epdf() { pdf="$(du -a --time ETH/ | awk '!($1="")' | sort -r | grep '\.pdf' | awk '!($1="")' | awk '!($1="")' | sed 's/^ //' | fzf -e )"
-	[ -z $pdf ] || ( $READER "$pdf" & ) ;}
 alias config='/usr/bin/git --git-dir=/home/alex/.local/share/git_dotfiles --work-tree=/home/alex'

@@ -4,7 +4,7 @@
 current=$(xdotool getwindowfocus)
 
 # xrandr is quite slow in execution. displayselect will generate a new one in postrun.
-# Otherwise if none exist this script will run xrandr once
+# Otherwise if none exist this script will run xrandr once. Changing display setups will not be detected.
 if [ -f /tmp/dims ]; then
 	dims="$(cat /tmp/dims)"
 else
@@ -23,17 +23,22 @@ screenwidth="$( echo "$dim" | grep -Eo '^[0-9]{1,5}x' | tr -d 'x')"
 screenheight="$( echo "$dim" | grep -Eo 'x[0-9]{1,5}+' | tr -d 'x+')"
 
 # Adjust here for larger/smaller windows
-newwidth=$(( 2 * screenwidth / 5))
-newheight=$(( 2 * screenheight / 5))
+newheight=$(( 2 * screenheight / 5 ))
+newwidth=$(( 2 * screenwidth / 5 ))
 # fit your borderwidth setup of your WM or windows could bleed over to other display
 borderwidth=2
 
+# see https://specifications.freedesktop.org/wm-spec/wm-spec-1.3.html for gravity specs
 case "$1" in
 	left)	horizontal=$(( borderwidth ))
-		vertical=$(( screenheight - newheight - 2 * borderwidth )) ;;
+		vertical=$(( screenheight - newheight - 2 * borderwidth ))
+		gravity=7 #gravity of southwest
+		;;
 	right)	horizontal=$((  screenwidth - newwidth - 2 * borderwidth ))
-		vertical=$(( screenheight - newheight  - 2 * borderwidth )) ;;
+		vertical=$(( screenheight - newheight  - 2 * borderwidth ))
+		gravity=9 #gravity of southeast
+		;;
 esac
 
-xdotool windowsize "$current" $newwidth $newheight
-xdotool windowmove "$current" $horizontal $vertical
+wmctrl -r :ACTIVE: -b remove,maximized_vert,maximized_horz
+wmctrl -r :ACTIVE: -e $gravity,$horizontal,$vertical,$newwidth,$newheight
