@@ -5,7 +5,7 @@
 # selection" which opens arandr.
 
 #automatically scale HD screens to better work with hidpi
-scale_factor_HD=1.6
+scale_factor_HD=${1:-1.6}
 
 #fixes issue that script gets called twice for some reason
 [ "$(pgrep -c displayselect)" -gt 1 ] && exit

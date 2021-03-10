@@ -6,6 +6,10 @@ if [ -n "$diff" ]; then
 	secs=$(( $(echo "$diff" | cut -f1 -d ':') * 3600  + $(echo "$diff" | cut -f2 -d ':') *60 ))
 	time_appointment="$(date --date "@$(( $( date +'%s' ) + $secs ))" +"%s")"
 	appointment="$(calcurse --next | tail -n1 | awk '{$1=""; print $0}' | sed 's/^\s*//')"
+	#shorten lecture appointments to just the name of lecture without profs
+	if [ "${#appointment}" -gt 20 ]; then
+		appointment="$(echo "$appointment" | sed -E 's/\(([VUG])\).*/(\1)/')"
+	fi
 	if [ "$1" = "notif" ]; then
 		msg="$(printf '%s\n%s' "$(date --date "@$time_appointment" +'%H:%M')" "$appointment")"
 		notify-send "Appointment coming up" "$msg"
@@ -15,9 +19,7 @@ if [ -n "$diff" ]; then
 			if [ ! -f /tmp/nodunst ]; then
 				printf '%s %s' "$(date --date "@$time_appointment" +'%H:%M')" "$appointment"
 			fi
-			printf '\n'
 		fi
 	fi
-else
-	printf '\n'
 fi
+printf '\n'

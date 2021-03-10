@@ -53,6 +53,5 @@ alias \
 	tmux="tmux -f ${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tmux.conf"\
 	cast="mkchromecast --video --control -i"\
 	castaudio="mkchromecast --control --screencast --b 320"\
-	mlterm="matlab -nosplash -nodesktop -noopengl"
 
 alias config='/usr/bin/git --git-dir=/home/alex/.local/share/git_dotfiles --work-tree=/home/alex'

@@ -38,6 +38,10 @@ settings:
   content.headers.user_agent:
     global: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like
       Gecko) Chrome/85.0.4183.121 Safari/537.36
+  content.media.audio_capture:
+    https://teams.microsoft.com: true
+  content.media.audio_video_capture:
+    https://teams.microsoft.com: true
   content.notifications:
     https://1337x.to: false
     https://boards.4chan.org: true
