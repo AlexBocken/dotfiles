@@ -17,6 +17,6 @@ case "$(printf "mpv\\ncopy url\\nqueue download\\nqueue youtube-dl\\nbrowser\\nr
 	#w3m) w3m "$1" >/dev/null 2>&1 ;;
 	#"mpv (float)") setsid mpv --input-ipc-server=/tmp/mpvsoc$(date +%s) --geometry=+0-0 --autofit=30%  --title="mpvfloat" "$1" >/dev/null 2>&1 & ;;
 	"rip media") dest="$(dmenuinput 'name of folder:')"
-			lynx --dump --nonumbers --listonly "$1" | grep -E "(*\.webm|*\.mp4|\.gif|\.jpg|\.jpeg|\.png|\.pdf|\.epub|\.mobi|\.djvu)" | sort -u | xargs wget -P "$HOME/$dest"
+			lynx --dump --nonumbers --listonly "$1" | grep -E "\.(webm|mp4|gif|jpg|jpeg|png|pdf|epub|mobi|djvu)" | sort -u | xargs wget -P "$HOME/$dest"
 			notify-send "dmenuhandler" "all media ripped into $dest";;
 esac

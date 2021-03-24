@@ -30,9 +30,10 @@ Plug 'rhysd/vim-grammarous'
 call plug#end()
 
 " Integrated spell-check
+"set spell
 " set spellang = en,de
-" nnoremap <silent> <F11> :set spell!<cr>
-" inoremap <silent> <F11> <C-O>:set spell!<cr>
+nnoremap <silent> <F11> :set spell!<cr>
+inoremap <silent> <F11> <C-O>:set spell!<cr>
 
 set bg=light
 set go=a

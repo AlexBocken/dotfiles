@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #A script that launches documents in their respective viewers
 #either via dmenu or fzf depending on the context
 ppid () { ps -p ${1:-$$} -o ppid=; }

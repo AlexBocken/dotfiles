@@ -21,11 +21,11 @@ update() {
 [ -f "$lasttime" ] && read -r previoustime < "$lasttime" || previoustime=0
 rx=$(update /sys/class/net/[ew]*/statistics/rx_bytes)
 tx=$(update /sys/class/net/[ew]*/statistics/tx_bytes)
-timedifference=$(( "$(date +'%s')" - "$previoustime" ))
+timedifference=$(( $(date +'%s') - previoustime ))
 
 if [ "$timedifference" -gt 0 ]; then
-	rx_avg=$(( "$rx" / "$timedifference" ))
-	tx_avg=$(( "$tx" / "$timedifference" ))
+	rx_avg=$(( rx / timedifference ))
+	tx_avg=$(( tx / timedifference ))
 else
 	rx_avg=$rx
 	tx_avg=$tx
