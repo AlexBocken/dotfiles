@@ -3,7 +3,7 @@
 #It uses the file name used by the uploader.
 #consider using it in a cronjob intermittently with something like
 #*/10 * * * * /home/<yourname>/.local/bin/threadwatcher scan
-THREADWATCHER_DIR=URLFILE=${XDG_DATA_HOME-:$HOME/.local/share}/4chan_watcher
+THREADWATCHER_DIR=${XDG_DATA_HOME:-$HOME/.local/share}/4chan_watcher
 URLFILE="$THREADWATCHER_DIR/threads"
 TMP_URLFILE=/tmp/4chan_thread_watcher_tmp$$
 
@@ -11,11 +11,18 @@ TMP_URLFILE=/tmp/4chan_thread_watcher_tmp$$
 [ -f "$URLFILE" ] || touch "$URLFILE"
 
 scan(){
-	echo "SCANNING"
+	if [ $(wc -l "$URLFILE"| cut -d ' ' -f1) -gt 0 ]; then
+		echo "scanning threads..."
+	else
+		echo "no threads to watch over currently"
+		exit
+	fi
 	while read -r line; do
+		running_dls=0
 		url="$(echo "$line" | cut -f1)"
 		echo "scanning $url"
 		dl_location="$(echo "$line" | cut -f2)"
+		mkdir -p "$dl_location"
 		echo "downloading to $dl_location"
 		mkdir -p "$dl_location"
 		json_url="$(echo "$url" | sed -E 's/boards\.(4chan|4channel)/a.4cdn/; s/$/.json/')"
@@ -27,31 +34,41 @@ scan(){
 		else
 			echo "$line" >> "$TMP_URLFILE"
 		fi
-		files_json="$(jq '.posts[] | if has("filename") then {filename: "\(.filename)\(.ext)", location: "\(.tim)\(.ext)", md5: .md5} else null end ' < /tmp/content$$ | grep -vE '^null$')"
+		files_json="$(jq '.posts[] | if has("filename") then {filename: "\(.no)_\(.filename)\(.ext)", location: "\(.tim)\(.ext)", md5: .md5} else null end ' < /tmp/content$$ | grep -vE '^null$')"
 		echo "$files_json" | jq '.filename' | tr -d '"' >> /tmp/filename$$
 		echo "$files_json" | jq '.location' | tr -d '"' >> /tmp/location$$
 		echo "$files_json" | jq '.md5' | tr -d '"' >> /tmp/md5$$
 		paste /tmp/filename$$ /tmp/location$$ >> /tmp/tmp$$
 		files="$(paste /tmp/tmp$$ /tmp/md5$$)"
 		rm /tmp/tmp$$ /tmp/md5$$ /tmp/location$$ /tmp/filename$$ /tmp/content$$
-		#echo "$files"
 		echo "$files" | while read -r file_line; do
 			filename="$(echo "$file_line" | cut -f1)"
 			master_location="$(echo "$file_line" | cut -f2 | tr -d '"')"
 			filelocation="$dl_location/$filename"
 			correct_md5="$(echo "$file_line" | cut -f3)"
+			[ -f "$filelocation" ] && slave_md5="$(openssl dgst -md5 -binary "$filelocation" | openssl enc -base64)"
 			board="$(echo "$url" | cut -d '/' -f4)"
 			file_url="https://i.4cdn.org/$board/$master_location"
-			mkdir -p "$dl_location"
-			#TODO: implement actual md5 checksum check instead of just looking whether the file exists
-			if [ -f "$filelocation" ]; then
+			if [ -f "$filelocation" ]  && [ "$correct_md5" = "$slave_md5" ]; then
 				true
 			else
-				touch "$filelocation" #to keep atime order correct?
+				if [ "$correct_md5" != "$slave_md5" ] && [ -f "$filelocation" ]; then
+					rm "$filelocation"
+					echo "removed $filename because of incorrect checksum, redownloading."
+				fi
+				[ -f "$filelocation" ] ||
+					touch "$filelocation" #to keep atime order correct?
+				#limit concurrent dls
+				if [ $running_dls -gt 25 ]; then
+					wait
+					running_dls=0
+				fi
 				wget -q -O "$filelocation" "$file_url" &
 				echo downloading "$filelocation"
+				((running_dls=running_dls+1))
 			fi
 		done
+		wait
 	done<"$URLFILE"
 	mv "$TMP_URLFILE" "$URLFILE"
 }
@@ -61,12 +78,18 @@ case "$1" in
 		else
 			dl_location="$HOME/$3"
 		fi
-		if grep -q "^$2\t" "$URLFILE"; then
-			dl_location_already="$(grep "^$2\t" "$URLFILE" | cut -f2)"
+		if grep -qP "^$2\t" "$URLFILE"; then
+			dl_location_already="$(grep -P "^$2\t" "$URLFILE" | cut -f2)"
 			notify-send "threadwatcher" "Thread already being watched. currently downloads to $dl_location_already"
-			new_location="$(dmenuinput "If you want to change location of thread to download, please insert new directory now:")"
-			sed -i "s|$dl_location_already|$new_location" "$URLFILE|"
-			mv "$dl_location_already" "$new_location"
+			choice="$(dmenuinput "If you want to change location of thread to download, please insert new directory now:")"
+			if echo "$choice" | grep -qE '^/'; then
+				new_location="$3"
+			else
+				new_location="$HOME/$3"
+			fi
+			[ -z "$new_location" ] && exit
+			sed -i "s|$dl_location_already|$new_location|" "$URLFILE"
+			mv $dl_location_already/* "$new_location"
 			notify-send "threadwatcher" "already downloaded files moved to $new_location. New files will also be downloaded there"
 		else
 			printf "%s\t%s\n" "$2" "$dl_location" | tee -ai "$URLFILE"
