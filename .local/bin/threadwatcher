@@ -10,6 +10,8 @@ TMP_URLFILE=/tmp/4chan_thread_watcher_tmp$$
 [ -d "$THREADWATCHER_DIR" ] || mkdir -p "$THREADWATCHER_DIR"
 [ -f "$URLFILE" ] || touch "$URLFILE"
 
+ping -q -c 1 1.1.1.1 > /dev/null || ping -q -c 1 1.0.0.1 > /dev/null || ping -q -c 1 example.org || { echo "No internet connection detected."; exit ;}
+
 scan(){
 	if [ $(wc -l "$URLFILE"| cut -d ' ' -f1) -gt 0 ]; then
 		echo "scanning threads..."
@@ -24,23 +26,18 @@ scan(){
 		dl_location="$(echo "$line" | cut -f2)"
 		mkdir -p "$dl_location"
 		echo "downloading to $dl_location"
-		mkdir -p "$dl_location"
 		json_url="$(echo "$url" | sed -E 's/boards\.(4chan|4channel)/a.4cdn/; s/$/.json/')"
 		curl -s -L "$json_url" | jq . > /tmp/content$$
-		#delete archived threads from watchlist
 		if [ -z "$(</tmp/content$$)" ]; then
 			echo "Thread $url not found ($dl_location) deleting from cached list of threads to watch"
 			continue
 		else
 			echo "$line" >> "$TMP_URLFILE"
+			mkdir -p "$dl_location"
 		fi
 		files_json="$(jq '.posts[] | if has("filename") then {filename: "\(.no)_\(.filename)\(.ext)", location: "\(.tim)\(.ext)", md5: .md5} else null end ' < /tmp/content$$ | grep -vE '^null$')"
-		echo "$files_json" | jq '.filename' | tr -d '"' >> /tmp/filename$$
-		echo "$files_json" | jq '.location' | tr -d '"' >> /tmp/location$$
-		echo "$files_json" | jq '.md5' | tr -d '"' >> /tmp/md5$$
-		paste /tmp/filename$$ /tmp/location$$ >> /tmp/tmp$$
-		files="$(paste /tmp/tmp$$ /tmp/md5$$)"
-		rm /tmp/tmp$$ /tmp/md5$$ /tmp/location$$ /tmp/filename$$ /tmp/content$$
+		#pastes together a multiline var using process substitution with layout: filename location md5
+		files="$(paste <(paste <(echo "$files_json" | jq '.filename' | tr -d '"') <(echo "$files_json" | jq '.location' | tr -d '"')) <(echo "$files_json" | jq '.md5' | tr -d '"'))"
 		echo "$files" | while read -r file_line; do
 			filename="$(echo "$file_line" | cut -f1)"
 			master_location="$(echo "$file_line" | cut -f2 | tr -d '"')"
@@ -105,4 +102,6 @@ case "$1" in
 		echo "Deleting..."
 		rm "$URLFILE"
 		touch "$URLFILE";;
+	"edit") ${EDITOR:-vim} "$URLFILE";;
+	*)printf "Incorrect usage.\n\tthreadwatcher [add URL DL_LOCATION] [list] [edit] [clean]\n"; exit 1;;
 esac
