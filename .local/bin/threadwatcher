@@ -10,9 +10,10 @@ TMP_URLFILE=/tmp/4chan_thread_watcher_tmp$$
 [ -d "$THREADWATCHER_DIR" ] || mkdir -p "$THREADWATCHER_DIR"
 [ -f "$URLFILE" ] || touch "$URLFILE"
 
-ping -q -c 1 1.1.1.1 > /dev/null || ping -q -c 1 1.0.0.1 > /dev/null || ping -q -c 1 example.org || { echo "No internet connection detected."; exit ;}
 
 scan(){
+	ping -q -c 1 1.1.1.1 > /dev/null || ping -q -c 1 1.0.0.1 > /dev/null || ping -q -c 1 example.org || { echo "No internet connection detected."; exit ;}
+
 	if [ $(wc -l "$URLFILE"| cut -d ' ' -f1) -gt 0 ]; then
 		echo "scanning threads..."
 	else
@@ -36,10 +37,11 @@ scan(){
 			mkdir -p "$dl_location"
 		fi
 		files_json="$(jq '.posts[] | if has("filename") then {filename: "\(.no)_\(.filename)\(.ext)", location: "\(.tim)\(.ext)", md5: .md5} else null end ' < /tmp/content$$ | grep -vE '^null$')"
+		rm /tmp/content$$
 		#pastes together a multiline var using process substitution with layout: filename location md5
 		files="$(paste <(paste <(echo "$files_json" | jq '.filename' | tr -d '"') <(echo "$files_json" | jq '.location' | tr -d '"')) <(echo "$files_json" | jq '.md5' | tr -d '"'))"
 		echo "$files" | while read -r file_line; do
-			filename="$(echo "$file_line" | cut -f1)"
+			filename="$(echo "$file_line" | cut -f1 | tr ' ' '_')"
 			master_location="$(echo "$file_line" | cut -f2 | tr -d '"')"
 			filelocation="$dl_location/$filename"
 			correct_md5="$(echo "$file_line" | cut -f3)"
@@ -69,29 +71,32 @@ scan(){
 	done<"$URLFILE"
 	mv "$TMP_URLFILE" "$URLFILE"
 }
+
+makepathabsolute(){
+	if echo "$1" | grep -qE '^/'; then
+		dl_location="$1"
+	else
+		dl_location="$HOME/$1"
+	fi
+	echo "$dl_location"
+}
 case "$1" in
-	"add") if echo "$3" | grep -qE '^/'; then
-			dl_location="$3"
-		else
-			dl_location="$HOME/$3"
-		fi
+	"add") dl_location="$(makepathabsolute "$3")"
 		if grep -qP "^$2\t" "$URLFILE"; then
 			dl_location_already="$(grep -P "^$2\t" "$URLFILE" | cut -f2)"
 			notify-send "threadwatcher" "Thread already being watched. currently downloads to $dl_location_already"
 			choice="$(dmenuinput "If you want to change location of thread to download, please insert new directory now:")"
-			if echo "$choice" | grep -qE '^/'; then
-				new_location="$3"
-			else
-				new_location="$HOME/$3"
-			fi
+			new_location="$(makepathabsolute "$choice")"
 			[ -z "$new_location" ] && exit
 			sed -i "s|$dl_location_already|$new_location|" "$URLFILE"
+			#find "$dl_location_already/" -type f -exec mv {} "$new_location" \;
 			mv $dl_location_already/* "$new_location"
 			notify-send "threadwatcher" "already downloaded files moved to $new_location. New files will also be downloaded there"
 		else
 			printf "%s\t%s\n" "$2" "$dl_location" | tee -ai "$URLFILE"
 			echo "added $2 to threadwatcher list. Downloading to $dl_location"
 		fi
+		echo "dl_location:$dl_location"
 		scan;;
 	"scan") scan;;
 	"list") printf "Thread:\t\t\t\t\t\tDownload location:\n"
