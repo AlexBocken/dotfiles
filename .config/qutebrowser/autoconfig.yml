@@ -31,6 +31,14 @@ settings:
           ""
         ',v': hint links spawn -d startmpv {hint-url}
         ',x': hint links spawn -d dmenuhandler {hint-url}
+  colors.webpage.darkmode.algorithm:
+    global: lightness-cielab
+  colors.webpage.darkmode.enabled:
+    global: false
+  colors.webpage.darkmode.grayscale.all:
+    global: false
+  colors.webpage.preferred_color_scheme:
+    global: dark
   content.blocking.method:
     global: both
   content.desktop_capture:
@@ -38,11 +46,13 @@ settings:
   content.headers.user_agent:
     global: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like
       Gecko) Chrome/85.0.4183.121 Safari/537.36
+  content.javascript.enabled:
+    global: true
   content.media.audio_capture:
     https://teams.microsoft.com: true
   content.media.audio_video_capture:
     https://teams.microsoft.com: true
-  content.notifications:
+  content.notifications.enabled:
     https://1337x.to: false
     https://boards.4chan.org: true
     https://boards.4channel.org: true
@@ -54,6 +64,8 @@ settings:
     https://www.duolingo.com: false
     https://www.reddit.com: false
     https://www.youtube.com: false
+  content.notifications.presenter:
+    global: libnotify
   content.register_protocol_handler:
     https://mail.google.com?extsrc=mailto&url=%25s: false
   content.user_stylesheets:
@@ -70,6 +82,7 @@ settings:
     global: 0
   editor.command:
     global:
+    - st
     - nvim
     - -f
     - '{file}'
