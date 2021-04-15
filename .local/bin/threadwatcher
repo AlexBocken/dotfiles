@@ -1,6 +1,7 @@
 #!/bin/bash
 #A script that interacts with 4chans API to checks for media to download out of threads.
 #It uses the file name used by the uploader.
+#(and adds post no. to distinguish possible duplicate file names)
 #consider using it in a cronjob intermittently with something like
 #*/10 * * * * /home/<yourname>/.local/bin/threadwatcher scan
 THREADWATCHER_DIR=${XDG_DATA_HOME:-$HOME/.local/share}/4chan_watcher
@@ -10,11 +11,14 @@ TMP_URLFILE=/tmp/4chan_thread_watcher_tmp$$
 [ -d "$THREADWATCHER_DIR" ] || mkdir -p "$THREADWATCHER_DIR"
 [ -f "$URLFILE" ] || touch "$URLFILE"
 
+#Cronjob Notifications
+DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus
+export DBUS_SESSION_BUS_ADDRESS
+export DISPLAY=:0.0
 
 scan(){
 	ping -q -c 1 1.1.1.1 > /dev/null || ping -q -c 1 1.0.0.1 > /dev/null || ping -q -c 1 example.org || { echo "No internet connection detected."; exit ;}
-
-	if [ $(wc -l "$URLFILE"| cut -d ' ' -f1) -gt 0 ]; then
+	if [ $(wc -l < "$URLFILE") -gt 0 ]; then
 		echo "scanning threads..."
 	else
 		echo "no threads to watch over currently"
@@ -31,6 +35,7 @@ scan(){
 		curl -s -L "$json_url" | jq . > /tmp/content$$
 		if [ -z "$(</tmp/content$$)" ]; then
 			echo "Thread $url not found ($dl_location) deleting from cached list of threads to watch"
+			notify-send "threadwatcher" "Thread downloading ${$dl_location//\/home\/alex/~} is complete now."
 			continue
 		else
 			echo "$line" >> "$TMP_URLFILE"
@@ -89,8 +94,7 @@ case "$1" in
 			new_location="$(makepathabsolute "$choice")"
 			[ -z "$new_location" ] && exit
 			sed -i "s|$dl_location_already|$new_location|" "$URLFILE"
-			#find "$dl_location_already/" -type f -exec mv {} "$new_location" \;
-			mv $dl_location_already/* "$new_location"
+			mv "$dl_location_already"/* "$new_location"
 			notify-send "threadwatcher" "already downloaded files moved to $new_location. New files will also be downloaded there"
 		else
 			printf "%s\t%s\n" "$2" "$dl_location" | tee -ai "$URLFILE"
