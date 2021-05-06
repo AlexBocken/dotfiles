@@ -1,16 +1,20 @@
-#!/bin/sh
+#!/bin/bash
 #A script that launches documents in their respective viewers
 #either via dmenu or fzf depending on the context
 ppid () { ps -p ${1:-$$} -o ppid=; }
 shell="$(ps aux | grep $( ppid ) | head -n1 | awk '{print $11}' )"
 document_dirs="$HOME/bks/* $HOME/eth/* $HOME/dox/* $HOME/dls/*"
+#personally I don't want any files tagged with 'w' in ranger listed. (Watched videos)
+tagged_file="${XDG_DATA_HOME:-$HOME/.local/share}/ranger/tagged"
+filterfile="/tmp/tagged_filter"
+grep -E '^w\:' "$tagged_file" | sed -E 's/^w\://' > "$filterfile"
 #force launch dmenu via cmd
 if [ "$1" = "launchdmenu" ]; then
-	file="$( find $document_dirs -type f | sed "s|$HOME|~|"|  dmenu -i -l 10 -p 'open what file?')"
+	file="$( find $document_dirs -type f | grep -vf "$filterfile" | sed "s|$HOME|~|"|  dmenu -i -l 10 -p 'open what file?')"
 #/bin/sh means it's probably from dmenu_run (it's ugly but works)
 elif [ ! "$shell" = "/bin/sh" ]; then
 	currentdir="$(pwd)"
-	file="$( find $document_dirs -type f | sed "s|$HOME|~|" |  fzf -e --query="$*")"
+	file="$( find $document_dirs -type f | grep -vf "$filterfile" | sed "s|$HOME|~|" |  fzf -e --query="$*")"
 	path="$(printf '%s%s' "$HOME" "${file//\~/}")"
 	[ -z "$file" ] && exit
 	cd "$( dirname "$path" )" || exit
@@ -23,7 +27,7 @@ elif [ ! "$shell" = "/bin/sh" ]; then
 	exit
 #launch dmenu as it's probably in dmenu_run
 else
-	file="$( find $document_dirs -type f | sed "s|$HOME|~|" | dmenu -i -l 10 -p 'open what file?' -it "$*" )"
+	file="$( find $document_dirs -type f | grep -vf "$filterfile" | sed "s|$HOME|~|" | dmenu -i -l 10 -p 'open what file?' -it "$*" )"
 fi
 #process selection if it's from dmenu
 [ -z "$file" ] && exit
@@ -35,3 +39,4 @@ echo "$file" | sed "s|\~|$HOME|" |
 		rifle "$pathfile" &
 	fi
 done
+rm "$filterfile"
