@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=A Wine application
+MimeType=text/vbscript;
+Exec=env WINEPREFIX="/home/alex/.local/share/wineprefixes/default" wine start /ProgIDOpen VBSFile %f
+NoDisplay=true
+StartupNotify=true
