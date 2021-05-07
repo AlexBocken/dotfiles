@@ -1,0 +1,24 @@
+#!/bin/sh
+current="$(pwd)"
+INPUTPDF="$1"
+printf '\\documentclass[a4paper,final]{article}
+\\usepackage{pdfpages}
+\\usepackage{ifpdf,ifxetex,everyshi}
+\\makeatletter
+\\ifpdf
+\\EveryShipout{\\ifodd\\c@page\\else\\pdfpageattr{/Rotate 180}\\fi}%%
+\\fi
+\\ifxetex
+\\EveryShipout{\\ifodd\\c@page\\special{pdf: put @thispage << /Rotate 180 >>}%%
+\\fi
+}
+\\fi
+\\makeatother
+\\begin{document}
+\\includepdf[pages=-, nup=1x2, booklet=true, landscape]{%s}
+\\end{document}' "$current/$INPUTPDF" > /tmp/tmp$$.tex
+cd /tmp || exit
+pdflatex /tmp/tmp$$.tex
+mv /tmp/tmp$$.pdf "$current/a5ona4_$INPUTPDF"
+cd "$current"
+rm -f /tmp/tmp$$.log /tmp/tmp$$.log
