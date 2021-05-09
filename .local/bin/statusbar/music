@@ -1,5 +1,5 @@
 #!/bin/sh
-if [ $( mpc status | grep '\[paused\]' | wc -l ) -eq 1 ]; then
+if mpc status | grep -q '\[paused\]' || [ "$(mpc status | wc -l)" -eq 1 ]; then
 	printf '\n'
 	exit
 fi
