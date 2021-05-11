@@ -1,7 +1,13 @@
 #!/bin/sh
 CACHE="${XDG_DATA_HOME:-$HOME/.local/share}/newsboat/cache.db"
-unread="$(sqlite3 "$CACHE" "SELECT unread,pubDate,title FROM rss_item;" |
-	grep -vE '^0' | sort -t'|' -k2 -gr | head -n1 |
-	sed 's/[0-9]*|[0-9]*|//')"
+ALREADY_NOTIFIED="${XDG_DATA_HOME:-$HOME/.local/share}/newsboat/notified"
+[ -f "$ALREADY_NOTIFIED" ] || touch "$ALREADY_NOTIFIED"
 
-notify-send "newsboat" "$(printf 'new article:\n %s' "$unread")"
+unread="$(sqlite3 "$CACHE" "SELECT unread,pubDate,title FROM rss_item;" |
+	grep -vE '^0' | sort -t'|' -k2 -gr |
+	grep -vf "$ALREADY_NOTIFIED")"
+
+echo "$unread" >> "$ALREADY_NOTIFIED"
+[ "$( echo "$unread" | wc -l)" -gt 1 ] && plural=s
+formatted="$(echo "$unread" | sed 's/[0-9]*|[0-9]*|//')"
+notify-send "newsboat" "$(printf 'new article%s:\n %s' "$plural" "$formatted")"
