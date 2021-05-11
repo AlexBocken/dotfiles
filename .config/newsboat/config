@@ -4,7 +4,7 @@ reload-threads 100
 
 external-url-viewer "newsboat_urlscan {}"
 
-notify-program "/usr/bin/notify-send"
+notify-program "/home/alex/.local/bin/newsboatnotifs"
 notify-format "%d new articles (%n unread articles, %f unread feeds)"
 
 bind-key j down
