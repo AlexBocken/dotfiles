@@ -1,0 +1,6 @@
+#!/bin/sh
+calcurse -i "$1"
+#summary assumes ics format
+summary="$(grep "SUMMARY[^:]*:" "$1" | cut -d':' -f2)"
+notify-send "Calendar event added" "$summary"
+rm "$1"
