@@ -1,7 +1,6 @@
 # PDF
 application;zathura %s
 image/pdf;zathura %s
-
 # Images
 image/bmp;sxiv %s
 image/gif;sxiv %s
@@ -13,4 +12,5 @@ image/tiff;sxiv %s
 image/x-png;sxiv %s
 
 #Text
-#text/html;firefox %s
+text/html; qutebrowser %s
+text/calendar; calendaradd %s
