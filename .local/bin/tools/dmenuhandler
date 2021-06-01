@@ -2,11 +2,20 @@
 # Feed this script a link and it will give dmenu
 # some choice programs to use to open it.
 
+makepathabsolute(){
+	if echo "$1" | grep -qE '^/'; then
+		dl_location="$1"
+	else
+		dl_location="$HOME/$1"
+	fi
+	echo "$dl_location"
+}
+
+choices="$(printf 'mpv\\ncopy url\\nqueue download\\nrifle file\\nqueue youtube-dl\\nbrowser\\nrip media\\ncast')"
 if echo "$1" | grep -q "4chan"; then
-	choice="$(printf "mpv\\ncopy url\\nqueue download\\nqueue youtube-dl\\nbrowser\\nwatch thread\\nrip media\\ncast" | dmenu -i -p "Open link with what program?")"
-else
-	choice="$(printf "mpv\\ncopy url\\nqueue download\\nqueue youtube-dl\\nbrowser\\nrip media\\ncast" | dmenu -i -p "Open link with what program?")"
+	choices="$(printf '%s\\nwatch thread' "$choices")"
 fi
+choice="$(echo "$choices" | dmenu -i -p "Open link with what program?")"
 case "$choice" in
 	"copy url") echo "$1" | xclip -selection clipboard ;;
 	mpv) setsid mpv --quiet --ytdl-format='bestvideo[height<=1080]+bestaudio/best[height<=1080]' "$1" & ;;
@@ -21,10 +30,13 @@ case "$choice" in
 	#feh) setsid feh "$1" >/dev/null 2>&1 & ;;
 	#w3m) w3m "$1" >/dev/null 2>&1 ;;
 	#"mpv (float)") setsid mpv --input-ipc-server=/tmp/mpvsoc$(date +%s) --geometry=+0-0 --autofit=30%  --title="mpvfloat" "$1" >/dev/null 2>&1 & ;;
+	"rifle file") curl -L "$1" -o "/tmp/riflefile"
+			rifle /tmp/riflefile;;
 	"watch thread") dest="$(dmenuinput 'name of folder:')"
-			threadwatcher add "$1" "$dest"
+			echo "dmenuhandler:$dest"
+			threadwatcher add "$1" "$dest" &
 			notify-send "dmenuhandler" "Thread watcher started. Download initialized.";;
-	"rip media") dest="$(dmenuinput 'name of folder:')"
-			lynx --dump --nonumbers --listonly "$1" | grep -E "\.(webm|mp4|gif|jpg|jpeg|png|pdf|epub|mobi|djvu)" | sort -u | xargs wget -P "$HOME/$dest"
+		"rip media") dest="$(dmenuinput 'name of folder:')"
+			lynx --dump --nonumbers --listonly "$1" | grep -E "\.(webm|mp4|gif|jpg|jpeg|png|pdf|epub|mobi|djvu)" | sort -u | xargs wget -P "$(makepathabsolute "$dest")"
 			notify-send "dmenuhandler" "all media ripped into $dest";;
 esac
