@@ -27,6 +27,7 @@ Plug 'dense-analysis/ale'
 Plug 'arcticicestudio/nord-vim'
 Plug 'tpope/vim-fugitive'
 Plug 'rhysd/vim-grammarous'
+" Plug 'goballooning/vim-live-latex-preview'
 call plug#end()
 
 " Integrated spell-check

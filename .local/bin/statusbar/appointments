@@ -16,6 +16,7 @@ if [ -n "$diff" ]; then
 	else
 		midnight=$(( $(date --date "$(date | sed 's/..:..:../23:59:59/; s/ PM//; s/ AM//')" +%s) + 1 ))
 		if [ $midnight -gt "$time_appointment" ]; then
+			#only print appointment if dunst-notifications are also shown -> "privacy screen"
 			if [ ! -f /tmp/nodunst ]; then
 				printf '%s %s' "$(date --date "@$time_appointment" +'%H:%M')" "$appointment"
 			fi

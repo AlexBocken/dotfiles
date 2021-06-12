@@ -5,6 +5,7 @@
 # second, gives network traffic per second.
 
 lasttime=${XDG_CACHE_HOME:-$HOME/.cache}/nettraf_time
+#lasttime="$NETTRAF_TIME"
 
 update() {
     sum=0

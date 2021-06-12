@@ -31,6 +31,8 @@ settings:
           ""
         ',v': hint links spawn -d startmpv {hint-url}
         ',x': hint links spawn -d dmenuhandler {hint-url}
+        ao: download-open;; download-remove
+        ar: download-remove
   colors.webpage.darkmode.algorithm:
     global: lightness-cielab
   colors.webpage.darkmode.enabled:
@@ -52,11 +54,15 @@ settings:
     https://teams.microsoft.com: true
   content.media.audio_video_capture:
     https://teams.microsoft.com: true
+  content.media.video_capture:
+    https://teams.microsoft.com: true
   content.notifications.enabled:
     https://1337x.to: false
     https://boards.4chan.org: true
     https://boards.4channel.org: true
+    https://forums.ankiweb.net: true
     https://iq.opengenus.org: false
+    https://kiwifarms.cc: true
     https://nobodyhasthe.biz: true
     https://old.reddit.com: false
     https://riot.im: true
@@ -76,10 +82,12 @@ settings:
     global: false
   downloads.location.suggestion:
     global: path
+  downloads.open_dispatcher:
+    global: rifle {}
   downloads.position:
     global: top
   downloads.remove_finished:
-    global: 0
+    global: 1000000
   editor.command:
     global:
     - st
@@ -117,19 +125,20 @@ settings:
   tabs.tabs_are_windows:
     global: true
   url.default_page:
-    global: https://searx.lukesmith.xyz/
+    global: https://searx.cedars.xyz/
   url.open_base_url:
     global: true
   url.searchengines:
     global:
-      DEFAULT: https://searx.lukesmith.xyz/?q={}
+      DEFAULT: https://searx.cedars.xyz/?q={}
       ddg: https://duckduckgo.com/?q={}
+      duden: https://www.duden.de/rechtschreibung/{}
       gg: https://linggle.com/?q={}
       ling: https://www.linguee.com/english-german/search?source=auto&query={}
       oz: http://www.ozdic.com/collocation-dictionary/{}
-      sx: https://searx.lukesmith.xyz/?q={}&categories=general&language=en-US
+      sx: https://searx.cedars.xyz/?q={}&categories=general&language=en-US
       yt: https://www.youtube.com/results?search_query={}
   url.start_pages:
-    global: https://searx.lukesmith.xyz/
+    global: https://searx.cedars.xyz/
   zoom.default:
     global: 160%

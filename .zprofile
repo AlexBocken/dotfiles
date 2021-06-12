@@ -47,7 +47,20 @@ export GOPATH="${XDG_DATA_HOME:-$HOME/.local/share}/go"
 export ANSIBLE_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/ansible/ansible.cfg"
 export SSB_HOME="$XDG_DATA_HOME/zoom"
 export PASSWORD_STORE_GPG_OPTS='--homedir=/home/alex/.local/share/gnupg'
-
+export MAILCAPS="${XDG_CONFIG_HOME:-$HOME/.config}/mutt/mailcap"
+export CABAL_CONFIG="$XDG_CONFIG_HOME"/cabal/config
+export CABAL_DIR="$XDG_CACHE_HOME"/cabal
+export GRADLE_USER_HOME="$XDG_DATA_HOME"/gradle
+export IPYTHONDIR="$XDG_CONFIG_HOME"/jupyter
+export JUPYTER_CONFIG_DIR="$XDG_CONFIG_HOME"/jupyter
+export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
+export JULIA_DEPOT_PATH="$XDG_DATA_HOME/julia:$JULIA_DEPOT_PATH"
+export NUGET_PACKAGES="$XDG_CACHE_HOME"/NuGetPackages
+export MAXIMA_USERDIR="$XDG_CONFIG_HOME"/maxima
+export WEECHAT_HOME="$XDG_CONFIG_HOME"/weechat
+export TEXMFHOME=$XDG_DATA_HOME/texmf
+export TEXMFVAR=$XDG_CACHE_HOME/texlive/texmf-var
+export TEXMFCONFIG=$XDG_CONFIG_HOME/texlive/texmf-config
 
 # XDG USER DIRECOTRIES
 export XDG_DESKTOP_DIR="$HOME"
@@ -152,3 +165,4 @@ ex=🎯:\
 
 # Switch escape and caps if tty and no passwd required:
 sudo -n loadkeys ${XDG_DATA_HOME:-$HOME/.local/share}/larbs/ttymaps.kmap 2>/dev/null
+source "/home/alex/.local/share/cargo/env"

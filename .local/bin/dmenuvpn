@@ -17,6 +17,6 @@ elif ping -c 1 -W 2 -q webprint.ethz.ch ;then
 	fi
 else
 	printf '%s\n%s\n' "$USER" "$(pass $PASS_DIR)" > /tmp/tmp_pass
-	[ -n "$choice" ] && st -t "openVPN" sudo openvpn --config "${XDG_CONFIG_HOME}/openvpn/cfgs/${choice}.ovpn" --auth-user-pass /tmp/tmp_pass & pkill -RTMIN+9 dwmblocks; sleep 2; rm -f /tmp/tmp_pass
+	[ -n "$choice" ] && st -t "openVPN" sudo openvpn --config "${XDG_CONFIG_HOME}/openvpn/cfgs/${choice}.ovpn" --mute-replay-warnings --auth-user-pass /tmp/tmp_pass & pkill -RTMIN+9 dwmblocks; sleep 2; rm -f /tmp/tmp_pass
 fi
 pkill -RTMIN+9 dwmblocks

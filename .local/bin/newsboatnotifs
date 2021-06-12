@@ -1,4 +1,5 @@
 #!/bin/sh
+#gets called by newsboat if it finds a new article.
 CACHE="${XDG_DATA_HOME:-$HOME/.local/share}/newsboat/cache.db"
 ALREADY_NOTIFIED="${XDG_DATA_HOME:-$HOME/.local/share}/newsboat/notified"
 [ -f "$ALREADY_NOTIFIED" ] || touch "$ALREADY_NOTIFIED"
@@ -6,8 +7,11 @@ ALREADY_NOTIFIED="${XDG_DATA_HOME:-$HOME/.local/share}/newsboat/notified"
 unread="$(sqlite3 "$CACHE" "SELECT unread,pubDate,title FROM rss_item;" |
 	grep -vE '^0' | sort -t'|' -k2 -gr |
 	grep -vf "$ALREADY_NOTIFIED")"
-
+[ -z "$unread" ] && exit
 echo "$unread" >> "$ALREADY_NOTIFIED"
 [ "$( echo "$unread" | wc -l)" -gt 1 ] && plural=s
 formatted="$(echo "$unread" | sed 's/[0-9]*|[0-9]*|//')"
-notify-send "newsboat" "$(printf 'new article%s:\n %s' "$plural" "$formatted")"
+notify-send "new article${plural}" "$formatted"
+
+#update statusbar to account for new articles
+pkill -RTMIN+13 dwmblocks

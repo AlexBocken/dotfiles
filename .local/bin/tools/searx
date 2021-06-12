@@ -12,7 +12,7 @@ else
 fi
 
 if [ "$choice" = "🔍"  ]; then
-    $browser "https://searx.bocken.org"
+    $browser "https://searx.cedars.xyz"
 elif [ "$choice" = "📋" ]; then
 	$browser "$(xclip -o -selection clipboard)"
 else
@@ -20,6 +20,6 @@ else
         $browser "$choice"
     else
 	string="$(echo $choice | sed 's/\ /+/g')"
-        $browser "https://searx.lukesmith.xyz/?q=$string&t=ffab&atb=v1-1"
+        $browser "https://searx.cedars.xyz/?q=$string&t=ffab&atb=v1-1"
     fi
 fi

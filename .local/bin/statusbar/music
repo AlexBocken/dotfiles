@@ -1,10 +1,5 @@
 #!/bin/sh
-if mpc status | grep -q '\[paused\]' || [ "$(mpc status | wc -l)" -eq 1 ]; then
-	printf '\n'
-	exit
-fi
-
-if [ $( mpc status | grep '\[playing\]' | wc -l ) -eq 1 ]; then
+if [ "$( mpc status | grep -c '\[playing\]')" -eq 1 ]; then
 	full_length="$(mpc status | sed "/^volume:/d" | tac | sed -e "s/\\[paused\\].*//g;s/\\[playing\\].*//g" | tr -d '\n' | sed -e "s/$/ /g")"
 	#remove full directory structure if no title present and too long
 	if [ ${#full_length} -gt 40 ]; then
@@ -12,5 +7,6 @@ if [ $( mpc status | grep '\[playing\]' | wc -l ) -eq 1 ]; then
 	else
 		echo "$full_length"
 	fi
-	exit
+else
+	printf '\n'
 fi

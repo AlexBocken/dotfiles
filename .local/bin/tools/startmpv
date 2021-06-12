@@ -6,10 +6,11 @@ if echo "$1" | grep -qE 'youtube.*list'; then
 	# The above mentioned script needs Youtube API access, (see the repo for more info on that)
 	# I've saved my API key in my password manager, I reccomend you to do something similar.
 	API_key="$(pass show 'Misc/Youtube Data API v3' | head -n1 )"
+	index="$(echo "$1" | perl -pe "s|&index=([0-9]+)|\1|")"
 	playlist_id="$( echo "$1" | perl -pe "s|^.*?(\?\|&)list=(.*?)|\2|; s|&index=[0-9]+||" )"
 	notify-send "startmpv" "Searching for all videos in playlist..."
 	curl "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=500&playlistId=$playlist_id&key=$API_key" |
-		jq '."items"[]."snippet"."resourceId"."videoId"' |
+		jq '.items[].snippet.resourceId.videoId' |
 		sed 's/^/https:\/\/www.youtube.com\/watch?v=/' |
 		xargs mpv --ytdl-format='bestvideo[ext=mp4][width<=1920][height<=1080]+bestaudio[ext=m4a]/best[ext=mp4]/best' ||
 		notify-send "startmpv" "An error has occured with playlist $playlist_id"
