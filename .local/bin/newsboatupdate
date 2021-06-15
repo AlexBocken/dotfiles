@@ -1,0 +1,7 @@
+#!/bin/sh
+DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus
+export DBUS_SESSION_BUS_ADDRESS
+export DISPLAY=:0.0
+newsboat -x reload & pid=$!
+sleep 60
+kill -15 $pid
