@@ -130,7 +130,7 @@ settings:
     global: true
   url.searchengines:
     global:
-      DEFAULT: https://searx.cedars.xyz/?q={}
+      DEFAULT: https://duckduckgo.com/?q={}
       ddg: https://duckduckgo.com/?q={}
       duden: https://www.duden.de/rechtschreibung/{}
       gg: https://linggle.com/?q={}
@@ -139,6 +139,6 @@ settings:
       sx: https://searx.cedars.xyz/?q={}&categories=general&language=en-US
       yt: https://www.youtube.com/results?search_query={}
   url.start_pages:
-    global: https://searx.cedars.xyz/
+    global: file:///home/alex/.config/qutebrowser/startpage.html
   zoom.default:
     global: 160%
