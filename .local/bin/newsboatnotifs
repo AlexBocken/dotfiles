@@ -1,17 +1,32 @@
 #!/bin/sh
 #gets called by newsboat if it finds a new article.
 CACHE="${XDG_DATA_HOME:-$HOME/.local/share}/newsboat/cache.db"
+CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/newsboat/urls"
 ALREADY_NOTIFIED="${XDG_DATA_HOME:-$HOME/.local/share}/newsboat/notified"
 [ -f "$ALREADY_NOTIFIED" ] || touch "$ALREADY_NOTIFIED"
 
-unread="$(sqlite3 "$CACHE" "SELECT unread,pubDate,title FROM rss_item;" |
+unread="$(sqlite3 "$CACHE" "SELECT unread,pubDate,title,feedurl FROM rss_item;" |
 	grep -vE '^0' | sort -t'|' -k2 -gr |
 	grep -vf "$ALREADY_NOTIFIED")"
 [ -z "$unread" ] && exit
 echo "$unread" >> "$ALREADY_NOTIFIED"
 [ "$( echo "$unread" | wc -l)" -gt 1 ] && plural=s
-formatted="$(echo "$unread" | sed 's/[0-9]*|[0-9]*|//')"
-notify-send "new article${plural}" "$formatted"
+articles="$(echo "$unread" | cut -d'|' -f3,4)"
+output="$(echo "$articles" | while read -r article; do
+	#remove '?' queries from URL
+	title="$(echo "$article" | cut -d'|' -f1)"
+	feed="$(echo "$article" | cut -d'|' -f2 | sed 's/?.*//')"
+	#Find custom name given via name tag in CONFIG
+	name="$(grep "$feed" "$CONFIG" | grep '~' |
+		perl -pe "s/[^~\"]*\"~([^\"]*).*/\1/")"
+	#If no custom name present, use name from CACHE
+	if [ -z "$name" ]; then
+		name="$(sqlite3 "$CACHE" "SELECT url,title FROM rss_feed;" |
+			grep -F "$feed" | cut -d'|' -f2)"
+	fi
+	printf '%s:\n%s\n' "$name" "$title"
+done)"
+notify-send "new article${plural}" "$output"
 
 #update statusbar to account for new articles
 pkill -RTMIN+13 dwmblocks
