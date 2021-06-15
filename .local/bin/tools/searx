@@ -3,6 +3,8 @@
 # Without input, will open DuckDuckGo.com.
 # URLs will be directly handed to the browser.
 # Anything else, it search it.
+mainpage="https://duckduckgo.com"
+searchpage="https://duckduckgo.com/?q=%s"
 browser=${BROWSER:-firefox}
 
 if [ -z "$(xclip -o -selection clipboard)" ]; then
@@ -12,7 +14,7 @@ else
 fi
 
 if [ "$choice" = "🔍"  ]; then
-    $browser "https://searx.cedars.xyz"
+    $browser "$mainpage"
 elif [ "$choice" = "📋" ]; then
 	$browser "$(xclip -o -selection clipboard)"
 else
@@ -20,6 +22,6 @@ else
         $browser "$choice"
     else
 	string="$(echo $choice | sed 's/\ /+/g')"
-        $browser "https://searx.cedars.xyz/?q=$string&t=ffab&atb=v1-1"
+	$browser "$(echo "${searchpage}" | sed "s/%s/$string/")"
     fi
 fi
