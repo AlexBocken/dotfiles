@@ -1,7 +1,7 @@
 #!/bin/bash
 #A script that launches documents in their respective viewers
 #either via dmenu or fzf depending on the context
-ppid () { ps -p ${1:-$$} -o ppid=; }
+ppid () { ps -p $$ -o ppid=; }
 shell="$(ps aux | grep $( ppid ) | head -n1 | awk '{print $11}' )"
 document_dirs="$HOME/bks/* $HOME/eth/* $HOME/dox/* $HOME/dls/*"
 #personally I don't want any files tagged with 'w' in ranger listed. (Watched videos)
@@ -10,10 +10,12 @@ filterfile="/tmp/tagged_filter"
 grep -E '^w\:' "$tagged_file" | sed -E 's/^w\://' > "$filterfile"
 #force launch dmenu via cmd
 if [ "$1" = "launchdmenu" ]; then
+	#shellcheck disable=SC2086
 	file="$( find $document_dirs -type f | grep -vf "$filterfile" | sed "s|$HOME|~|"|  dmenu -i -l 10 -p 'open what file?')"
 #/bin/sh means it's probably from dmenu_run (it's ugly but works)
 elif [ ! "$shell" = "/bin/sh" ]; then
 	currentdir="$(pwd)"
+	#shellcheck disable=SC2086
 	file="$( find $document_dirs -type f | grep -vf "$filterfile" | sed "s|$HOME|~|" |  fzf -e --query="$*")"
 	path="$(printf '%s%s' "$HOME" "${file//\~/}")"
 	[ -z "$file" ] && exit
@@ -27,6 +29,7 @@ elif [ ! "$shell" = "/bin/sh" ]; then
 	exit
 #launch dmenu as it's probably in dmenu_run
 else
+	#shellcheck disable=SC2086
 	file="$( find $document_dirs -type f | grep -vf "$filterfile" | sed "s|$HOME|~|" | dmenu -i -l 10 -p 'open what file?' -it "$*" )"
 fi
 #process selection if it's from dmenu
