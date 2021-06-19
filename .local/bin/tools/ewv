@@ -1,3 +1,0 @@
-#!/bin/sh
-video=$(du -a ~/eth/videos/* --time | awk '!($1="")' | sort -bg | awk '!($1="")' | awk '!($1="")' | sed 's/^ \/home\/alex\/eth\/videos\///' | grep -E "\....$"| tac | dmenu -l 10 -p "What lecture would you like to watch?");
-[ -z $video ] || ( mpv "/home/alex/eth/videos/$video" & disown )
