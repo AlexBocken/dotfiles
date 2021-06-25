@@ -33,7 +33,9 @@ case "$choice" in
 	"rifle file") curl -L "$1" -o "/tmp/riflefile"
 			rifle /tmp/riflefile;;
 	"watch thread") dest="$(dmenuinput 'name of folder:')"
+			[ -z "$dest" ] && exit
 			echo "dmenuhandler:$dest"
+			mkdir -p "$(makepathabsolute "$dest")"
 			threadwatcher add "$1" "$dest" &
 			notify-send "dmenuhandler" "Thread watcher started. Download initialized.";;
 		"rip media") dest="$(dmenuinput 'name of folder:')"
