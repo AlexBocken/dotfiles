@@ -15,9 +15,9 @@ color index_number black default
 color index_subject blue default '.*'
 
 # New mail is boldened:
-color index brightdefault black "~N"
-color index_author brightcyan black "~N"
-color index_subject brightblue black "~N"
+color index black blue "~N"
+color index_author brightblack blue "~N"
+color index_subject black blue "~N"
 
 # Tagged mail is highlighted:
 color index brightdefault blue "~T"
@@ -30,7 +30,7 @@ mono underline underline
 mono indicator reverse
 mono error bold
 color normal default default
-color indicator brightblack white
+color indicator brightwhite black
 color sidebar_highlight red default
 color sidebar_divider brightblack black
 color sidebar_flagged red black
