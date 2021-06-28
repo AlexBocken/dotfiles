@@ -338,8 +338,12 @@ handle_mime() {
 }
 
 handle_fallback() {
-    echo '----- File Type Classification -----' && file --dereference --brief -- "${FILE_PATH}" && exit 5
-    exit 1
+	if [ "$(file --dereference --brief -- "${FILE_PATH}"| cut -d' ' -f1)"  = "JSON" ]; then
+		jq --color-output . "${FILE_PATH}" && exit 5
+    	else
+    		echo '----- File Type Classification -----' && file --dereference --brief -- "${FILE_PATH}" && exit 5
+    		exit 1
+	fi
 }
 
 
