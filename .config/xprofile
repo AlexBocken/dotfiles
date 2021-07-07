@@ -20,7 +20,7 @@ picom --experimental-backends & #ME NEED BLUR
 dunst &			# dunst for notifications
 dwmblocks 2> /dev/null &
 xset r rate 300 50 &	# Speed xrate up
-unclutter --timeout 2 --ignore-scrolling &		# Remove mouse when idle
+xbanish -t 2 &
 element-desktop --hidden &
 transmission-daemon &
 ibus-daemon -drx &
