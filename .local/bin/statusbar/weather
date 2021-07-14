@@ -1,6 +1,6 @@
 #!/bin/sh
 meteobluelink="https://www.meteoblue.com/en/weather/forecast/multimodel/zurich_switzerland_2657896"
-multimodel_path="$XDG_DATA_HOME/$(date +%s)_multimodel.png"
+multimodel_path="$XDG_DATA_HOME/$(date -I)_multimodel.png"
 
 last_downloaded_path="$(for file in "$XDG_DATA_HOME"/*_multimodel.png; do
 	echo "$file"
@@ -9,8 +9,7 @@ last_downloaded="$(echo "${last_downloaded_path%_multimodel.png}" | awk 'BEGIN{F
 if [ "$last_downloaded" = "*" ]; then
 	FLAG_download=true
 else
-	day_last_downloaded="$( date -d @"$last_downloaded" -I)"
-	if [ "$(date -I)" != "$day_last_downloaded" ]; then
+	if [ "$(date -I)" != "$last_downloaded" ]; then
 		echo "Last report is from another day, downloading for today..."
 		rm "$XDG_DATA_HOME"/*_multimodel.png
 		FLAG_download=true
