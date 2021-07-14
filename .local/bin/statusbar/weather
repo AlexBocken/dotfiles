@@ -1,23 +1,27 @@
 #!/bin/sh
-location="$1"; [ -z "$location" ] || { location="$location+" && rm -f "$HOME/.local/share/weatherreport" ;}
+meteobluelink="https://www.meteoblue.com/en/weather/forecast/multimodel/zurich_switzerland_2657896"
+multimodel_path="$XDG_DATA_HOME/$(date +%s)_multimodel.png"
 
-getforecast() { ping -q -c 1 1.1.1.1 >/dev/null || exit 1
-curl -s "wttr.in/$location" > "$HOME/.local/share/weatherreport" || exit 1 ;}
-
-showweather() { printf "%s" "$(sed '16q;d' "$HOME/.local/share/weatherreport" | grep -wo "[0-9]*%" | sort -n | sed -e '$!d' | sed -e "s/^/☔ /g" | tr -d '\n')"
-sed '13q;d' "$HOME/.local/share/weatherreport" | grep -o "m\\(-\\)*[0-9]\\+" | sort -n -t 'm' -k 2n | sed -e 1b -e '$!d' | tr '\n|m' ' ' | awk '{print " ❄️",$1 "°","🌞",$2 "°"}' ;}
-
-case $BLOCK_BUTTON in
-    1) $TERMINAL -e less -S "$HOME/.local/share/weatherreport" ;;
-    2) getforecast && showweather ;;
-    3) pgrep -x dunst >/dev/null && notify-send "🌈 Weather module" "\- Left click for full forecast.
-- Middle click to update forecast.
-☔: Chance of rain/snow
-❄: Daily low
-🌞: Daily high" ;;
-esac
-
-if [ "$(stat -c %y "$HOME/.local/share/weatherreport" >/dev/null 2>&1 | awk '{print $1}')" != "$(date '+%Y-%m-%d')" ]
-	then getforecast && showweather
-	else showweather
+last_downloaded_path="$(for file in "$XDG_DATA_HOME"/*_multimodel.png; do
+	echo "$file"
+done | head -n1)"
+last_downloaded="$(echo "${last_downloaded_path%_multimodel.png}" | awk 'BEGIN{FS="/"} {print $NF}')"
+if [ "$last_downloaded" = "*" ]; then
+	FLAG_download=true
+else
+	day_last_downloaded="$( date -d @"$last_downloaded" -I)"
+	if [ "$(date -I)" != "$day_last_downloaded" ]; then
+		echo "Last report is from another day, downloading for today..."
+		rm "$XDG_DATA_HOME"/*_multimodel.png
+		FLAG_download=true
+	else
+		FLAG_download=false
+	fi
 fi
+if [ $FLAG_download = 'true' ]; then
+	mb_imagelink="$(lynx --dump --listonly --nonumbers "$meteobluelink" | grep meteogram_multiSimple_hd)"
+	curl -L "$mb_imagelink" -o "$multimodel_path"
+else
+	echo "currently downloaded multimodel is from today, showing cached version"
+fi
+sxiv "$XDG_DATA_HOME"/*_multimodel.png
