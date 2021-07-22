@@ -191,7 +191,7 @@ alternative_header_first_line_format = $b$1$aqqu$/a$9 {%t}|{%f} $1$atqq$/a$9$/b
 #
 alternative_header_second_line_format = {{$4$b%a$/b$9}{ - $7%b$9}{ ($4%y$9)}}|{%D}
 #
-current_item_prefix = $(cyan)$r$b
+current_item_prefix = $(cyan_black)$r$b
 #
 current_item_suffix = $/r$(end)$/b
 #
