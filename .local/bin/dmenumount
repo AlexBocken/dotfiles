@@ -5,11 +5,13 @@
 # be prompted to give a mountpoint from already existsing directories. If you
 # input a novel directory, it will prompt you to create that directory.
 
+UUID_TO_PWD="$XDG_CONFIG_HOME/mount/list"
+
 getmount() { \
 	[ -z "$chosen" ] && exit 1
         # shellcheck disable=SC2086
 	mp="$(find $1 2>/dev/null | dmenu -i -p "Type in mount point.")" || exit 1
-	[ "$mp" = "" ] && exit 1
+	test -z "$mp" && exit 1
 	if [ ! -d "$mp" ]; then
 		mkdiryn=$(printf "No\\nYes" | dmenu -i -p "$mp does not exist. Create it?") || exit 1
 		[ "$mkdiryn" = "Yes" ] && (mkdir -p "$mp" || sudo -A mkdir -p "$mp")
@@ -25,6 +27,20 @@ mountusb() { \
 	partitiontype="$(lsblk -no "fstype" "$chosen")"
 	case "$partitiontype" in
 		"vfat") sudo -A mount -t vfat "$chosen" "$mp" -o rw,umask=0000;;
+		"exfat") sudo -A mount "$chosen" "$mp" -o uid="$(id -u)",gid="$(id -g)";;
+		"crypto_LUKS")	uuid="$(lsblk -rpo 'name,uuid' | grep "^$chosen" | cut -d' ' -f2)"
+			result="$(grep "$uuid" "$UUID_TO_PWD")"
+			if [ -n "$result" ]
+			then
+				pw_loc="$(echo "$result" | cut -f2)"
+				pw="$(pass show "$pw_loc")"
+			else
+				pw="$(dmenupass "Password for $chosen:")"
+			fi
+			[ -z "$pw" ] && exit 0
+			echo -n "$pw" | sudo -A cryptsetup open "$chosen" "${chosen##*/}" -d -
+			sudo -A mount "/dev/mapper/${chosen##*/}" "$mp" || exit 0
+			;;
 		*) sudo -A mount "$chosen" "$mp"; user="$(whoami)"; ug="$(groups | awk '{print $1}')"; sudo -A chown "$user":"$ug" "$mp";;
 	esac
 	notify-send "💻 USB mounting" "$chosen mounted to $mp."
@@ -35,7 +51,7 @@ mountandroid() { \
 	chosen="$(echo "$chosen" | cut -d : -f 1)"
 	getmount "$HOME -maxdepth 3 -type d"
         simple-mtpfs --device "$chosen" "$mp"
-	#echo "OK" | dmenu -i -p "Tap Allow on your phone if it asks for permission and then press enter" || exit 1
+	echo "OK" | dmenu -i -p "Tap Allow on your phone if it asks for permission and then press enter" || exit 1
 	simple-mtpfs --device "$chosen" "$mp"
 	notify-send "🤖 Android Mounting" "Android device mounted to $mp."
 	}
@@ -49,7 +65,9 @@ asktype() { \
 	}
 
 anddrives=$(simple-mtpfs -l 2>/dev/null)
-usbdrives="$(lsblk -rpo "name,type,size,mountpoint" | awk '$4==""{printf "%s (%s)\n",$1,$3}')"
+usbdrives="$(lsblk -rpo "name,type,size,mountpoint" |
+	grep 'part\|rom\|disk' |
+	awk '$4==""{printf "%s (%s)\n",$1,$3}')"
 
 if [ -z "$usbdrives" ]; then
 	[ -z "$anddrives" ] && echo "No USB drive or Android device detected" && exit

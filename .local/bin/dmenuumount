@@ -6,10 +6,18 @@
 
 unmountusb() {
 	[ -z "$drives" ] && exit
-	chosen="$(echo "$drives" | dmenu -i -p "Unmount which drive?")" || exit 1
+	chosen="$(echo "$drives" | cut -f1 | dmenu -i -p "Unmount which drive?")" || exit 1
+	if echo "$drives" | grep "$chosen" | cut -f2 | grep -q crypt; then
+		crypt=true
+	fi
 	chosen="$(echo "$chosen" | awk '{print $1}')"
 	[ -z "$chosen" ] && exit
 	sudo -A umount "$chosen" && notify-send "💻 USB unmounting" "$chosen unmounted."
+	if [ -n "$crypt" ]
+	then
+		name="$(echo "$drives" | grep "$chosen" | cut -f3)"
+		sudo -A cryptsetup close ${name}
+	fi
 	}
 
 unmountandroid() { \
@@ -26,7 +34,7 @@ asktype() { \
 	esac
 	}
 
-drives=$(lsblk -nrpo "name,type,size,mountpoint" | awk '$4!~/\/boot|\/home$|SWAP/&&length($4)>1{printf "%s (%s)\n",$4,$3}')
+drives=$(lsblk -nrpo "name,type,size,mountpoint,label" | awk -F':' '{gsub(/ /,":")}$4!~/\/boot|\/efi|\/home$|SWAP/&&length($4)>1{printf "%s (%s) %s\t%s\t%s\n",$4,$3,$5,$2,$1}')
 
 if ! grep simple-mtpfs /etc/mtab; then
 	[ -z "$drives" ] && echo "No drives to unmount." &&  exit
