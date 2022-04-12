@@ -5,6 +5,9 @@
 # be prompted to give a mountpoint from already existsing directories. If you
 # input a novel directory, it will prompt you to create that directory.
 
+#File should have two fields: uuid and password location in pass
+#The file is tab-seperated
+#UUIDs can be found via `lsblk -rpo "name,size,uuid"`
 UUID_TO_PWD="$XDG_CONFIG_HOME/mount/list"
 
 getmount() { \
