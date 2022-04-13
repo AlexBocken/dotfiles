@@ -6,6 +6,8 @@
 
 config_version: 2
 settings:
+  auto_save.session:
+    global: true
   bindings.commands:
     global:
       normal:
@@ -41,20 +43,27 @@ settings:
     global: false
   colors.webpage.preferred_color_scheme:
     global: dark
+  completion.scrollbar.width:
+    global: 1
   content.blocking.method:
     global: both
   content.desktop_capture:
     global: ask
+    https://meet.piribauer.de: true
   content.headers.user_agent:
     global: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like
       Gecko) Chrome/85.0.4183.121 Safari/537.36
   content.javascript.enabled:
     global: true
   content.media.audio_capture:
+    https://meet.alpenrunde.com: true
     https://teams.microsoft.com: true
   content.media.audio_video_capture:
+    https://meet.alpenrunde.com: true
     https://teams.microsoft.com: true
   content.media.video_capture:
+    https://meet.alpenrunde.com: true
+    https://meet.piribauer.de: true
     https://teams.microsoft.com: true
   content.notifications.enabled:
     https://1337x.to: false
@@ -96,6 +105,12 @@ settings:
     - '{file}'
     - -c
     - normal {line}G{column0}l
+  fileselect.folder.command:
+    global:
+    - st
+    - -e
+    - ranger
+    - --choosedir={}
   fileselect.handler:
     global: external
   fileselect.multiple_files.command:
@@ -111,7 +126,9 @@ settings:
     - ranger
     - --choosefile={}
   fonts.default_size:
-    global: 20pt
+    global: 10pt
+  fonts.web.size.default:
+    global: 16
   fonts.web.size.default_fixed:
     global: 13
   hints.border:
@@ -125,20 +142,21 @@ settings:
   tabs.tabs_are_windows:
     global: true
   url.default_page:
-    global: https://searx.cedars.xyz/
+    global: file:///home/alex/.config/qutebrowser/startpage.html
   url.open_base_url:
     global: true
   url.searchengines:
     global:
       DEFAULT: https://duckduckgo.com/?q={}
       ddg: https://duckduckgo.com/?q={}
-      duden: https://www.duden.de/rechtschreibung/{}
+      dw: https://www.dwds.de/wb/{}
       gg: https://linggle.com/?q={}
       ling: https://www.linguee.com/english-german/search?source=auto&query={}
+      nyaa: nyaa.si/?q={}
       oz: http://www.ozdic.com/collocation-dictionary/{}
       sx: https://searx.cedars.xyz/?q={}&categories=general&language=en-US
       yt: https://www.youtube.com/results?search_query={}
   url.start_pages:
     global: file:///home/alex/.config/qutebrowser/startpage.html
   zoom.default:
-    global: 160%
+    global: 80%
