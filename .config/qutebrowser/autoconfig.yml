@@ -8,6 +8,8 @@ config_version: 2
 settings:
   auto_save.session:
     global: true
+  backend:
+    global: webengine
   bindings.commands:
     global:
       normal:
@@ -137,6 +139,10 @@ settings:
     global: false
   qt.highdpi:
     global: true
+  spellcheck.languages:
+    global:
+    - en-US
+    - de-DE
   tabs.show:
     global: never
   tabs.tabs_are_windows:
