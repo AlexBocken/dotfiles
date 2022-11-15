@@ -2,7 +2,7 @@
 
 # install cups-pdf and install printer using the webinterface on http://localhost:631/admin
 # default virtual printer dir is below, adjust if changed
-VIRTUAL_PRINTER_DIR="/var/spool/cupsd-pdf/$USER"
+VIRTUAL_PRINTER_DIR="/var/spool/cups-pdf/$USER"
 # Printer to print magazine layout on
 PRINTER="Canon-MF220"
 for file in $@; do
