@@ -34,6 +34,7 @@ set noshowmode
 set noruler
 set laststatus=0
 set noshowcmd
+set undofile
 
 colorscheme nord
 
@@ -69,7 +70,14 @@ colorscheme nord
 
 " AirLatex
 " your login-name
-let g:AirLatexUsername="cookies:overleaf_session2=s%"
+let g:AirLatexUsername="cookies:overleaf_session2=s%3A0TKey254b9595rC63gLQZsvRwg9b9564.CwNUf292zMuPmgNPAZ4z%2FOgLBTDk2ynd%2BgmPXJXmuYE"
+
+"This allows for change paste motion cp{motion}
+nmap <silent> cp :set opfunc=ChangePaste<CR>g@
+function! ChangePaste(type, ...)
+    silent exe "normal! `[v`]\"_c"
+    silent exe "normal! p"
+endfunction
 
 " optional: set server name
 let g:AirLatexDomain="www.overleaf.com"
@@ -77,6 +85,7 @@ let g:AirLatexDomain="www.overleaf.com"
 let g:AirLatexAllowInsecure=0
 
 " vimtex:
+let g:vimtex_view_method = 'zathura'
 let g:vimtex_compiler_latexmk = { 'build_dir' : '',
 			\ 'callback' : 1,
 			\ 'continuous' : 1,
@@ -112,7 +121,7 @@ let g:vimtex_compiler_latexmk = { 'build_dir' : '',
 	map <leader>s :!clear && shellcheck -x %<CR>
 
 " Open my bibliography file in split
-	map <leader>b :vsp<space>$BIB<CR>
+	map <leader>b :!( st nvim $BIB & ) > /dev/null 2>&1<CR>
 	map <leader>r :vsp<space>$REFER<CR>
 
 " Replace all is aliased to S.
