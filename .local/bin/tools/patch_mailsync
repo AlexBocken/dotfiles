@@ -1,0 +1,2 @@
+#!/bin/sh
+sudo sed -i '/case "$(readlink -f \/sbin\/init)" in/,+2d' $(which mailsync)

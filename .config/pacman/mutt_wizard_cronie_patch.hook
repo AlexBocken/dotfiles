@@ -1,0 +1,8 @@
+[Trigger]
+ 	Operation = Upgrade
+	Type = Package
+	Target = mutt-wizard*
+[Action]
+	Description = Patch for Notifications using cronie
+	When = PostTransaction
+	Exec = /usr/local/bin/patch_mailsync
