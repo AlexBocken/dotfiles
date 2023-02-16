@@ -16,11 +16,12 @@ Plug 'lukesmithxyz/vimling'
 Plug 'vimwiki/vimwiki'
 Plug 'vim-airline/vim-airline'
 Plug 'tpope/vim-commentary'
-Plug 'neoclide/coc.nvim', {'branch': 'master', 'commit': '2ad659d8b1a3d7bef7dca7d33c6ab9363a729100', 'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'yarn install --frozen-lockfile'}
 Plug 'ap/vim-css-color'
 Plug 'lervag/vimtex'
 Plug 'arcticicestudio/nord-vim'
 Plug 'rhysd/vim-grammarous'
+Plug 'jalvesaq/Nvim-R', {'branch': 'stable'}
 Plug 'da-h/AirLatex.vim', {'do': ':UpdateRemotePlugins'}
 call plug#end()
 
@@ -35,7 +36,6 @@ set noruler
 set laststatus=0
 set noshowcmd
 set undofile
-
 colorscheme nord
 
 " Some basics:
@@ -67,6 +67,15 @@ colorscheme nord
     else
         let NERDTreeBookmarksFile = '~/.vim' . '/NERDTreeBookmarks'
     endif
+
+" Nvim-R Defintions for R IDE
+let g:R_assign = 3 " do (not) map _ to <- for assignment
+vmap <Space> <Plug>RDSendSelection
+nmap <Space> <Plug>RDSendLine
+let R_nvimpager = 'tab' " display R docs in new tab
+let R_start_libs = 'base,stats,graphics,grDevices,utils,methods'
+let R_hl_term = 0
+" let Rout_more_colors = 1
 
 " AirLatex
 " your login-name
@@ -139,7 +148,7 @@ let g:vimtex_compiler_latexmk = { 'build_dir' : '',
 	autocmd VimLeave *.tex !texclear %
 
 " Ensure files are read as what I want:
-	let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
+	let g:vimwiki_ext2syntax = {'.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
 	map <leader>v :VimwikiIndex
 	let g:vimwiki_list = [{'path': '~/vimwiki', 'syntax': 'markdown', 'ext': '.md'}]
 	autocmd BufRead,BufNewFile /tmp/calcurse*,~/.calcurse/notes/* set filetype=markdown
