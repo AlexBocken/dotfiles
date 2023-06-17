@@ -5,6 +5,23 @@ CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/newsboat/urls"
 ALREADY_NOTIFIED="${XDG_DATA_HOME:-$HOME/.local/share}/newsboat/notified"
 [ -f "$ALREADY_NOTIFIED" ] || touch "$ALREADY_NOTIFIED"
 
+
+#setup for crontab notifications (patly copied from mailsync)
+[ -f /tmp/dbus_session_bus_address ] &&
+	export DBUS_SESSION_BUS_ADDRESS=$(cat /tmp/dbus_session_bus_address)
+
+pgrepoutput="$(pgrep -ax X\(\|org\|wayland\))"
+displays="$(echo "$pgrepoutput" | grep -wo "[0-9]*:[0-9]\+" | sort -u)"
+[ -z "$displays" ] && [ -d /tmp/.X11-unix ] && displays=$(cd /tmp/.X11-unix && for x in X*; do echo ":${x#X}"; done)
+
+notify() {
+	[ -n "$pgrepoutput" ] && for x in ${displays:-:0}; do
+		export DISPLAY="$x"
+		notify-send --app-name="newsboat" "$1" "$2"
+	done ;}
+
+
+# check for new articles and create notifications
 unread="$(sqlite3 "$CACHE" "SELECT unread,pubDate,title,feedurl FROM rss_item;" |
 	grep -vE '^0' | sort -t'|' -k2 -gr |
 	grep -vf "$ALREADY_NOTIFIED")"
@@ -20,12 +37,11 @@ echo "$articles" | while read -r article; do
 	name="$(grep "$feed" "$CONFIG" | grep '~' |
 		perl -pe "s/[^~\"]*\"~([^\"]*).*/\1/")"
 	#If no custom name present, use name from CACHE
-	echo "$feed"
 	if [ -z "$name" ]; then
 		name="$(sqlite3 "$CACHE" "SELECT rssurl,title FROM rss_feed;" |
 			grep -F "$feed" | cut -d'|' -f2)"
 	fi
-	notify-send "${name}:" "$title"
+	notify "${name}:" "$title"
 done
 
 #update statusbar to account for new articles
