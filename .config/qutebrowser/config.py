@@ -7,6 +7,7 @@ c.auto_save.session = False
 c.backend = "webengine"
 c.bindings.commands = { "normal":
          {
+            "u": "undo --window",
             ",C": "spawn -d st castyt {url}",
             ",S": "spawn -d mpvallvids {url}",
             ",V": "spawn -d startmpv {url}",
