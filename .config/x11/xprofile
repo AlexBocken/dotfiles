@@ -9,8 +9,8 @@ xrdb -merge ~/.config/x11/Xresources
 setbg &			# set the background with the `setbg` script
 
 xrdb ${XDG_CONFIG_HOME:-$HOME/.config}/x11/xresources & xrdbpid=$!	# Uncomment to use Xresources colors/settings on startup
-autostart="picom mpd dunst unclutter dwmblocks update_musicbar pipewire remapd"
 
+autostart="picom mpd dunst unclutter dwmblocks update_musicbar pipewire remapd pipewire"
 for program in $autostart; do
 	pidof -s "$program" || setsid -f "$program"
 done >/dev/null 2>&1
