@@ -5,26 +5,27 @@
 VIRTUAL_PRINTER_DIR="/var/spool/cups-pdf/$USER"
 # Printer to print magazine layout on
 PRINTER="Canon-MF220"
-for file in $@; do
-	lpr -P Virtual_PDF_Printer -o number-up=2 -o orientation-requested=4 -o fit-to-page -o media=a4 "$file"
-	str="."
-	until lpc status | grep -A 4 'Virtual_PDF_Printer:' | tail -n1 | grep 'no entries'; do
-		printf "\033[s\033[uPrinting to file for two slides per a5 page"
-		printf "%s" $str
-		printf "\033[u"
-		str=$str.
-    		sleep 1
-	done
-	echo "virtual printing done."
-	last_job_id="$(ls "$VIRTUAL_PRINTER_DIR" | grep -o '[0-9]*\.pdf$' | grep '[0-9]' | cut -d'.' -f1 | sort -n | tail -n1)"
-	#echo "last_job_id:$last_job_id"
-	file_two_page="$(ls $VIRTUAL_PRINTER_DIR/*${last_job_id}.pdf)"
-	#echo "file_two_page:$file_two_page"
-	printf "Invoking a5ona4..."
-	a5ona4 "$file_two_page" > /dev/null
-	echo "Done."
-	rm "$file_two_page"
-	only_filename_two_page="$( echo "$file_two_page"| awk -F/ '{print $NS}' )"
-	echo "Magazine layout of $file being sent to printer..."
-	lpr -P $PRINTER -o media=A4 -o Duplex=DuplexTumble -o sides=two-sided-short-edge -o BindEdge=Bottom -o media=a4 -r a5ona4_$file*
+PRINTER=Virtual_PDF_Printer
+file="$@"
+lpr -P Virtual_PDF_Printer -o number-up=2 -o orientation-requested=4 -o fit-to-page -o media=a4 "$file"
+str="."
+until lpc status | grep -A 4 'Virtual_PDF_Printer:' | tail -n1 | grep 'no entries'; do
+	printf "\033[s\033[uPrinting to file for two slides per a5 page"
+	printf "%s" $str
+	printf "\033[u"
+	str=$str.
+	sleep 1
 done
+echo "virtual printing done."
+last_job_id="$(ls "$VIRTUAL_PRINTER_DIR" | grep -o '[0-9]*\.pdf$' | grep '[0-9]' | cut -d'.' -f1 | sort -n | tail -n1)"
+#echo "last_job_id:$last_job_id"
+file_two_page="$(ls $VIRTUAL_PRINTER_DIR/*${last_job_id}.pdf)"
+#echo "file_two_page:$file_two_page"
+printf "Invoking a5ona4..."
+a5ona4 "$file_two_page" > /dev/null
+echo "Done."
+rm "$file_two_page"
+only_filename_two_page="$( echo "$file_two_page"| awk -F/ '{print $NS}' )"
+echo "Magazine layout of $file being sent to printer..."
+file_without_suffix="$(echo "$file" | sed 's/[ \(\)]/_/g; s/\.pdf$//')"
+lpr -P $PRINTER -o media=A4 -o Duplex=DuplexTumble -o sides=two-sided-short-edge -o BindEdge=Bottom -o media=a4 -r a5ona4_${file_without_suffix}*

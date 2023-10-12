@@ -1,2 +1,0 @@
-#!/bin/bash
-[ -n "$1" ] && echo "$1" > "/home/alex/test"

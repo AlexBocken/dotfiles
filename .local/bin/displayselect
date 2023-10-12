@@ -5,7 +5,12 @@
 # selection" which opens arandr.
 
 #automatically scale HD screens to better work with hidpi
-scale_factor_HD=${1:-1.6}
+scale_factor_HD=${1:-1.6666}
+scale_outputs="HDMI-3
+DP-2
+HDMI-1-3
+DP1-2"
+
 
 #fixes issue that script gets called twice for some reason
 [ "$(pgrep -c displayselect)" -gt 1 ] && exit
@@ -40,9 +45,9 @@ twoscreen() { # If multi-monitor is selected and there are two screens.
         primary=$(echo "$screens" | dmenu -i -p "Select primary display:")
         secondary=$(echo "$screens" | grep -v "$primary")
         direction=$(printf "left\\nright" | dmenu -i -p "What side of $primary should $secondary be on?")
-	if [ "$primary" = "HDMI-1" ]; then
+	if $(echo "$scale_outputs" | grep -q "$primary"); then
         	xrandr --output "$primary" --auto --scale $scale_factor_HD --output "$secondary" --"$direction"-of "$primary" --auto --scale 1.0x1.0
-	elif [ "$secondary" = "HDMI-1" ]; then
+	elif $(echo "$scale_outputs" | grep -q "$seconday"); then
         	xrandr --output "$primary" --auto --scale 1.0x1.0 --output "$secondary" --"$direction"-of "$primary" --auto --scale $scale_factor_HD
 	else
         	xrandr --output "$primary" --auto --scale 1.0x1.0 --output "$secondary" --"$direction"-of "$primary" --auto --scale 1.0x1.0
@@ -65,7 +70,7 @@ multimon() { # Multi-monitor handler.
 	esac ;}
 
 onescreen() { # If only one output available or chosen.
-	xrandr --output "$1" --auto --scale 1.0x1.0 $(echo "$allposs" | grep -v "$1" | awk '{print "--output", $1, "--off"}' | tr '\n' ' ')
+	xrandr --output "$1" --auto --scale 1 $(echo "$allposs" | grep -v "$1" | awk '{print "--output", $1, "--off"}' | tr '\n' ' ')
 	}
 
 postrun() { # Stuff to run to clean up.

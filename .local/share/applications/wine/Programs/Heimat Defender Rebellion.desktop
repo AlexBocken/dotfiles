@@ -1,8 +1,0 @@
-[Desktop Entry]
-Name=Heimat Defender Rebellion
-Exec=env WINEPREFIX="/home/alex/.local/share/wineprefixes/default" wine C:\\\\windows\\\\command\\\\start.exe /Unix /home/alex/.local/share/wineprefixes/default/dosdevices/c:/ProgramData/Microsoft/Windows/Start\\ Menu/Programs/Heimat\\ Defender\\ Rebellion.lnk
-Type=Application
-StartupNotify=true
-Path=/home/alex/.local/share/wineprefixes/default/dosdevices/c:/Program Files (x86)/Heimat Defender Rebellion
-Icon=B3C3_HeimatDefender.0
-StartupWMClass=heimatdefender.exe

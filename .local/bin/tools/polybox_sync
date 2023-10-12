@@ -1,7 +1,0 @@
-#!/bin/bash
-# Required if run as a cronjob:
-export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus
-export PASSWORD_STORE_GPG_OPTS="--homedir=$HOME/.local/share/gnupg"
-export PASSWORD_STORE_DIR="$HOME/.local/share/password-store"
-
-ping 1.1.1.1 -c 1 && owncloudcmd -s -u abocken -p "$(pass ETH/nETHz\ -\ abocken@ethz.ch)" $HOME/eth/polybox https://polybox.ethz.ch

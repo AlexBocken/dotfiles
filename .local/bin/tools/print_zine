@@ -1,0 +1,5 @@
+#!/bin/sh
+PRINTER="Canon-MF220"
+#PRINTER=Virtual_PDF_Printer
+a5ona4 "$1"
+lpr -P $PRINTER -o media=A4 -o Duplex=DuplexTumble -o sides=two-sided-short-edge -o BindEdge=Bottom -o media=a4 -r "a5ona4_$1"

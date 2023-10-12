@@ -1,12 +1,10 @@
 #!/bin/sh
-# Gives a dmenu prompt to search DuckDuckGo.
-# Without input, will open DuckDuckGo.com.
+# Gives a dmenu prompt to searx
+# Without input, will open mainpage.
 # URLs will be directly handed to the browser.
-# Anything else, it search it.
-mainpage="https://duckduckgo.com"
-searchpage="https://duckduckgo.com/?q=%s"
+mainpage="https://bocken.org/searx"
+searchpage="https://bocken.org/searx/search?q=%s"
 browser=${BROWSER:-firefox}
-
 if [ -z "$(xclip -o -selection clipboard)" ]; then
 	choice=$(printf "🔍\n" | dmenu -i -p "Searx:") || exit 1
 else

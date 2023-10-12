@@ -1,7 +1,0 @@
-#!/bin/bash
-day=$(date '+%Y%b%d')
-logged=$(grep -v Break ~/bks/pomodoros_freetime | grep $(date '+%Y%b%d') | grep -Eo "\(.*\)" | paste -sd+ | bc)
-temp=$(cat /tmp/pomptemptimesft 2>/dev/null)
-min=$([ "$logged" != "" ] && ([ "$temp" != "" ] &&  echo "$logged + $temp" | bc || echo $logged )  || ([ "$temp" != "" ] && echo $temp))
-[ -n "$min" ] && printf '📚%s'"$min"
-printf '\n'

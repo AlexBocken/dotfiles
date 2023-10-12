@@ -61,18 +61,14 @@ c.statusbar.show = "always"
 c.tabs.show = "never"
 c.tabs.tabs_are_windows = True
 
-from os import environ
-from os.path import join
-if not(config_home:= environ["XDG_CONFIG_HOME"]):
-    config_home = expanduser("~/.config")
-local_startpage : str = join(config_home, "qutebrowser/startpage.html")
+local_startpage : str = "https://bocken.org"
 c.url.start_pages = local_startpage
 c.url.default_page = local_startpage
 
 c.url.open_base_url = True
 
-c.url.searchengines = {
-      "DEFAULT": "https://duckduckgo.com/?q={}",
+searchengines = {
+      "brave": "https://search.brave.com/search?q={}&source=web",
       "cactus": "https://latin.cactus2000.de/index.php?q={}",
       "ddg": "https://duckduckgo.com/?q={}",
       "dw": "https://www.dwds.de/wb/{}",
@@ -83,7 +79,9 @@ c.url.searchengines = {
       "oz": "http://www.ozdic.com/collocation-dictionary/{}",
       "re": "https://bocken.org/rezepte/?q={}",
       "yt": "https://www.youtube.com/results?search_query={}"
-    }
+      }
+searchengines["DEFAULT"] = searchengines["brave"]
+c.url.searchengines = searchengines
 
 c.zoom.default = "160%"
 

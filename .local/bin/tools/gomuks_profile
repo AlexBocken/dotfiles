@@ -1,0 +1,2 @@
+#!/bin/sh
+name=$1 GOMUKS_CACHE_HOME="$XDG_CACHE_HOME/gomuks_$name" GOMUKS_CONFIG_HOME="$XDG_CONFIG_HOME/gomuks_$name" GOMUKS_DATA_HOME="$XDG_DATA_HOME/gomuks_$name" DEBUG_DIR="/tmp/gomuks_$name" GOMUKS_DOWNLOAD_HOME="$HOME" gomuks

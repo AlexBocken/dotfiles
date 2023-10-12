@@ -1,0 +1,16 @@
+#!/bin/sh
+if [ "$( mpc status | grep -c '\[playing\]')" -eq 1 ]; then
+	if [ ! -f /tmp/nodunst ]; then
+		full_length="$(mpc status | sed "/^volume:/d" | tac | sed -e "s/\\[paused\\].*//g;s/\\[playing\\].*//g" | tr -d '\n' | sed -e "s/$/ /g")"
+		#remove full directory structure if no title present and too long
+		if [ ${#full_length} -gt 40 ]; then
+			echo "${full_length##*/}"
+		else
+			echo "$full_length"
+		fi
+	else
+		printf '\n'
+	fi
+else
+	printf '\n'
+fi

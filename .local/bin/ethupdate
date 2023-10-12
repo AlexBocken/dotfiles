@@ -1,0 +1,14 @@
+#!/bin/sh
+rclone_out="$(rclone copy --verbose OLAT: ~/eth/.olat 2>&1)"
+echo "$rclone_out" | tee -i $HOME/rclone.log
+rclone_out="$(echo "$rclone_out" | grep INFO | grep "Copied (new)" | cut -d':' -f2 | cut -d'/' -f1,3,4,5 --complement)"
+[ -n "$rclone_out" ] &&
+	/usr/bin/env DISPLAY=:0 /usr/bin/notify-send 'new files (olat):' "$rclone_out"
+
+cd $HOME/eth/.moodle
+pgrep moodle-dl || [ -f running.lock ] && rm running.lock
+
+log="$(moodle-dl | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g")"
+notifs="$(echo "$log" | grep -E '^\+' | sed 's/^+\s*/+/g')"
+[ $(printf %s "$notifs" | wc -l) -gt 0 ] &&
+	/usr/bin/env DISPLAY=:0 /usr/bin/notify-send 'new files (moodle):' "$notifs"

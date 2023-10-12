@@ -1,0 +1,3 @@
+#!/bin/sh
+abook --config /home/alex/.config/abook/abookrc --datafile /home/alex/.local/share/abook/addressbook --mutt-query "" |
+	dmenu -l 10 | perl -pe 's/([^\t]*)\t([^\t]*)/\1 <\2>/'

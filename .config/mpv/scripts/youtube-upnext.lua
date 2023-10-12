@@ -33,7 +33,7 @@ local opts = {
     cursor_unselected = "○ ",
 
     --font size scales by window, if false requires larger font and padding sizes
-    scale_playlist_by_window=false,
+    scale_playlist_by_window=true,
 
     --playlist ass style overrides inside curly brackets, \keyvalue is one field, extra \ for escape in lua
     --example {\\fnUbuntu\\fs10\\b0\\bord1} equals: font=Ubuntu, size=10, bold=no, border=1
@@ -225,6 +225,7 @@ local function get_invidious(url)
                     label=v.title .. " - " .. v.author,
                     file=string.format(opts.youtube_url, v.videoId)
                 })
+	    msg.verbose(v.author)
         end
         mp.osd_message("upnext fetch from Invidious succeeded", 10)
         return res

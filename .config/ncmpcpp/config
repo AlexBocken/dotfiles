@@ -352,7 +352,7 @@ media_library_albums_split_by_date = no
 #
 #lines_scrolled = 2
 #
-lyrics_fetchers = genius, azlyrics, sing365, metrolyrics, justsomelyrics, jahlyrics, plyrics, tekstowo, internet
+lyrics_fetchers = azlyrics, sing365, metrolyrics, justsomelyrics, jahlyrics, plyrics, tekstowo, internet, genius
 #
 #follow_now_playing_lyrics = no
 #

@@ -1,0 +1,4 @@
+41c41
+< 			*systemd*|*openrc*) export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus ;;
+---
+> 			*systemd*|*openrc*) export DBUS_SESSION_BUS_ADDRESS=$(cat /tmp/dbus_session_bus_address);;

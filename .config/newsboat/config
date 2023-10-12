@@ -18,21 +18,21 @@ bind-key h quit
 bind-key a toggle-article-read
 bind-key n next-unread
 bind-key N prev-unread
+bind-key D pb-download
 bind-key U show-urls
 bind-key x pb-delete
-bind-key D delete-article
 
 color listnormal cyan default
-color listfocus white black bold
+color listfocus black yellow standout bold
 color listnormal_unread blue default
-color listfocus_unread white black bold
+color listfocus_unread yellow default bold
 color info red black bold
 color article white default bold
 
 browser linkhandler
 macro , open-in-browser
 macro t set browser "qndl" ; open-in-browser ; set browser linkhandler
-macro a set browser "tsp youtube-dl --add-metadata -xic -f bestaudio/best" ; open-in-browser ; set browser linkhandler
+macro a set browser "tsp yt-dlp --embed-metadata -xic -f bestaudio/best" ; open-in-browser ; set browser linkhandler
 macro v set browser "setsid -f mpv" ; open-in-browser ; set browser linkhandler
 macro w set browser "lynx" ; open-in-browser ; set browser linkhandler
 macro d set browser "dmenuhandler" ; open-in-browser ; set browser linkhandler
@@ -42,6 +42,7 @@ macro p set browser "peertubetorrent %u 480" ; open-in-browser ; set browser lin
 macro P set browser "peertubetorrent %u 1080" ; open-in-browser ; set browser linkhandler
 
 notify-program "newsboatnotifs"
+highlight all "---.*---" yellow
 highlight all ".*---.*---.*" red default bold
 highlight feedlist ".*(0/0))" black
 highlight article "(^Feed:.*|^Title:.*|^Author:.*)" cyan default bold

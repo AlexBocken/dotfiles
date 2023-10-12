@@ -5,7 +5,7 @@ if echo "$1" | grep -qE 'youtube.*list'; then
 	js_playlist_index_loc="$HOME/src/youtube-playlist-video-ids"
 	# The above mentioned script needs Youtube API access, (see the repo for more info on that)
 	# I've saved my API key in my password manager, I reccomend you to do something similar.
-	API_key="$(pass show 'Misc/Youtube Data API v3' | head -n1 )"
+	API_key="$(pass show 'dev/Youtube Data API v3' | head -n1 )"
 	index="$(echo "$1" | perl -pe "s|&index=([0-9]+)|\1|")"
 	playlist_id="$( echo "$1" | perl -pe "s|^.*?(\?\|&)list=(.*?)|\2|; s|&index=[0-9]+||" )"
 	notify-send "startmpv" "Searching for all videos in playlist..."

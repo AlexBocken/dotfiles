@@ -6,6 +6,6 @@
 
 host=https://new.bocken.org:443/transmission
 user=alex
-password=$(pass show server/transmission)
+password=$(pass show server/seenas/transmission)
 transmission-remote $host -n $user:$password -a "$@" && notify-send "🔽 Torrent added."
 pkill -RTMIN+12 dwmblocks
