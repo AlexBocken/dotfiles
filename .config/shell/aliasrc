@@ -54,7 +54,8 @@ alias \
 	ref="shortcuts >/dev/null; source ${XDG_CONFIG_HOME:-$HOME/.config}/shell/shortcutrc ; source ${XDG_CONFIG_HOME:-$HOME/.config}/shell/zshnameddirrc" \
 	weath="less -S ${XDG_DATA_HOME:-$HOME/.local/share}/weatherreport"\
 	glog="git log --all --graph --decorate"\
-	clog="config log --all --graph --decorate"
+	clog="config log --all --graph --decorate"\
+	tremc="tremc --skip-version-check"
 
 # force config location
 alias \
