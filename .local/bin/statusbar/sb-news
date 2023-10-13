@@ -1,6 +1,6 @@
 #!/bin/sh
 num="$(newsboat -x print-unread | cut -f1 -d ' ' )"
 if  ! pgrep newsboat > /dev/null ; then
-	[ "$num" -gt 0 ] 2>/dev/null && printf "📰%s" "$num"
+	[ "$num" -gt 0 ] 2>/dev/null && printf "%s" "$num"
 	printf '\n'
 fi
