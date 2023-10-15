@@ -1,0 +1,39 @@
+#!/bin/sh
+# A small script manually writing into the /sys/class/backlight/* files
+# If multiple go through all and apply changes/printout status
+# if no first argument is given prints out current status
+# else: apply changes (+/- -> relative, only number: -> absolute)
+# numbers in percentages
+
+for backlight in "/sys/class/backlight/"*; do
+	max_brightness=$(cat $backlight/max_brightness)
+	current_brightness_abs=$(cat $backlight/brightness)
+	current_brightness_rel="$(echo "$current_brightness_abs * 100 / $max_brightness" | bc -l | xargs printf '%.0f')"
+
+	# For statusbar
+	if [ -z  $1 ]; then
+		echo "☀️$current_brightness_rel%"
+		# continue as relative changes can result in differing brightness for multiple backlights
+		continue
+	fi
+
+	max(){
+		echo $(( $1 > $2 ? $1 : $2 ))
+	}
+	min(){
+		echo $(( $1 < $2 ? $1 : $2 ))
+	}
+	limit(){
+		echo $(min $(max $1 0) 100)
+	}
+
+	if echo $1 | grep -q '^[+-]'; then
+		new_brightness_rel=$(limit $(echo $current_brightness_rel $1 | bc))
+	else
+		new_brightness_rel=$(limit $1)
+	fi
+	new_brightness_abs=$(echo "($new_brightness_rel * $max_brightness)/ 100" | bc)
+	echo "$new_brightness_abs" | sudo tee $backlight/brightness > /dev/null
+done
+[ -z $1 ] ||
+	pkill -RTMIN+2 dwmblocks
