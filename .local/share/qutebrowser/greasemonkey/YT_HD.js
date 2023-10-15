@@ -54,7 +54,7 @@
 	// If autoTheater is true, each video page opened will default to theater mode.
 	// This means the video will always be resized immediately if you are changing the size.
 	// NOTE: YouTube will not always allow theater mode immediately, the page must be fully loaded before theater can be set.
-	const autoTheater = false;
+	const autoTheater = true;
 
 	// If flushBuffer is false, then the first second or so of the video may not always be the desired resolution.
 	//   If true, then the entire video will be guaranteed to be the target resolution, but there may be
