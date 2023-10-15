@@ -27,22 +27,29 @@ do
 			printf '\n' &&
 			continue
 
-		status=$(sed "s/Discharging//;s/Not charging/🛑/;s/Charging/🔌/;s/Unknown/🔋/;s/Full/⚡/" "$battery"/status)
+		unset status
+		status=$(sed "s/Not charging/🛑/" "$battery"/status)
 		# Center picture around the actual capacity.
 		# Displayable capacities: 0, 1/4, 1/2, 3/4, 1 -> intervall of length 25% centered around displaycategory
 		# -> +- 12.5% for every level
-		if [ "$status" = "" ]; then
-			[ "$capacity" -le 13 ] &&
-				status=""
-			[ "$capacity" -le 37 ] &&
-				status=""
-			[ "$capacity" -le 63 ] &&
-				status=""
+		if grep -qE "(Discharging|Charging)" "$battery"/status; then
+			status=
 			[ "$capacity" -le 87 ] &&
 				status=""
+			[ "$capacity" -le 63 ] &&
+				status=""
+			[ "$capacity" -le 37 ] &&
+				status=""
+			[ "$capacity" -le 13 ] &&
+				status=""
+			[ "$capacity" -le 5 ] &&
+				status="❗"
+			if grep -q "Charging" "$battery"/status; then
+				status="${status}🔌"
+			fi
 		fi
-		printf "%s\n" "$status"
+		printf "%s \n" "$status"
 	else
 		echo "Error. Capacity:$capacity" > /dev/stderr #if battery fails during reading, quit
 	fi
-done | sed 's/ *$//'
+done
