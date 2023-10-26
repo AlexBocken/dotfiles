@@ -443,7 +443,26 @@ inoremap <silent><expr> <TAB>
 	\ pumvisible() ? "\<C-n>" :
 	\ "\<tab>"
 inoremap <expr><S-tab> pumvisible() ? "\<C-p>" : "\<C-h>"
+let g:coc#disable_startup_autoselect = 1
 
+" confirms selection if any or just break line if none
+function! EnterSelect()
+    " if the popup is visible and an option is not selected
+    if pumvisible() && complete_info()["selected"] == -1
+        return "\<C-y>\<CR>"
+
+    " if the pum is visible and an option is selected
+    elseif pumvisible()
+        return coc#_select_confirm()
+
+    " if the pum is not visible
+    else
+        return "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+    endif
+endfunction
+
+" makes <CR> confirm selection if any or just break line if none
+inoremap <silent><expr> <cr> EnterSelect()
 " Use <c-space> to trigger completion.
 if has('nvim')
   inoremap <silent><expr> <c-space> pumvisible() ?  coc#_select_confirm()
@@ -451,11 +470,6 @@ if has('nvim')
 else
   inoremap <silent><expr> <c-@> coc#refresh()
 endif
-
-" Make <CR> auto-select the first completion item and notify coc.nvim to
-" format on enter, <cr> could be remapped by other vim plugin
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 " Use `[g` and `]g` to navigate diagnostics
 " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
