@@ -18,12 +18,11 @@ Plug 'vim-airline/vim-airline'
 Plug 'tpope/vim-commentary'
 Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'yarn install --frozen-lockfile'}
 Plug 'ap/vim-css-color'
-Plug 'lervag/vimtex'
+Plug 'lervag/vimtex', { 'for': ['tex'] }
 Plug 'arcticicestudio/nord-vim'
 Plug 'rhysd/vim-grammarous'
-Plug 'jalvesaq/Nvim-R', {'branch': 'stable'}
-Plug 'luk400/vim-jukit'
-Plug 'yaegassy/coc-astro', {'do': 'yarn install --frozen-lockfile'}
+Plug 'jalvesaq/Nvim-R', {'branch': 'stable', 'for': ['r', 'R', 'Rmd', 'rmd']}
+Plug 'luk400/vim-jukit', {'for': ['ipynb', 'py']}
 call plug#end()
 
 set title
@@ -449,7 +448,7 @@ let g:coc#disable_startup_autoselect = 1
 function! EnterSelect()
     " if the popup is visible and an option is not selected
     if pumvisible() && complete_info()["selected"] == -1
-        return "\<C-y>\<CR>"
+        return "\<C-y>\<Enter>"
 
     " if the pum is visible and an option is selected
     elseif pumvisible()
