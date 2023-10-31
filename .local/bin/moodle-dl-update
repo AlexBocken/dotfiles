@@ -1,12 +1,7 @@
 #!/bin/sh
 MOODLE_DIR="/home/alex/eth/.moodle"
 cd "$MOODLE_DIR"
-echo "pgrepping"
-pgrep -x moodle-dl
 if ! pgrep -x moodle-dl; then
-	echo "nothing"
 	[ -f running.lock ] && rm running.lock
 	moodle-dl >/dev/null 2>&1
-else
-	echo "something"
 fi
