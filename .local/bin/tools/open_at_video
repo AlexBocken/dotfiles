@@ -1,0 +1,7 @@
+#!/bin/sh
+if echo $1 | grep -qv '^/'; then
+	absolute_path_file="$(pwd)/$1"
+else
+	absolute_path_file="$1"
+fi
+$TERMINAL $FILE "${absolute_path_file%/*}"
