@@ -14,4 +14,4 @@ map i recolor
 map p print
 map g goto top
 map <C-s> exec zathura_backward_search.sh
-map <A-Return> exec ranger_at_file $FILE
+map <A-Return> exec openfilebrowser $FILE
