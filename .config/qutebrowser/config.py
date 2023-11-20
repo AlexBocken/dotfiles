@@ -1,7 +1,7 @@
 import dracula.draw
 
 # Load existing settings made via :set
-config.load_autoconfig(False)
+config.load_autoconfig()
 
 c.auto_save.session = False
 c.backend = "webengine"
@@ -78,10 +78,10 @@ searchengines = {
       "ling": "https://www.linguee.com/english-german/search?source=auto&query={}",
       "nyaa": "nyaa.si/?q={}",
       "oz": "http://www.ozdic.com/collocation-dictionary/{}",
-      "re": "https://bocken.org/rezepte/?q={}",
+      "re": "https://bocken.org/rezepte?q={}",
       "yt": "https://www.youtube.com/results?search_query={}"
       }
-searchengines["DEFAULT"] = searchengines["brave"]
+searchengines["DEFAULT"] = searchengines["ddg"]
 c.url.searchengines = searchengines
 
 c.zoom.default = "160%"
