@@ -28,8 +28,6 @@ c.content.blocking.method = "both"
 c.content.desktop_capture = "ask"
 c.content.fullscreen.window = False
 
-c.content.headers.user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
-
 c.content.javascript.enabled = True
 c.content.local_content_can_access_remote_urls = True
 c.content.notifications.presenter = "libnotify"
@@ -42,7 +40,7 @@ c.downloads.open_dispatcher = "rifle {}"
 c.downloads.position = "top"
 c.downloads.remove_finished = 1000000
 
-c.editor.command = [ "st", "nvim", "-f", "'{file}'", "-c", "normal", "{line}G{column}" ]
+c.editor.command = [ "st", "nvim", "-f", "{file}", "-c", "normal {line}G{column}l" ]
 c.fileselect.folder.command = [ "st", "-e", "ranger", "--choosedir={}" ]
 c.fileselect.handler = "external"
 c.fileselect.multiple_files.command =  [ "st", "-e", "ranger", "--choosefiles={}" ]
