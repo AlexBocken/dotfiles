@@ -35,7 +35,7 @@ echo "syncclouds.sh: calcurse-caldav"
 calcurse_pid=$!
 
 # Wait for all processes to complete and print a message for each one
-
+# This does not print in the correct order (meaning first done first printed), but it's good enough
 wait $vdirsyncer_pid
 echo "syncclouds.sh: vdirsyncer done"
 
