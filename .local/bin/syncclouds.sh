@@ -30,10 +30,9 @@ echo "syncclouds.sh: calcurse-caldav"
 {
     # remove lock file if calcurse-caldav is not running
     pgrep -x calcurse-caldav || [ -f ~/.local/share/calcurse/caldav/lock ] && rm ~/.local/share/calcurse/caldav/lock
-    calcurse-caldav
+    CALCURSE_CALDAV_PASSWORD=$(pass server/seenas/nextcloud_admin_pass) calcurse-caldav
 } > /dev/null 2>&1 &
 calcurse_pid=$!
-echo "calcurse_pid: $calcurse_pid"
 
 # Wait for all processes to complete and print a message for each one
 
