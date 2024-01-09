@@ -95,7 +95,7 @@
     "sync_speed_attempts": 3,
     "sync_speed_time": 1000,
     "thumbnail_enable": true,
-    "thumbnail_jellyscrub": false,
+    "thumbnail_jellyscrub": true,
     "thumbnail_osc_builtin": true,
     "thumbnail_preferred_size": 320,
     "transcode_dolby_vision": true,
