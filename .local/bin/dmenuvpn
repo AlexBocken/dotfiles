@@ -3,21 +3,18 @@ PASS_DIR=Misc/SaferVPN
 USER='alexander@bocken.org'
 ETH_user="abocken@student-net.ethz.ch"
 ETH_password_path="ETH/VPN"
+ETH_OTP_path="OTP/nETHz"
 
 choice="$(ls "${XDG_CONFIG_HOME}/openvpn/cfgs" | sed 's/\.ovpn//' | awk 'BEGIN {print "ETH"}; {print $0}' | dmenu -i -p 'connect with which vpn server?' -l 10)"
 [ -z "$choice" ] && exit
 if [ "$choice" = "ETH" ]; then
 	if [ $(pgrep -c openconnect) -eq 0 ]; then
-		transmission-remote -u 0
-		transmission-remote -d 0
-		pass "$ETH_password_path" | sudo openconnect -g student-net -u "$ETH_user" --passwd-on-stdin sslvpn.ethz.ch &
+		printf "%s\n%s\n" "$(pass "$ETH_password_path")" "$(pass otp "$ETH_OTP_path")" | sudo openconnect --useragent=AnyConnect -g student-net -u "$ETH_user" --passwd-on-stdin sslvpn.ethz.ch &
 		if ping -c 3 -W 3 -q webprint.ethz.ch ;then
 			notify-send "ETH VPN" "ETH VPN connected"
 		fi
 	elif ping -c 1 -W 2 -q webprint.ethz.ch ;then
 			sudo pkill openconnect && notify-send "ETH VPN" "ETH VPN disconnected"
-			transmission-remote -U
-			transmission-remote -D
 	fi
 else
 	printf '%s\n%s\n' "$USER" "$(pass $PASS_DIR)" > /tmp/tmp_pass
