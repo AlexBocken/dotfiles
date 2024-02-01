@@ -14,7 +14,7 @@ moodle_pid=$!
 # sync nextcloud drive
 echo "syncclouds.sh: nextcloudcmd"
 {
-    nextcloudcmd -s -u "alexander@bocken.org" --password "$(pass server/seenas/nextcloud_admin_pass | head -n1)"  ~/dox/nextcloud https://cloud.bocken.org
+    nextcloudcmd -u "alexander" --password "Misc/nextcloud_token"  ~/dox/nextcloud https://cloud.bocken.org
 } > /dev/null 2>&1 &
 nextcloud_pid=$!
 
@@ -30,7 +30,7 @@ echo "syncclouds.sh: calcurse-caldav"
 {
     # remove lock file if calcurse-caldav is not running
     pgrep -x calcurse-caldav || [ -f ~/.local/share/calcurse/caldav/lock ] && rm ~/.local/share/calcurse/caldav/lock
-    CALCURSE_CALDAV_PASSWORD=$(pass server/seenas/nextcloud_admin_pass) calcurse-caldav
+    CALCURSE_CALDAV_PASSWORD=$(pass Misc/calcurse_token) calcurse-caldav
 } > /dev/null 2>&1 &
 calcurse_pid=$!
 
