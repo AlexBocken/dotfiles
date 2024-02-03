@@ -14,7 +14,7 @@ moodle_pid=$!
 # sync nextcloud drive
 echo "syncclouds.sh: nextcloudcmd"
 {
-    nextcloudcmd -u "alexander" --password "Misc/nextcloud_token"  ~/dox/nextcloud https://cloud.bocken.org
+	nextcloudcmd -u "alexander" --password "$(pass show Misc/nextcloud_token | head -n1)"  ~/dox/nextcloud https://cloud.bocken.org
 } > /dev/null 2>&1 &
 nextcloud_pid=$!
 
