@@ -28,7 +28,7 @@ c.content.blocking.method = "both"
 c.content.desktop_capture = "ask"
 c.content.fullscreen.window = False
 
-c.content.javascript.enabled = True
+#c.content.javascript.enabled = True
 c.content.local_content_can_access_remote_urls = True
 c.content.notifications.presenter = "libnotify"
 
@@ -67,6 +67,7 @@ c.url.default_page = local_startpage
 c.url.open_base_url = True
 
 searchengines = {
+      "sx": "https://searx.bocken.org/?q={}",
       "brave": "https://search.brave.com/search?q={}&source=web",
       "cactus": "https://latin.cactus2000.de/index.php?q={}",
       "ddg": "https://duckduckgo.com/?q={}",
@@ -79,7 +80,7 @@ searchengines = {
       "re": "https://bocken.org/rezepte?q={}",
       "yt": "https://www.youtube.com/results?search_query={}"
       }
-searchengines["DEFAULT"] = searchengines["ddg"]
+searchengines["DEFAULT"] = searchengines["sx"]
 c.url.searchengines = searchengines
 
 c.zoom.default = "160%"
