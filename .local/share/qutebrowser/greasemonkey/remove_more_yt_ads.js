@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Auto Remove Ads
-// @version      1.0.1
+// @version      1.0.2
 // @description  Autoremove static ads
 // @author       Alexander Bocken
 // @match        *://*.youtube.com/*
@@ -11,4 +11,5 @@ setInterval(() => {
 	el => {
 			el.remove();
 	})
+    document.querySelectorAll('[aria-label="Not interested"]').forEach(el => { el.click() })
 }, 50)
