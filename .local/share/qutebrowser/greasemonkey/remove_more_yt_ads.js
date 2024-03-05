@@ -7,7 +7,7 @@
 // @exclude      *://*.youtube.com/subscribe_embed?*
 // ==/UserScript==
 setInterval(() => {
-    document.querySelectorAll('.ytd-page-top-ad-layout-renderer,.ytd-display-ad-renderer,.ytd-video-display-full-buttoned-renderer, ytd-display-ad-renderer,.ytd-banner-promo-renderer-background,.ytd-player-legacy-desktop-watch-ads-renderer').forEach(
+    document.querySelectorAll('.ytd-page-top-ad-layout-renderer,.ytd-display-ad-renderer,.ytd-video-display-full-buttoned-renderer, ytd-display-ad-renderer,.ytd-banner-promo-renderer-background,.ytd-player-legacy-desktop-watch-ads-renderer,ytd-ad-slot-renderer').forEach(
 	el => {
 			el.remove();
 	})
