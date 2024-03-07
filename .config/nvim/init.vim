@@ -22,7 +22,13 @@ Plug 'lervag/vimtex', { 'for': ['tex'] }
 Plug 'arcticicestudio/nord-vim'
 Plug 'rhysd/vim-grammarous'
 Plug 'jalvesaq/Nvim-R', {'branch': 'stable', 'for': ['r', 'R', 'Rmd', 'rmd']}
-Plug 'luk400/vim-jukit', {'for': ['ipynb', 'py']}
+Plug 'luk400/vim-jukit'
+Plug 'David-Kunz/gen.nvim'
+Plug 'othree/html5.vim'
+Plug 'pangloss/vim-javascript'
+Plug 'evanleck/vim-svelte', {'branch': 'main'}
+Plug 'github/copilot.vim',
+Plug 'dmadisetti/AirLatex.vim', {'branch': 'main'}
 call plug#end()
 
 set title
@@ -62,6 +68,25 @@ colorscheme nord
 " Splits open at the bottom and right, which is non-retarded, unlike vim defaults.
 	set splitbelow splitright
 
+""" Autocompile RMarkdown on save if flag is set in file
+" Define a function to check for the autocompile flag and compile if present
+function! CompileRMarkdown()
+    let autocompile = search('<\!--\s\+vim:\s\+set\s\+autocompile=true\s\+-->', 'nW') != 0
+    if autocompile
+        silent !Rscript -e 'rmarkdown::render("%")'
+        redraw!
+    endif
+endfunction
+
+" Automatically compile RMarkdown on buffer write
+autocmd BufWritePost *.Rmd call CompileRMarkdown()
+
+""" GitHub Copilot
+" remap accept to <C-J> instead of <CR>
+imap <silent><script><expr> <C-J> copilot#Accept("\<CR>")
+let g:copilot_no_tab_map = v:true
+
+
 " Python Notebooks using jukit
 let g:_jukit_python_os_cmd = 'python'
 let g:jukit_shell_cmd = 'ipython'
@@ -95,9 +120,9 @@ let g:jukit_convert_overwrite_default = -1
 "   - Default setting when converting from .ipynb to .py or vice versa and a file of the same name already exists. Can be of [-1, 0, 1], where -1 means no default (i.e. you'll be prompted to specify what to do), 0 means never overwrite, 1 means always overwrite
 let g:jukit_convert_open_default = -1
 
-let g:jukit_hist_use_ueberzug = 1
+let g:jukit_hist_use_ueberzug = 0
 "   - Set to 1 to use Überzug to display saved outputs instead of an ipython split window
-let g:jukit_ueberzug_use_cached = 1
+let g:jukit_ueberzug_use_cached = 0
 "   - Whether to cache created images of saved outputs. If set to 0, will convert saved outputs to png from scratch each time. Note that this will make displaying saved outputs significantly slower.
 let g:jukit_ueberzug_pos = [0.25, 0.25, 0.4, 0.6]
 "   - position and dimension of Überzug window WITH output split present - [x, y, width, height]. Use `:call jukit#ueberzug#set_default_pos()` to modify/visualize.
@@ -122,7 +147,7 @@ let g:jukit_ueberzug_imagemagick_cmd = 'convert'
 "   - path to imagemagick (`convert` command) executable
 
 " Nerd tree
-	map <leader>n :NERDTreeToggle<CR>
+	"map <leader>n :NERDTreeToggle<CR>
 	autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
     if has('nvim')
         let NERDTreeBookmarksFile = stdpath('data') . '/NERDTreeBookmarks'
@@ -141,7 +166,9 @@ let R_hl_term = 0
 
 " AirLatex
 " your login-name
-let g:AirLatexUsername="cookies:overleaf_session2=s%3AMANcnaAAj4VeIgXsNIiCINZ0QgwtYNzn.9x0PVRqOp8egbGYpnIHuffJUxmH%2F%2F2W%2FFnTBPmDny1M"
+" let g:AirLatexCookieDB="~/.mozilla/firefox/do0jepvp.default-release/cookies.sqlite"
+let g:AirLatexCookie="cookies:overleaf2_session=s%3AtveT0u3Xn8VXTJmkUuSpO2p1o5SLGNYI.ARSAQd4K%2FO7L5ilui54Ht7voJWjD%2BxctQ1ngTRrlo6A"
+" let g:AirLatexUsername="cookies:overleaf_session2=s%3AMANcnaAAj4VeIgXsNIiCINZ0QgwtYNzn.9x0PVRqOp8egbGYpnIHuffJUxmH%2F%2F2W%2FFnTBPmDny1M"
 
 "This allows for change paste motion cp{motion}
 nmap <silent> cp :set opfunc=ChangePaste<CR>g@
@@ -163,7 +190,7 @@ let g:vimtex_compiler_latexmk = { 'build_dir' : '',
 			\ 'executable' : 'latexmk',
 			\ 'hooks' : [],
 			\ 'options' : [
-			\   '-pdflatex="pdflatex --shell-escape %O %S"',
+			\   '-xelatex',
 			\   '-verbose',
 			\   '-file-line-error',
 			\   '-synctex=1',
@@ -171,6 +198,7 @@ let g:vimtex_compiler_latexmk = { 'build_dir' : '',
 			\ ],
 			\}
 
+			"\   '-pdflatex="pdflatex --shell-escape %O %S"',
 
 " vimling:
 	"nm <leader><leader>d :call ToggleDeadKeys()<CR>
@@ -404,7 +432,7 @@ nnoremap <leader>h :call ToggleHiddenAll()<CR>
 
 
 """I like COC
-let g:coc_global_extensions = ['coc-json', 'coc-texlab', 'coc-svg', 'coc-docker', 'coc-lua', 'coc-perl', 'coc-r-lsp', 'coc-tsserver', 'coc-emmet', 'coc-clangd', 'coc-html-css-support', 'coc-go', 'coc-css', 'coc-perl', 'coc-yaml', 'coc-svelte', 'coc-sql']
+let g:coc_global_extensions = ['coc-json', 'coc-texlab', 'coc-svg', 'coc-docker', 'coc-lua', 'coc-perl', 'coc-r-lsp', 'coc-tsserver', 'coc-emmet', 'coc-clangd', 'coc-html-css-support', 'coc-go', 'coc-css', 'coc-perl', 'coc-yaml', 'coc-svelte', 'coc-sql', 'coc-sh']
 " Set internal encoding of vim, not needed on neovim, since coc.nvim using some
 " unicode characters in the file autoload/float.vim
 set encoding=utf-8
