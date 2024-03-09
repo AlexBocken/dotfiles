@@ -5,8 +5,8 @@
 VIRTUAL_PRINTER_DIR="/var/spool/cups-pdf/$USER"
 # Printer to print magazine layout on
 PRINTER="Canon-MF220"
-PRINTER=Virtual_PDF_Printer
-file="$@"
+#PRINTER=Virtual_PDF_Printer
+file="$1"
 lpr -P Virtual_PDF_Printer -o number-up=2 -o orientation-requested=4 -o fit-to-page -o media=a4 "$file"
 str="."
 until lpc status | grep -A 4 'Virtual_PDF_Printer:' | tail -n1 | grep 'no entries'; do

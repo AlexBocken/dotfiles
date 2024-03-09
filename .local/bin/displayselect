@@ -6,10 +6,7 @@
 
 #automatically scale HD screens to better work with hidpi
 scale_factor_HD=${1:-1.6666}
-scale_outputs="HDMI-3
-DP-2
-HDMI-1-3
-DP1-2"
+scale_outputs="HDMI-1 DP-7"
 
 
 #fixes issue that script gets called twice for some reason
@@ -45,7 +42,7 @@ twoscreen() { # If multi-monitor is selected and there are two screens.
         primary=$(echo "$screens" | dmenu -i -p "Select primary display:")
         secondary=$(echo "$screens" | grep -v "$primary")
         direction=$(printf "left\\nright" | dmenu -i -p "What side of $primary should $secondary be on?")
-	if $(echo "$scale_outputs" | grep -q "$primary"); then
+	if echo "$scale_outputs" | grep -q "$primary"; then
         	xrandr --output "$primary" --auto --scale $scale_factor_HD --output "$secondary" --"$direction"-of "$primary" --auto --scale 1.0x1.0
 	elif $(echo "$scale_outputs" | grep -q "$seconday"); then
         	xrandr --output "$primary" --auto --scale 1.0x1.0 --output "$secondary" --"$direction"-of "$primary" --auto --scale $scale_factor_HD

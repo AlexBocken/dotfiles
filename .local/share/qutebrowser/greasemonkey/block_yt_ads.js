@@ -7,12 +7,12 @@
 // @exclude      *://*.youtube.com/subscribe_embed?*
 // ==/UserScript==
 setInterval(() => {
-    const btn = document.querySelector('.videoAdUiSkipButton,.ytp-ad-skip-button')
-    if (btn) {
-        btn.click()
-    }
+    document.querySelector('.videoAdUiSkipButton,.ytp-ad-skip-button')?.click()
     const ad = [...document.querySelectorAll('.ad-showing')][0];
     if (ad) {
         document.querySelector('video').playbackRate = 10;
     }
+	setTimeout( () => {
+    document.querySelector('.videoAdUiSkipButton,.ytp-ad-skip-button')?.click()
+	}, 5000)
 }, 50)

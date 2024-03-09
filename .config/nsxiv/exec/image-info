@@ -16,6 +16,8 @@ exec 2>/dev/null
 filename=$(basename -- "$1")
 filesize=$(du -Hh -- "$1" | cut -f 1)
 geometry="${2}x${3}"
+#TODO: imrpove for multiple date formats
+#currently just picks the first date that is not a profile or file date using exiftool (no one coherent standard for date in exif metadata is used)
+date_shot="$(exiftool -- "$1" | grep 'Date' | grep -vE '(Profile|File)' | head -n1 | cut -d: -f1 --complement)"
 
-echo "${filesize}${s}${geometry}${s}${filename}"
-
+echo "${filesize}${s}${geometry}${s}${filename}${s}${date_shot}"

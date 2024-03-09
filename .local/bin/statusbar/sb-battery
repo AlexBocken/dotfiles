@@ -23,9 +23,10 @@ do
 			echo "Error. Capacity:$capacity" > /dev/stderr &&
 			continue
 		# do not display full batteries (nice to unclutter status bars for laptops mostly used stationiary)
-		[ "$capacity" -eq 100 ] &&
-			printf '\n' &&
+		if [ "$capacity" -eq 100 ] || grep -q "Full" "$battery"/status; then
+			printf '\n'
 			continue
+		fi
 
 		unset status
 		status=$(sed "s/Not charging/🛑/" "$battery"/status)

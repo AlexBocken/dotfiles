@@ -10,14 +10,14 @@ setbg &			# set the background with the `setbg` script
 
 xrdb ${XDG_CONFIG_HOME:-$HOME/.config}/x11/xresources & xrdbpid=$!	# Uncomment to use Xresources colors/settings on startup
 
-autostart="picom mpd dunst unclutter dwmblocks update_musicbar pipewire remapd pipewire"
+autostart="picom mpd dunst unclutter dwmblocks update_musicbar pipewire remapd pipewire jellyfin-mpv-shim"
 for program in $autostart; do
 	pidof -s "$program" || setsid -f "$program"
 done >/dev/null 2>&1
 xrandr --auto
-xrandr --dpi 180		# Set DPI. User may want to use a larger number for larger screens.
-xrandr --listactivemonitors | grep -qE '1920.*x1080.*HDMI-1-3$' && ( xrandr --output  HDMI-1-3 --scale 1.666666666666 && setbg ) # set scale for 2nd monitor if connected
-
+xrandr --dpi 140		# Set DPI. User may want to use a larger number for larger screens.
+sb-bright 40			# set brighntess by default to 40% instead of ~38%
+xrandr --listactivemonitors | grep -qE '1920.*x1080.*DP-7$' && ( xrandr --output  DP-7 --scale 1.666666666666 && setbg ) # set scale for 2nd monitor if connected
 echo "$DBUS_SESSION_BUS_ADDRESS" > /tmp/dbus_session_bus_address
 
 # Ensure that xrdb has finished running before moving on to start the WM/DE.

@@ -17,10 +17,10 @@ Hostname = cloud.bocken.org
 
 # Path to the CalDAV calendar on the host specified above. This is the base
 # path following your host name in the URL.
-Path = /remote.php/dav/calendars/admin/personal/
+Path = /remote.php/dav/calendars/alexander/personal/
 
 # Type of authentication to use. Must be "basic" or "oauth2"
-#AuthMethod = basic
+AuthMethod = basic
 
 # Enable this if you want to skip SSL certificate checks.
 InsecureSSL = No
@@ -53,8 +53,8 @@ Verbose = Yes
 # Set `Password` to your password in plaintext (unsafe),
 # or `PasswordCommand` to a shell command that retrieves it (recommended).
 [Auth]
-Username = alexander@bocken.org
-# Password = DO NOT USE
+Username = alexander
+# Password = # SET VIA CALCURSE_CALDAV_PASSWORD environment variable
 # PasswordCommand = #Does not work
 
 # Optionally specify additional HTTP headers here.
@@ -63,13 +63,15 @@ Username = alexander@bocken.org
 
 # Use the following to synchronize with an OAuth2-based service
 # such as Google Calendar.
-#[OAuth2]
+[OAuth2]
+ClientID = calcurse
+ClientSecret =
 #ClientID = your_client_id
 #ClientSecret = your_client_secret
 
 # Scope of access for API calls. Synchronization requires read/write.
-#Scope = https://example.com/resource/scope
+Scope =
 
 # Change the redirect URI if you receive errors, but ensure that it is identical
 # to the redirect URI you specified in the API settings.
-#RedirectURI = http://127.0.0.1
+RedirectURI = http://127.0.0.1

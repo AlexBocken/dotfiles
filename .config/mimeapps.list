@@ -18,3 +18,4 @@ video/x-matroska=video.desktop
 video/mp4=video.desktop
 x-scheme-handler/lbry=lbry.desktop
 inode/directory=file.desktop
+x-scheme-handler/msteams=teams.desktop

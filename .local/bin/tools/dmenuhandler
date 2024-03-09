@@ -11,7 +11,7 @@ makepathabsolute(){
 	echo "$dl_location"
 }
 
-choices="$(printf 'mpv\ncopy url\nqueue download\nrifle file\nqueue youtube-dl\nbrowser\nrip media\ncast')"
+choices="$(printf 'mpv\ncopy url\nqueue download\nrifle file\nqueue youtube-dl\nbrowser\nrip media\ncast\nadd torrent\n')"
 if echo "$1" | grep -q "4chan"; then
 	choices="$(printf '%s\nwatch thread' "$choices")"
 fi
@@ -38,7 +38,13 @@ case "$choice" in
 			mkdir -p "$(makepathabsolute "$dest")"
 			threadwatcher add "$1" "$dest" &
 			notify-send "dmenuhandler" "Thread watcher started. Download initialized.";;
-		"rip media") dest="$(dmenuinput 'name of folder:')"
-			lynx --dump --nonumbers --listonly "$1" | grep -E "\.(webm|mp4|gif|jpg|jpeg|png|pdf|epub|mobi|djvu)" | sort -u | xargs wget -P "$(makepathabsolute "$dest")"
-			notify-send "dmenuhandler" "all media ripped into $dest";;
+	"rip media") dest="$(dmenuinput 'name of folder:')"
+		lynx --dump --nonumbers --listonly "$1" | grep -E "\.(webm|mp4|gif|jpg|jpeg|png|pdf|epub|mobi|djvu)" | sort -u | xargs wget -P "$(makepathabsolute "$dest")"
+		notify-send "dmenuhandler" "all media ripped into $dest";;
+	"add torrent") echo "$1" | grep -q '^magnet:' && transadd "$1"
+		if echo "$1" | grep -q "\.torrent$"; then
+			curl -L "$1" -o "/tmp/torrentfile"
+			transadd "/tmp/torrentfile"
+			rm "/tmp/torrentfile"
+		fi
 esac

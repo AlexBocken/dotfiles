@@ -36,6 +36,7 @@ export XDG_VIDEOS_DIR="$HOME/vids"
 #Various stuff
 export BIB="$XDG_DOCUMENTS_DIR/bib.bib"
 
+export MATES_DIR="${XDG_DATA_HOME:-$HOME/.local/share/}/vdirsyncer/contacts/"
 #export XDG_RUNTIME_DIR="$HOME/.cache/xdg_run" # Messes up Audio for some reason, might be useful to figure out in the future how to fix
 #export XAUTHORITY="$HOME/.cache/xdg_run/Xauthority" # This line will break some DMs.
 export CHROOT="${HOME}/.local/src/chroot"

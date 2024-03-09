@@ -1,7 +1,6 @@
 #!/bin/sh
-DBUS_SESSION_BUS_ADDRESS=$(cat /tmp/dbus_session_bus_address)
-export DBUS_SESSION_BUS_ADDRESS
-export DISPLAY=:0.0
+export DBUS_SESSION_BUS_ADDRESS=$(cat /tmp/dbus_session_bus_address)
+#export DISPLAY=:0.0
 newsboat -x reload & pid=$!
 sleep 120
 kill -15 $pid

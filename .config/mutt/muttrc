@@ -1,8 +1,7 @@
 # vim: filetype=neomuttrc
 source /usr/share/mutt-wizard/mutt-wizard.muttrc
 source /home/alex/.config/mutt/accounts/alexander@bocken.org.muttrc
-macro index,pager i1 '<sync-mailbox><enter-command>source /home/alex/.config/mutt/accounts/alexander@bocken.org.muttrc<enter><change-folder>!<enter>;<check-stats>' "switch to alexander@bocken.org"
-macro index,pager i2 '<sync-mailbox><enter-command>source /home/alex/.config/mutt/accounts/1-abocken@ethz.ch.muttrc<enter><change-folder>!<enter>;<check-stats>' "switch to abocken@ethz.ch"
+macro index,pager i2 '<sync-mailbox><enter-command>source /home/alex/.config/mutt/accounts/abocken@ethz.ch.muttrc<enter><change-folder>!<enter>;<check-stats>' "switch to abocken@ethz.ch"
 set forward_attachments = ask-yes
 macro compose m \
 "<enter-command>set pipe_decode<enter>\
@@ -14,6 +13,17 @@ macro compose m \
 <tag-entry><previous-entry><tag-entry><group-alternatives>" \
 "Convert markdown to HTML5 and plaintext alternative content types"
 
-set query_command = "abook --config $XDG_CONFIG_HOME/abook/abookrc --datafile $XDG_DATA_HOME/abook/addressbook --mutt-query '%s'"
-macro index,pager a "<enter-command>set my_pipe_decode=\$pipe_decode pipe_decode<return><pipe-message>abook --config $XDG_CONFIG_HOME/abook/abookrc --datafile $XDG_DATA_HOME/abook/addressbook --add-email<return><enter-command>set pipe_decode=\$my_pipe_decode; unset my_pipe_decode<return>" "add the sender address to abook"
+#set query_command = "abook --config $XDG_CONFIG_HOME/abook/abookrc --datafile $XDG_DATA_HOME/abook/addressbook --mutt-query '%s'"
+#macro index,pager a "<enter-command>set my_pipe_decode=\$pipe_decode pipe_decode<return><pipe-message>abook --config $XDG_CONFIG_HOME/abook/abookrc --datafile $XDG_DATA_HOME/abook/addressbook --add-email<return><enter-command>set pipe_decode=\$my_pipe_decode; unset my_pipe_decode<return>" "add the sender address to abook"
 macro index,pager i3 '<sync-mailbox><enter-command>source /home/alex/.config/mutt/accounts/alexander@aaathats3as.com.muttrc<enter><change-folder>!<enter>;<check-stats>' "switch to alexander@aaathats3as.com"
+macro index,pager i1 '<sync-mailbox><enter-command>source /home/alex/.config/mutt/accounts/alexander@bocken.org.muttrc<enter><change-folder>!<enter>;<check-stats>' "switch to alexander@bocken.org"
+
+
+set query_command= "mates mutt-query '%s'"
+
+set query_command = "echo %s | xargs khard email --parsable --"
+bind editor <Tab> complete-query
+bind editor ^T    complete
+macro index,pager a \
+  "<pipe-message>khard add-email<return>" \
+  "add the sender email address to khard"

@@ -6,5 +6,88 @@
 
 config_version: 2
 settings:
+  bindings.commands:
+    global:
+      normal:
+        ',C': spawn -d st castyt {url}
+        ',S': spawn -d mpvallvids {url}
+        ',V': spawn -d startmpv {url}
+        ',X': spawn -d dmenuhandler {url}
+        ',c': hint links spawn -d st castyt {hint-url}
+        ',s': hint links spawn -d mpvallvids {hint-url}
+        ',v': hint links spawn -d startmpv {hint-url}
+        ',x': hint links spawn -d dmenuhandler {hint-url}
+        aO: download-open;; download-remove;; close
+        ao: download-open;; download-remove
+        ar: download-remove
+        gP: open -p {url}
+        u: undo --window
+  colors.webpage.darkmode.algorithm:
+    global: lightness-cielab
+  colors.webpage.darkmode.contrast:
+    global: 0.5
+  colors.webpage.darkmode.enabled:
+    global: false
+  colors.webpage.darkmode.threshold.background:
+    global: 100
+  colors.webpage.preferred_color_scheme:
+    global: light
+  content.cookies.accept:
+    global: no-3rdparty
+  content.desktop_capture:
+    https://meet.bocken.org: true
+  content.headers.user_agent:
+    global: Mozilla/5.0 ({os_info}) AppleWebKit/{webkit_version} (KHTML, like Gecko)
+      {qt_key}/{qt_version} {upstream_browser_key}/{upstream_browser_version} Safari/{webkit_version}
+  content.javascript.clipboard:
+    global: access-paste
+  content.javascript.enabled:
+    global: true
+  content.media.audio_capture:
+    https://meet.bocken.org: true
+    https://meet.piribauer.de: true
+    https://teams.microsoft.com: true
+  content.media.audio_video_capture:
+    https://meet.bocken.org: true
+    https://meet.piribauer.de: true
+    https://teams.microsoft.com: true
+  content.media.video_capture:
+    https://meet.bocken.org: true
+    https://meet.piribauer.de: true
+    https://teams.microsoft.com: true
   content.notifications.enabled:
+    https://cloud.bocken.org: true
     https://stream.bocken.org: true
+    https://teams.microsoft.com: true
+  content.pdfjs:
+    global: false
+  downloads.location.directory:
+    global: /tmp
+  downloads.location.prompt:
+    global: false
+  editor.command:
+    global:
+    - st
+    - nvim
+    - -f
+    - '{file}'
+    - -c
+    - normal
+    - '{line}G{column}l'
+  prompt.filebrowser:
+    global: true
+  url.searchengines:
+    global:
+      DEFAULT: https://bocken.org/searx/?q={}
+      brave: https://search.brave.com/search?q={}&source=web
+      cactus: https://latin.cactus2000.de/index.php?q={}
+      ddg: https://duckduckgo.com/?q={}
+      dw: https://www.dwds.de/wb/{}
+      gg: https://linggle.com/?q={}
+      jisho: jisho.org/search/{}
+      ling: https://www.linguee.com/english-german/search?source=auto&query={}
+      nyaa: nyaa.si/?q={}
+      oz: http://www.ozdic.com/collocation-dictionary/{}
+      re: https://bocken.org/rezepte?q={}
+      sx: https://bocken.org/searx/?q={}
+      yt: https://www.youtube.com/results?search_query={}
