@@ -71,12 +71,13 @@ colorscheme nord
 """ Autocompile RMarkdown on save if flag is set in file
 " Define a function to check for the autocompile flag and compile if present
 function! CompileRMarkdown()
-    let autocompile = search('<\!--\s\+vim:\s\+set\s\+autocompile=true\s\+-->', 'nW') != 0
+    let autocompile = search('<\!--\s\+vim:\s\+set\s\+autocompile=true:\s\+-->', 'nW') != 0
     if autocompile
         silent !Rscript -e 'rmarkdown::render("%")'
         redraw!
     endif
 endfunction
+
 
 " Automatically compile RMarkdown on buffer write
 autocmd BufWritePost *.Rmd call CompileRMarkdown()
@@ -190,7 +191,7 @@ let g:vimtex_compiler_latexmk = { 'build_dir' : '',
 			\ 'executable' : 'latexmk',
 			\ 'hooks' : [],
 			\ 'options' : [
-			\   '-xelatex',
+			\   '-pdflatex="pdflatex --shell-escape %O %S"',
 			\   '-verbose',
 			\   '-file-line-error',
 			\   '-synctex=1',
