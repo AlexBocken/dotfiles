@@ -250,6 +250,9 @@
 
     var checkExistTimer = setInterval(function () {
         if(bulkRunning) return
+	addCheckBoxIfMissing('day')
+	addCheckBoxIfMissing('month')
+	addCheckBoxIfMissing('year')
         addCheckBoxIfMissing('latitude')
         addCheckBoxIfMissing('longitude')
         addCheckBoxIfMissing('altitude')
