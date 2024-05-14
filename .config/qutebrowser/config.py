@@ -7,6 +7,7 @@ c.auto_save.session = False
 c.backend = "webengine"
 c.bindings.commands = { "normal":
          {
+            "<Alt-Return>": "open -t {url}",
             "u": "undo --window",
             ",C": "spawn -d st castyt {url}",
             ",S": "spawn -d mpvallvids {url}",
@@ -28,9 +29,10 @@ c.content.blocking.method = "both"
 c.content.desktop_capture = "ask"
 c.content.fullscreen.window = False
 
-#c.content.javascript.enabled = True
+#c.content.javascript.enabled = True # make editable via autoconfig
 c.content.local_content_can_access_remote_urls = True
 c.content.notifications.presenter = "libnotify"
+c.content.javascript.clipboard = "access-paste"
 
 from os.path import expanduser
 c.downloads.location.directory = expanduser("~")
