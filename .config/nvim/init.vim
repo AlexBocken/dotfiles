@@ -29,6 +29,7 @@ Plug 'pangloss/vim-javascript'
 Plug 'evanleck/vim-svelte', {'branch': 'main'}
 Plug 'github/copilot.vim',
 Plug 'dmadisetti/AirLatex.vim', {'branch': 'main'}
+Plug 'nathangrigg/vim-beancount'
 call plug#end()
 
 set title
@@ -71,7 +72,7 @@ colorscheme nord
 """ Autocompile RMarkdown on save if flag is set in file
 " Define a function to check for the autocompile flag and compile if present
 function! CompileRMarkdown()
-    let autocompile = search('<\!--\s\+vim:\s\+set\s\+autocompile=true:\s\+-->', 'nW') != 0
+    let autocompile = search('<\!--\s\+vim:\s\+set\s\+autocompile=true\s\+-->', 'nW') != 0
     if autocompile
         silent !Rscript -e 'rmarkdown::render("%")'
         redraw!
