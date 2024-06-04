@@ -29,7 +29,7 @@ local function handle_n()
         local filename = mp.get_property("filename")
         -- Use a method to copy 'filename' to clipboard (platform-specific)
         -- For example, on Unix-like systems, you might use 'xclip'
-        os.execute("echo " .. filename .. " | xclip -selection clipboard")
+        os.execute("printf %s" .. filename .. " | xclip -selection clipboard")
         mp.osd_message("Copied filename " .. filename .. " to clipboard", 3)
         reset_y() -- Reset the 'y' keypress state
     end
@@ -43,7 +43,7 @@ local function handle_d()
     if y_pressed then
         local filepath = mp.get_property("path")
         local directory = string.match(filepath, "(.*/)")
-        os.execute("echo " .. directory .. " | xclip -selection clipboard")
+        os.execute("printf %s" .. directory .. " | xclip -selection clipboard")
         mp.osd_message("Copied directory " .. directory .. " to clipboard", 3)
         reset_y()
     end
@@ -53,7 +53,7 @@ end
 local function handle_p()
     if y_pressed then
         local full_path = mp.get_property("path")
-        os.execute("echo " .. full_path .. " | xclip -selection clipboard")
+        os.execute("printf %s " .. full_path .. " | xclip -selection clipboard")
         mp.osd_message("Copied full path " .. full_path .. " to clipboard", 3)
         reset_y()
     end
