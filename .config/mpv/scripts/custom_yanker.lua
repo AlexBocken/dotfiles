@@ -23,9 +23,9 @@ local function handle_y()
 end
 
 -- Function to handle 'n' keypress
+-- Copy the filename to clipboard
 local function handle_n()
     if y_pressed then
-        -- Copy the filename to clipboard
         local filename = mp.get_property("filename")
         -- Use a method to copy 'filename' to clipboard (platform-specific)
         -- For example, on Unix-like systems, you might use 'xclip'
@@ -36,22 +36,30 @@ local function handle_n()
 end
 
 -- Bind the keys to their respective functions
-mp.add_key_binding("y", "check_y", handle_y)
-mp.add_key_binding("n", "check_n", handle_n)
 
 -- Function to handle 'd' keypress
+-- Copy the directory to clipboard
 local function handle_d()
     if y_pressed then
-        -- Copy the directory to clipboard
         local filepath = mp.get_property("path")
         local directory = string.match(filepath, "(.*/)")
-        -- Use a method to copy 'directory' to clipboard (platform-specific)
-        -- For example, on Unix-like systems, you might use 'xclip'
         os.execute("echo " .. directory .. " | xclip -selection clipboard")
         mp.osd_message("Copied directory " .. directory .. " to clipboard", 3)
-        reset_y() -- Reset the 'y' keypress state
+        reset_y()
     end
 end
 
--- Bind the 'd' key to its respective function
+-- Function to handle 'p' keypress
+local function handle_p()
+    if y_pressed then
+        local full_path = mp.get_property("path")
+        os.execute("echo " .. full_path .. " | xclip -selection clipboard")
+        mp.osd_message("Copied full path " .. full_path .. " to clipboard", 3)
+        reset_y()
+    end
+end
+
+mp.add_key_binding("y", "check_y", handle_y)
+mp.add_key_binding("n", "check_n", handle_n)
+mp.add_key_binding("p", "check_p", handle_p)
 mp.add_key_binding("d", "check_d", handle_d)
