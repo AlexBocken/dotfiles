@@ -15,7 +15,7 @@ local function reset_y()
 end
 
 -- Function to handle 'y' keypress
-local function handle_y()
+local function handle_yanker()
     reset_y()
     y_pressed = true
     -- Start a timer to reset the state after 2 seconds
@@ -24,7 +24,7 @@ end
 
 -- Function to handle 'n' keypress
 -- Copy the filename to clipboard
-local function handle_n()
+local function handle_filename()
     if y_pressed then
         local filename = mp.get_property("filename")
         -- Use a method to copy 'filename' to clipboard (platform-specific)
@@ -39,7 +39,7 @@ end
 
 -- Function to handle 'd' keypress
 -- Copy the directory to clipboard
-local function handle_d()
+local function handle_dir()
     if y_pressed then
         local filepath = mp.get_property("path")
         local directory = string.match(filepath, "(.*/)")
@@ -50,7 +50,7 @@ local function handle_d()
 end
 
 -- Function to handle 'p' keypress
-local function handle_p()
+local function handle_path()
     if y_pressed then
         local full_path = mp.get_property("path")
         os.execute("printf %s " .. full_path .. " | xclip -selection clipboard")
@@ -59,7 +59,22 @@ local function handle_p()
     end
 end
 
-mp.add_key_binding("y", "check_y", handle_y)
-mp.add_key_binding("n", "check_n", handle_n)
-mp.add_key_binding("p", "check_p", handle_p)
-mp.add_key_binding("d", "check_d", handle_d)
+-- Function to copy the title to clipboard
+local function handle_title()
+    if y_pressed then
+        local title = mp.get_property("media-title")
+        if title and title ~= mp.get_property("filename") then
+            os.execute("printf %s" .. title .. " | xclip -selection clipboard")
+            mp.osd_message("Copied title " .. title .. " to clipboard", 3)
+        else
+            handle_filename() -- Call the function to copy the filename
+        end
+        reset_y()
+    end
+end
+
+mp.add_key_binding("y", "check_y", handle_yanker)
+mp.add_key_binding("n", "check_n", handle_filename)
+mp.add_key_binding("p", "check_p", handle_path)
+mp.add_key_binding("d", "check_d", handle_dir)
+mp.add_key_binding("t", "check_t", handle_title)
