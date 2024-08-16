@@ -1,0 +1,124 @@
+IMAPStore alexander@bocken.org-remote
+Host mail.bocken.org
+Port 993
+User alexander
+PassCmd "pass alexander@bocken.org"
+AuthMechs LOGIN
+TLSType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+MaildirStore alexander@bocken.org-local
+Subfolders Verbatim
+Path /home/alex/.local/share/mail/alexander@bocken.org/
+Inbox /home/alex/.local/share/mail/alexander@bocken.org/INBOX
+
+Channel alexander@bocken.org
+Expunge Both
+Far :alexander@bocken.org-remote:
+Near :alexander@bocken.org-local:
+Patterns * !"[Gmail]/All Mail"
+Create Both
+SyncState *
+MaxMessages 0
+ExpireUnread no
+# End profile
+
+IMAPStore abocken@ethz.ch-remote
+Host outlook.office365.com
+Port 993
+User abocken@ethz.ch
+PassCmd "mutt_oauth2.py ~/.local/share/mail/eth.token"
+AuthMechs XOAUTH2
+TLSType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+MaildirStore abocken@ethz.ch-local
+Subfolders Verbatim
+Path /home/alex/.local/share/mail/abocken@ethz.ch/
+Inbox /home/alex/.local/share/mail/abocken@ethz.ch/INBOX
+
+Channel abocken@ethz.ch
+Expunge Both
+Far :abocken@ethz.ch-remote:
+Near :abocken@ethz.ch-local:
+Patterns * !"[Gmail]/All Mail"
+Create Both
+SyncState *
+MaxMessages 0
+ExpireUnread no
+# End profile
+
+#IMAPStore abocken@ethz.ch-remote
+#Host mail.ethz.ch
+#Port 993
+#User abocken
+#PassCmd "pass 'ETH/nETHz - abocken@ethz.ch'"
+#AuthMechs LOGIN
+#TLSType IMAPS
+#CertificateFile /etc/ssl/certs/ca-certificates.crt
+#
+#MaildirStore abocken@ethz.ch-local
+#Subfolders Verbatim
+#Path /home/alex/.local/share/mail/abocken@ethz.ch/
+#Inbox /home/alex/.local/share/mail/abocken@ethz.ch/INBOX
+#
+#Channel abocken@ethz.ch
+#Expunge Both
+#Far :abocken@ethz.ch-remote:
+#Near :abocken@ethz.ch-local:
+#Patterns * !"[Gmail]/All Mail"
+#Create Both
+#SyncState *
+#MaxMessages 0
+#ExpireUnread no
+
+
+IMAPStore alexander@aaathats3as.com-remote
+Host mail.cock.li
+Port 993
+User alexander@aaathats3as.com
+PassCmd "pass eMail/aaathats3as.com"
+AuthMechs LOGIN
+TLSType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+MaildirStore alexander@aaathats3as.com-local
+Subfolders Verbatim
+Path /home/alex/.local/share/mail/alexander@aaathats3as.com/
+Inbox /home/alex/.local/share/mail/alexander@aaathats3as.com/INBOX
+
+Channel alexander@aaathats3as.com
+Expunge Both
+Far :alexander@aaathats3as.com-remote:
+Near :alexander@aaathats3as.com-local:
+Patterns * !"[Gmail]/All Mail"
+Create Both
+SyncState *
+MaxMessages 0
+ExpireUnread no
+# End profile
+
+IMAPStore account@bocken.org-remote
+Host mail.bocken.org
+Port 993
+User account
+PassCmd "pass account@bocken.org"
+AuthMechs LOGIN
+TLSType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+MaildirStore account@bocken.org-local
+Subfolders Verbatim
+Path /home/alex/.local/share/mail/account@bocken.org/
+Inbox /home/alex/.local/share/mail/account@bocken.org/INBOX
+
+Channel account@bocken.org
+Expunge Both
+Far :account@bocken.org-remote:
+Near :account@bocken.org-local:
+Patterns * !"[Gmail]/All Mail" !"*fts-flatcurve*" !"*virtual*"
+Create Both
+SyncState *
+MaxMessages 0
+ExpireUnread no
+# End profile
