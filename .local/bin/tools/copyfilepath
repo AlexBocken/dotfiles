@@ -1,0 +1,3 @@
+#!/bin/sh
+printf %s "$*" | xclip -selection clipboard &&
+	notify-send "Copied to clipboard: $*"

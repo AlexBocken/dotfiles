@@ -16,3 +16,4 @@ map g goto top
 map <C-s> exec zathura_backward_search.sh
 map <A-Return> exec "openfilebrowser $FILE"
 map <C-h> exec "movepdf $FILE"
+map y exec "copyfilepath $FILE"
