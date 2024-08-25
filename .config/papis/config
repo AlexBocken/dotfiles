@@ -1,0 +1,33 @@
+[papers]
+dir = ~/dox/papers
+extra-bibtex-keys = ["doc_url"]
+use-git = True
+formatter = jinja2
+
+# Format folder & file in format <year>-<last_name_first_author>-<paper_title>
+add-file-name = {{ doc.year }}-{{ (doc.author_list[0].family if doc.author_list else "AUTHOR_MISSING") }}-{{ doc.title }}
+add-folder-name = {{ doc.year }}-{{ (doc.author_list[0].family if doc.author_list else "AUTHOR_MISSING") }}-{{ doc.title }}
+
+# Defaults simply converted to jinja2
+header-format = <ansired>{{doc.html_escape.title}}</ansired>\n <ansigreen>{{doc.html_escape.author}}</ansigreen>\n  <ansiblue>({{doc.html_escape.year}})</ansiblue> [<ansiyellow>{{doc.html_escape.tags}}</ansiyellow>]
+match-format = {{doc.tags}}{{doc.subfolder}}{{doc.title}}{{doc.author}}{{doc.year}}
+document-description-format = {{doc.title}} - {{doc.author}}
+multiple-authors-format = {{au.family}}, {{au.given}}
+ref-format = {{ doc.title[:15] | default('') }} {{ doc.author[:6] | default('') }} {{ doc.year }}
+browse-query-format = {{doc.title}} {{doc.author}}
+
+[books]
+dir = ~/dox/books
+add-file-name = {doc[author]}{doc[title]}
+use-git = True
+
+[settings]
+opentool = rifle
+default-library = papers
+file-browser = ranger
+
+
+[tui]
+editmode = vi
+options_list.selected_margin_style = bg:ansigreen fg:ansired
+options_list.unselected_margin_style =
