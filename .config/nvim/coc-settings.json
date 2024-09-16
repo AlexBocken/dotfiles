@@ -2,5 +2,5 @@
 "suggest.enablePreselect": false,
 "suggest.noselect": true,
 "svelte.enable-ts-plugin": true,
-"pyright.inlayHints.functionReturnTypes": false
+"pyright.inlayHints.variableTypes": false
 }
