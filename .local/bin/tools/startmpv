@@ -14,6 +14,17 @@ if echo "$1" | grep -qE 'youtube.*list'; then
 		sed 's/^/https:\/\/www.youtube.com\/watch?v=/' |
 		xargs mpv --ytdl-format='bestvideo[ext=mp4][width<=1920][height<=1080]+bestaudio[ext=m4a]/best[ext=mp4]/best' ||
 		notify-send "startmpv" "An error has occured with playlist $playlist_id"
+elif echo "$1" | grep -qE 'rumble.com'; then
+	notify-send "startmpv" "Rumble videos are not supported by mpv, first ripping, then playing..."
+	(
+		cd /tmp
+		yt-dlp "$1" &
+		# get the filename of the downloaded video
+		filename="$(yt-dlp -e "$1")"
+		sleep 5
+		mpv /tmp/$filename*part
+		rm /tmp/$filename*part
+	)
 else
 	mpv --ytdl-format='bestvideo[ext=mp4][width<=1920][height<=1080]+bestaudio[ext=m4a]/best[ext=mp4]/best' "$1"
 fi
