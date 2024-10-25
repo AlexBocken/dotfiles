@@ -1,4 +1,5 @@
 let mapleader =","
+let g:vimwiki_list = [{'path': '~/dox/notes/', 'index': 'Main'}]
 
 if ! filereadable(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autoload/plug.vim"'))
 	echo "Downloading junegunn/vim-plug to manage plugins..."
@@ -6,6 +7,8 @@ if ! filereadable(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autolo
 	silent !curl "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" > ${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autoload/plug.vim
 	autocmd VimEnter * PlugInstall
 endif
+
+let g:vimwiki_list = [{'path': '~/dox/notes/', 'index': 'Main'}]
 
 call plug#begin(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/plugged"'))
 Plug 'tpope/vim-surround'
@@ -28,9 +31,10 @@ Plug 'othree/html5.vim'
 Plug 'pangloss/vim-javascript'
 Plug 'evanleck/vim-svelte', {'branch': 'main'}
 Plug 'github/copilot.vim',
-Plug 'dmadisetti/AirLatex.vim', {'branch': 'main'}
 Plug 'nathangrigg/vim-beancount'
 call plug#end()
+
+let g:vimwiki_list = [{'path': '~/dox/notes/', 'index': 'Main'}]
 
 set title
 set bg=light
@@ -124,7 +128,7 @@ let g:jukit_convert_open_default = -1
 
 let g:jukit_hist_use_ueberzug = 0
 "   - Set to 1 to use Überzug to display saved outputs instead of an ipython split window
-let g:jukit_ueberzug_use_cached = 0
+let g:jukit_ueberzug_use_cached = 1
 "   - Whether to cache created images of saved outputs. If set to 0, will convert saved outputs to png from scratch each time. Note that this will make displaying saved outputs significantly slower.
 let g:jukit_ueberzug_pos = [0.25, 0.25, 0.4, 0.6]
 "   - position and dimension of Überzug window WITH output split present - [x, y, width, height]. Use `:call jukit#ueberzug#set_default_pos()` to modify/visualize.
@@ -145,7 +149,7 @@ let g:jukit_ueberzug_jupyter_cmd = 'jupyter'
 "   - path to jupyter executable. By default it just uses the jupyter command found in your environment. If you started an output split in a virtual environment, make sure that you either have jupyter installed in that environment or set the absolute path to the python3 command.
 let g:jukit_ueberzug_cutycapt_cmd = 'CutyCapt'
 "   - path to cutycapt executable
-let g:jukit_ueberzug_imagemagick_cmd = 'convert'
+let g:jukit_ueberzug_imagemagick_cmd = 'magick'
 "   - path to imagemagick (`convert` command) executable
 
 " Nerd tree
@@ -166,23 +170,12 @@ let R_start_libs = 'base,stats,graphics,grDevices,utils,methods'
 let R_hl_term = 0
 " let Rout_more_colors = 1
 
-" AirLatex
-" your login-name
-" let g:AirLatexCookieDB="~/.mozilla/firefox/do0jepvp.default-release/cookies.sqlite"
-let g:AirLatexCookie="cookies:overleaf2_session=s%3AtveT0u3Xn8VXTJmkUuSpO2p1o5SLGNYI.ARSAQd4K%2FO7L5ilui54Ht7voJWjD%2BxctQ1ngTRrlo6A"
-" let g:AirLatexUsername="cookies:overleaf_session2=s%3AMANcnaAAj4VeIgXsNIiCINZ0QgwtYNzn.9x0PVRqOp8egbGYpnIHuffJUxmH%2F%2F2W%2FFnTBPmDny1M"
-
 "This allows for change paste motion cp{motion}
 nmap <silent> cp :set opfunc=ChangePaste<CR>g@
 function! ChangePaste(type, ...)
     silent exe "normal! `[v`]\"_c"
     silent exe "normal! p"
 endfunction
-
-" optional: set server name
-let g:AirLatexDomain="www.overleaf.com"
-
-let g:AirLatexAllowInsecure=0
 
 " vimtex:
 let g:vimtex_view_method = 'zathura'
