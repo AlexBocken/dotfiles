@@ -1,0 +1,2 @@
+#!/bin/sh
+QT_SCALE_FACTOR=1.6666666666666666 skanlite
