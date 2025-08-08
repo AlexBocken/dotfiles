@@ -1,4 +1,4 @@
 #!/bin/bash
 num=$(find ~/.local/share/mail/*/INBOX/new -type f | wc -l)
-[ $num != 0 ] && printf "%s" "$num"
+[ $num != 0 ] && printf " %s" "$num"
 printf '\n'
