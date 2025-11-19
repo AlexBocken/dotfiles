@@ -25,12 +25,11 @@ Plug 'lervag/vimtex', { 'for': ['tex'] }
 Plug 'arcticicestudio/nord-vim'
 Plug 'rhysd/vim-grammarous'
 Plug 'jalvesaq/Nvim-R', {'branch': 'stable', 'for': ['r', 'R', 'Rmd', 'rmd']}
-Plug 'luk400/vim-jukit'
+"Plug 'luk400/vim-jukit'
 Plug 'David-Kunz/gen.nvim'
 Plug 'othree/html5.vim'
 Plug 'pangloss/vim-javascript'
 Plug 'evanleck/vim-svelte', {'branch': 'main'}
-Plug 'github/copilot.vim',
 Plug 'nathangrigg/vim-beancount'
 call plug#end()
 
@@ -38,7 +37,7 @@ let g:vimwiki_list = [{'path': '~/dox/notes/', 'index': 'Main'}]
 
 set title
 set bg=light
-set go=a
+"set go=a
 set mouse=a
 set nohlsearch
 set clipboard+=unnamedplus
@@ -48,6 +47,13 @@ set laststatus=0
 set noshowcmd
 set undofile
 colorscheme nord
+
+" Use terminal background (transparent)
+highlight Normal ctermbg=NONE guibg=NONE
+highlight NonText ctermbg=NONE guibg=NONE
+highlight LineNr ctermbg=NONE guibg=NONE
+highlight SignColumn ctermbg=NONE guibg=NONE
+highlight EndOfBuffer ctermbg=NONE guibg=NONE
 
 " Some basics:
 	nnoremap c "_c
@@ -69,7 +75,8 @@ colorscheme nord
 " Goyo plugin makes text more readable when writing prose:
 	map <leader>f :Goyo \| set bg=light \| set linebreak<CR>
 " Spell-check set to <leader>o, 'o' for 'orthography':
-	map <leader>o :setlocal spell! spelllang=en_us<CR>
+	map <leader>o :setlocal spell! spelllang=en_us<CR>:syntax on<CR>
+	map <leader>O :setlocal spell! spelllang=de_ch<CR>:syntax on<CR>
 " Splits open at the bottom and right, which is non-retarded, unlike vim defaults.
 	set splitbelow splitright
 
@@ -86,11 +93,6 @@ endfunction
 
 " Automatically compile RMarkdown on buffer write
 autocmd BufWritePost *.Rmd call CompileRMarkdown()
-
-""" GitHub Copilot
-" remap accept to <C-J> instead of <CR>
-imap <silent><script><expr> <C-J> copilot#Accept("\<CR>")
-let g:copilot_no_tab_map = v:true
 
 
 " Python Notebooks using jukit
@@ -626,3 +628,6 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
 inoremap <silent><expr> <NUL> coc#refresh()
+
+""" Set the foldlevel to 99 (beancount)
+set foldlevel=99
