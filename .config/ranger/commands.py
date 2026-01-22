@@ -60,3 +60,20 @@ class my_edit(Command):
         # This is a generic tab-completion function that iterates through the
         # content of the current directory.
         return self._tab_directory_content()
+
+
+class smart_shell(Command):
+    """:smart_shell
+
+    If SHLVL == 1, spawn a new shell in the current directory.
+    If SHLVL > 1, quit ranger (same as pressing 'q').
+    """
+
+    def execute(self):
+        shlvl = int(os.environ.get('SHLVL', 1))
+        if shlvl > 1:
+            # We're in a nested shell, quit ranger to return to parent shell
+            self.fm.execute_console('quit')
+        else:
+            # Top-level shell, spawn a new shell
+            self.fm.execute_command(os.environ.get('SHELL', '/bin/sh'))
