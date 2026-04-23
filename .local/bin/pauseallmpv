@@ -1,10 +1,37 @@
 #!/bin/sh
 
-# You might notice all mpv commands are aliased to have this input-ipc-server
-# thing. That's just for this particular command, which allows us to pause
-# every single one of them with one command! This is bound to super + shift + p
-# (with other things) by default and is used in some other places.
+# Send a command to every running mpv instance via its IPC socket
+# (created by the mpvSockets.lua script in ~/.config/mpv/scripts).
+#
+# Usage: pauseallmpv [subcommand]
+#   (no arg)    pause all mpv instances (original behavior)
+#   toggle      toggle pause
+#   play        unpause
+#   next        playlist-next
+#   prev        playlist-prev
+#   stop        stop playback
+#   seek-fwd    seek +10s
+#   seek-back   seek -10s
+#
+# Exit status: 0 if at least one mpv instance was reached, 1 otherwise.
 
-for i in $(ls /tmp/mpvSockets/*); do
-	echo '{ "command": ["set_property", "pause", true] }' | socat - "$i";
+case "${1:-pause}" in
+	pause)     cmd='["set_property","pause",true]' ;;
+	toggle)    cmd='["cycle","pause"]' ;;
+	play)      cmd='["set_property","pause",false]' ;;
+	next)      cmd='["playlist-next"]' ;;
+	prev)      cmd='["playlist-prev"]' ;;
+	stop)      cmd='["stop"]' ;;
+	seek-fwd)  cmd='["seek",10]' ;;
+	seek-back) cmd='["seek",-10]' ;;
+	*) echo "Usage: $0 [pause|toggle|play|next|prev|stop|seek-fwd|seek-back]" >&2; exit 2 ;;
+esac
+
+rc=1
+for s in /tmp/mpvSockets/*; do
+	[ -S "$s" ] || continue
+	rc=0
+	printf '{"command":%s}\n' "$cmd" | socat - "$s" >/dev/null
 done
+
+exit $rc
